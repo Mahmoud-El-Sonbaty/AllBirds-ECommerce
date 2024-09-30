@@ -14,6 +14,10 @@ namespace AllBirds.Models
 
         [StringLength(40, MinimumLength = 4)]
         public string NameEn { get; set; }
+        public int ParentId { get; set; }
+        public int Level { get; set; } = 0;
+        public bool IsParent { get; set; } = false;
         public virtual ICollection<CategoryProduct>? Products { get; set; }
+        public virtual ICollection<Size>? AvailableSizes { get; set; }
     }
 }
