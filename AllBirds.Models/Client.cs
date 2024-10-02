@@ -10,21 +10,25 @@ namespace AllBirds.Models
 {
     public class Client : BaseEntity<int>
     {
-        [StringLength(15, MinimumLength = 3)]
+        [MaxLength(15)]
         public string? FirstName { get; set; }
         
-        [StringLength(15, MinimumLength = 3)]
+        [MaxLength(15)]
         public string? LastName { get; set; }
 
+        [MaxLength(128)]
+        public string? ImagePath { get; set; }
+
+        [MaxLength(15)]
         public string? Country { get; set; }
 
-        [StringLength(15, MinimumLength = 6)]
+        [MaxLength(15)]
         public string? City { get; set; }
 
-        [StringLength(255, MinimumLength = 10)]
+        [MaxLength(255)]
         public string? Address { get; set; }
 
-        [StringLength(10, MinimumLength = 5)]
+        [MaxLength(10)]
         public string? ZipCode { get; set; }
 
         public int UserId { get; set; }

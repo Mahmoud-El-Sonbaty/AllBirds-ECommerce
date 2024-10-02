@@ -10,11 +10,12 @@ namespace AllBirds.Models
 {
     public class OrderMaster : BaseEntity<int>
     {
-        public int UserId { get; set; }
-        public virtual IdentityUser<int>? User { get; set; }
+        public int ClientId { get; set; }
+        public virtual Client? Client { get; set; }
         public decimal Total { get; set; }
         public int OrderStateId { get; set; }
         public virtual OrderState? OrderState { get; set; }
+        [MaxLength(128)]
         public string? Notes { get; set; }
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
     }

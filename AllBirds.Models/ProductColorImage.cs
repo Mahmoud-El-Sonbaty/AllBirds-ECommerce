@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace AllBirds.Models
 {
-    public class ProductImage : BaseEntity<int>
+    public class ProductColorImage : BaseEntity<int>
     {
         public int ProductId { get; set; }
-        public virtual Product? Product { get; set; }
+        public virtual ProductColor? Product { get; set; }
 
-        [Required, StringLength(255)]
+        [Required, MaxLength(255)]
         public string ImagePath { get; set; }
     }
 }

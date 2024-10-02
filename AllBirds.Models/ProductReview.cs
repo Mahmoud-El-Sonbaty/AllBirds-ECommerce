@@ -13,15 +13,13 @@ namespace AllBirds.Models
         public int ProductId { get; set; }
         public virtual Product? Product { get; set; }
         public int ClientId { get; set; }
-        public virtual IdentityUser<int>? Client { get; set; }
-
-        [Range(0, 5)]
+        public virtual Client? Client { get; set; }
         public float Rating { get; set; }
 
-        [StringLength(64, MinimumLength = 20)]
+        [MaxLength(64)]
         public string? RatingHead { get; set; }
 
-        [StringLength(128, MinimumLength = 32)]
+        [MaxLength(128)]
         public string? Review { get; set; }
     }
 }
