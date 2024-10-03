@@ -11,5 +11,6 @@ namespace AllBirds.Models
     {
         [MaxLength(2)]
         public string SizeNumber { get; set; }
+        public virtual ICollection<ProductSize>? Products { get; set; }
     }
 }
