@@ -9,8 +9,8 @@ namespace AllBirds.Models
 {
     public class Category : BaseEntity<int>
     {
-        [MaxLength(40)]
-        public string NameAr { get; set; }
+        //[MaxLength(40)]
+        //public string NameAr { get; set; }
 
         [MaxLength(40)]
         public string NameEn { get; set; }
