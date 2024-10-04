@@ -31,6 +31,5 @@ namespace AllBirds.Models
         public virtual ICollection<Color>? AvailableColors { get; set; }
         public virtual ICollection<ProductSize>? AvailableSizes { get; set; }
         public virtual ICollection<ProductReview>? Reviews { get; set; }
-        public virtual ICollection<ProductColorImage>? Images { get; set; }
     }
 }
