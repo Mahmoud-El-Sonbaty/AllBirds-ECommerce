@@ -33,16 +33,16 @@ namespace AllBirds.AdminDashboard
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<AllBirdsContext>();
-            //builder.Services.ConfigureApplicationCookie(options =>
-            //{
-            //    options.AccessDeniedPath = "/Account/AccessDenied";
-            //    options.Cookie.Name = "MVCAdminCookie";
-            //    //options.Cookie.HttpOnly = true;
-            //    options.ExpireTimeSpan = TimeSpan.FromDays(3);
-            //    options.LoginPath = "/Account/Login";
-            //    //options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-            //    //options.SlidingExpiration = true;
-            //});
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.Cookie.Name = "MVCAdminCookie";
+                //options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(3);
+                options.LoginPath = "/Account/Login";
+                //options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                //options.SlidingExpiration = true;
+            });
             //builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
 

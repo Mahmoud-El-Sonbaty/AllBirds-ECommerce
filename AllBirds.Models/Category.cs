@@ -15,7 +15,7 @@ namespace AllBirds.Models
         [MaxLength(40)]
         public string NameEn { get; set; }
         public int ParentCategoryId { get; set; }
-        public virtual Category? ParentCategory { get; set; }
+        //public virtual Category? ParentCategory { get; set; }
         public int Level { get; set; } = 0;
         public bool IsParentCategory { get; set; } = false;
         public string? ImagePath { get; set; }

@@ -213,14 +213,14 @@ namespace AllBirds.Context
                 new Color
                 {
                     Id = 1,
-                    ColorCode = "",
+                    ColorCode = "color1",
                     CreatedBy = 1,
                     Created = DateTime.Now
                 },
                 new Color
                 {
                     Id = 2,
-                    ColorCode = "",
+                    ColorCode = "color2",
                     CreatedBy = 1,
                     Created = DateTime.Now
                 }
