@@ -20,6 +20,6 @@ namespace AllBirds.Models
         //public bool IsParentCategory { get; set; } = false;
         public string? ImagePath { get; set; }
         public virtual ICollection<CategoryProduct>? Products { get; set; }
-        public virtual ICollection<Size>? AvailableSizes { get; set; }
+        public virtual ICollection<CategorySize>? AvailableSizes { get; set; }
     }
 }

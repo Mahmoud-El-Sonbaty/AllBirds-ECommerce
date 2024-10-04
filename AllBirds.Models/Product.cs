@@ -23,12 +23,13 @@ namespace AllBirds.Models
         [MaxLength(255)]
         public string? DescriptionEn { get; set; }
 
+        public int Discount { get; set; }
+
         public bool FreeShipping { get; set; } = false;
 
         public virtual ICollection<CategoryProduct>? Categories { get; set; }
         public virtual ICollection<Color>? AvailableColors { get; set; }
-        public virtual ICollection<Size>? AvailableSizes { get; set; }
+        public virtual ICollection<ProductSize>? AvailableSizes { get; set; }
         public virtual ICollection<ProductReview>? Reviews { get; set; }
-        public virtual ICollection<ProductColorImage>? Images { get; set; }
     }
 }
