@@ -16,6 +16,7 @@ namespace AllBirds.Context
         //public DbSet<Client> Clients { get; set; }
         //public DbSet<ClientFavorite> ClientFavorites { get; set; }
         //public DbSet<Color> Colors { get; set; }
+        //public DbSet<Coupon> Coupons { get; set; }
         //public DbSet<OrderDetail> OrdersDetail { get; set; }
         //public DbSet<OrderMaster> OrdersMaster { get; set; }
         //public DbSet<OrderState> OrderStates { get; set; }

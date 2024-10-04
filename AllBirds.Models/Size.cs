@@ -9,8 +9,9 @@ namespace AllBirds.Models
 {
     public class Size : BaseEntity<int>
     {
-        [MaxLength(2)]
+        [MaxLength(5)]
         public string SizeNumber { get; set; }
         public virtual ICollection<ProductSize>? Products { get; set; }
+        public virtual ICollection<CategorySize>? Categories { get; set; }
     }
 }

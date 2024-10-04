@@ -1,5 +1,5 @@
-using AllBirds.AdminDashboard.Data;
 using AllBirds.Context;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,8 +16,7 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddDbContext<AllBirdsContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-            builder.Services.AddDefaultIdentity<IdentityUser<int>>(options =>
+            builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireDigit = true;
@@ -25,9 +24,19 @@ namespace AllBirds.AdminDashboard
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
+                options.User.RequireUniqueEmail = true;
             })
-                .AddRoles<IdentityRole<int>>()
                 .AddEntityFrameworkStores<AllBirdsContext>();
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.Cookie.Name = "MVCAdminCookie";
+                //options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(3);
+                options.LoginPath = "/Account/Login";
+                //options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                //options.SlidingExpiration = true;
+            });
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
