@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using AllBirds.DTOs.UserDTOs;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace AllBirds.Application.Mapper
 {
@@ -107,6 +109,16 @@ namespace AllBirds.Application.Mapper
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
             //    .ForMember(dest => dest.AuthorAge, opt => opt.MapFrom(src => src.Author.Age));
             #endregion
+
+
+
+            CreateMap<AdminAccRegisterDTOs, IdentityUser>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore()) 
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+            .ReverseMap();
+            CreateMap<GetAccountAdminDTOs , IdentityUser>().ReverseMap();
+            CreateMap<LoginUserDTOs , IdentityUser>().ReverseMap();
+
         }
     }
 }
