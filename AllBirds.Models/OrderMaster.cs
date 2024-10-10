@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,7 +11,7 @@ namespace AllBirds.Models
     public class OrderMaster : BaseEntity<int>
     {
         public int ClientId { get; set; }
-        public virtual Client? Client { get; set; }
+        public virtual CustomUser? Client { get; set; }
 
         [Column(TypeName = "money")]
         public decimal Total { get; set; }

@@ -9,11 +9,11 @@ namespace AllBirds.Context
     //{
     //    public AllBirdContext(DbContextOptions<AllBirdContext> dbContextOptions) : base(dbContextOptions) { }
     //}
-    public class AllBirdsContext(DbContextOptions<AllBirdsContext> dbContextOptions) : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>(dbContextOptions)
+    public class AllBirdsContext(DbContextOptions<AllBirdsContext> dbContextOptions) : IdentityDbContext<CustomUser, IdentityRole<int>, int>(dbContextOptions)
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryProduct> CategoryProducts { get; set; }
-        public DbSet<Client> Clients { get; set; }
+        //public DbSet<Client> Clients { get; set; }
         public DbSet<ClientFavorite> ClientFavorites { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Coupon> Coupons { get; set; }

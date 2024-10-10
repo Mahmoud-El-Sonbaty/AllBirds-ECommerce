@@ -2,6 +2,7 @@ using AllBirds.Application.Contracts;
 using AllBirds.Application.Mapper;
 using AllBirds.Context;
 using AllBirds.Infrastructure;
+using AllBirds.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-            builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(options =>
+            builder.Services.AddIdentity<CustomUser, IdentityRole<int>>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireDigit = true;
