@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace AllBirds.Models
         public int ProductId { get; set; }
         public virtual Product? Product { get; set; }
         public int ClientId { get; set; }
-        public virtual Client? Client { get; set; }
+        public virtual CustomUser? Client { get; set; }
         public float Rating { get; set; }
 
         [MaxLength(64)]

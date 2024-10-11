@@ -11,10 +11,10 @@ namespace AllBirds.DTOs.CategoryDTOs
     {
         public int Id { get; set; }
         
-        [StringLength(40, MinimumLength = 4)]
+        [StringLength(40, MinimumLength = 3)]
         public string NameAr { get; set; }
         
-        [StringLength(40, MinimumLength = 4)]
+        [StringLength(40, MinimumLength = 3)]
         public string NameEn { get; set; }
     }
 }

@@ -9,8 +9,8 @@ namespace AllBirds.Models
 {
     public class ProductColorImage : BaseEntity<int>
     {
-        public int ProductId { get; set; }
-        public virtual ProductColor? Product { get; set; }
+        public int ProductColorId { get; set; }
+        public virtual ProductColor? ProductColor { get; set; }
 
         [Required, MaxLength(255)]
         public string ImagePath { get; set; }

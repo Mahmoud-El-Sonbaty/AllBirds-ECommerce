@@ -9,11 +9,11 @@ namespace AllBirds.Context
     //{
     //    public AllBirdContext(DbContextOptions<AllBirdContext> dbContextOptions) : base(dbContextOptions) { }
     //}
-    public class AllBirdsContext(DbContextOptions<AllBirdsContext> dbContextOptions) : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>(dbContextOptions)
+    public class AllBirdsContext(DbContextOptions<AllBirdsContext> dbContextOptions) : IdentityDbContext<CustomUser, IdentityRole<int>, int>(dbContextOptions)
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryProduct> CategoryProducts { get; set; }
-        public DbSet<Client> Clients { get; set; }
+        //public DbSet<Client> Clients { get; set; }
         public DbSet<ClientFavorite> ClientFavorites { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
@@ -30,200 +30,47 @@ namespace AllBirds.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // Seed Roles
+            modelBuilder.Entity<IdentityRole<int>>().HasData(
+                new IdentityRole<int> { Id = 1, Name = "SuperUser", NormalizedName = "SUPERUSER"},
+                new IdentityRole<int> { Id = 2, Name = "Manager", NormalizedName = "MANAGER"},
+                new IdentityRole<int> { Id = 3, Name = "Admin", NormalizedName = "ADMIN"},
+                new IdentityRole<int> { Id = 4, Name = "Client", NormalizedName = "CLIENT"}
+            );
             // Seed OrderStates
             modelBuilder.Entity<OrderState>().HasData(
-                new OrderState
-                {
-                    Id = 1,
-                    StateAr = "في العربة",
-                    StateEn = "In Cart",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new OrderState
-                {
-                    Id = 2,
-                    StateAr = "جاري التجهيز",
-                    StateEn = "Processing",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new OrderState
-                {
-                    Id = 3,
-                    StateAr = "خرج للتوصيل",
-                    StateEn = "Out For Delivery",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new OrderState
-                {
-                    Id = 4,
-                    StateAr = "تم التوصيل",
-                    StateEn = "Deliverd",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                }
+                new OrderState { Id = 1, StateAr = "في العربة", StateEn = "In Cart", CreatedBy = 1, Created = DateTime.Now },
+                new OrderState { Id = 2, StateAr = "جاري التجهيز", StateEn = "Processing", CreatedBy = 1, Created = DateTime.Now },
+                new OrderState { Id = 3, StateAr = "خرج للتوصيل", StateEn = "Out For Delivery", CreatedBy = 1, Created = DateTime.Now },
+                new OrderState { Id = 4, StateAr = "تم التوصيل", StateEn = "Deliverd", CreatedBy = 1, Created = DateTime.Now }
             );
             // Seed Sizes
-            modelBuilder.Entity<Size>().HasData(
-                new Size
-                {
-                    Id = 1,
-                    SizeNumber = "1",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 2,
-                    SizeNumber = "2",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 3,
-                    SizeNumber = "3",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 4,
-                    SizeNumber = "4",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 5,
-                    SizeNumber = "5",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 6,
-                    SizeNumber = "5.5",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 7,
-                    SizeNumber = "6",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 8,
-                    SizeNumber = "6.5",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 9,
-                    SizeNumber = "7",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 10,
-                    SizeNumber = "7.5",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 11,
-                    SizeNumber = "8",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 12,
-                    SizeNumber = "8.5",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 13,
-                    SizeNumber = "9",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 14,
-                    SizeNumber = "9.5",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 15,
-                    SizeNumber = "10",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 16,
-                    SizeNumber = "10.5",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 17,
-                    SizeNumber = "11",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 18,
-                    SizeNumber = "12",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 19,
-                    SizeNumber = "13",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Size
-                {
-                    Id = 20,
-                    SizeNumber = "14",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                }
-                );
+            modelBuilder.Entity<Size>().HasData(                
+                new Size { Id = 1, SizeNumber = "1", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 2, SizeNumber = "2", CreatedBy = 1, Created = DateTime.Now},
+                new Size { Id = 3, SizeNumber = "3", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 4, SizeNumber = "4", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 5, SizeNumber = "5", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 6, SizeNumber = "5.5", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 7, SizeNumber = "6", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 8, SizeNumber = "6.5", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 9, SizeNumber = "7", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 10, SizeNumber = "7.5", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 11, SizeNumber = "8", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 12, SizeNumber = "8.5", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 13, SizeNumber = "9", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 14, SizeNumber = "9.5", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 15, SizeNumber = "10", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 16, SizeNumber = "10.5", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 17, SizeNumber = "11", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 18, SizeNumber = "12", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 19, SizeNumber = "13", CreatedBy = 1, Created = DateTime.Now },
+                new Size { Id = 20, SizeNumber = "14", CreatedBy = 1, Created = DateTime.Now }
+            );
             // Seed Colors
             modelBuilder.Entity<Color>().HasData(
-                new Color
-                {
-                    Id = 1,
-                    ColorCode = "color1",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                },
-                new Color
-                {
-                    Id = 2,
-                    ColorCode = "color2",
-                    CreatedBy = 1,
-                    Created = DateTime.Now
-                }
+                new Color { Id = 1, ColorCode = "color1", CreatedBy = 1, Created = DateTime.Now },
+                new Color { Id = 2, ColorCode = "color2", CreatedBy = 1, Created = DateTime.Now }
             );
         }
         //public int SaveChanges(bool acceptAllChangesOnSuccess, int userId)
