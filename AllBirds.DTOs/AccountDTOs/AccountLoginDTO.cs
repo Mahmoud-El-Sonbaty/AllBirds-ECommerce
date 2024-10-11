@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace AllBirds.DTOs.AccountDTOs
 {
-    public class AdminRegisterDTO
+    public class AccountLoginDTO
     {
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

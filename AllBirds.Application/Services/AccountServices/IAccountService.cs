@@ -1,4 +1,5 @@
 ﻿using AllBirds.DTOs.AccountDTOs;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ namespace AllBirds.Application.Services.AccountServices
 {
     public interface IAccountService
     {
-        public bool Login(UserLoginDTO userLoginDTO);
-        public bool Register(ClientRegisterDTO clientRegisterDTO);
-        public bool RegisterAdmin(AdminRegisterDTO adminregisterDTO);
+        public Task<bool> LoginAsync(AccountLoginDTO accountLoginDTO);
+        public Task LogoutAsync();
+        public Task<bool> RegisterAsync(CUAccountDTO cUAccountDTO);
+        public List<IdentityRole<int>> GetRoles();
     }
 }

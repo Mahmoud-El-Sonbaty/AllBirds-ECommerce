@@ -29,7 +29,7 @@ namespace AllBirds.Models
         public string? Address { get; set; }
 
         [MaxLength(10)]
-        public string? ZipCode { get; set; }
+        public string? PostalCode { get; set; }
         public virtual ICollection<OrderMaster>? ClientOrders { get; set; }
         public virtual ICollection<ProductReview>? ProductReviews { get; set; }
         public virtual ICollection<ClientFavorite>? ClientFavorites { get; set; }

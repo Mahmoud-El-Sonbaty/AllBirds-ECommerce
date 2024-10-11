@@ -1,9 +1,8 @@
 using AllBirds.Application.Contracts;
 using AllBirds.Application.Mapper;
+using AllBirds.Application.Services.AccountServices;
 using AllBirds.Context;
-using AllBirds.Infrastructure;
 using AllBirds.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,10 +19,10 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddDbContext<AllBirdsContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            //builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-            builder.Services.AddIdentity<CustomUser, IdentityRole<int>>(options =>
+            builder.Services.AddDefaultIdentity<CustomUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireDigit = true;
@@ -33,6 +32,17 @@ namespace AllBirds.AdminDashboard
                 options.Password.RequireLowercase = false;
                 options.User.RequireUniqueEmail = true;
             })
+                .AddRoles<IdentityRole<int>>()
+            //builder.Services.AddIdentity<CustomUser, IdentityRole<int>>(options =>
+            //{
+            //    options.SignIn.RequireConfirmedAccount = true;
+            //    options.Password.RequireDigit = true;
+            //    options.Password.RequiredLength = 6;
+            //    options.Password.RequireNonAlphanumeric = false;
+            //    options.Password.RequireUppercase = false;
+            //    options.Password.RequireLowercase = false;
+            //    options.User.RequireUniqueEmail = true;
+            //})
                 .AddEntityFrameworkStores<AllBirdsContext>();
             builder.Services.ConfigureApplicationCookie(options =>
             {
