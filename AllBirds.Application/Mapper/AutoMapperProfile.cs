@@ -1,4 +1,8 @@
 ﻿using AllBirds.DTOs.AccountDTOs;
+using AllBirds.DTOs.ColorDTOs;
+using AllBirds.DTOs.CouponDTOs;
+using AllBirds.DTOs.OrderStateDTOs;
+using AllBirds.DTOs.SizeDTOs;
 using AllBirds.Models;
 using AutoMapper;
 
@@ -10,104 +14,82 @@ namespace AllBirds.Application.Mapper
         {
             #region Account
             CreateMap<CUAccountDTO, CustomUser>().ReverseMap();
-            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
-            //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.BookPrice, opt => opt.MapFrom(src => src.Book.Price))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
-            //    .ForMember(dest => dest.AuthorAge, opt => opt.MapFrom(src => src.Author.Age));
+            CreateMap<AccountLoginDTO, CustomUser>().ReverseMap();
             #endregion
 
             #region Category
-            //CreateMap<CreateOrUpdateBookDTO, Book>().ReverseMap();
-            //CreateMap<GetAllBookDTO, Book>().ReverseMap();
-            //CreateMap<GetOneBookDTO, Book>().ReverseMap()
-            //    .ForMember(dest => dest.AuthorsName, opt => opt.MapFrom(src => src.BookAuthors!.Select(b => b.Author!.Name).ToList()))
-            //    .ForMember(dest => dest.BookAuthorIds, opt => opt.MapFrom(src => src.BookAuthors!.Select(b => b.Author!.Id).ToList()));
-            #endregion
-
-            #region Product
-            //CreateMap<CreateOrUpdateAuthorDTO, Author>().ReverseMap();
-            //CreateMap<GetAllAuthorDTO, Author>().ReverseMap();
-            //CreateMap<GetOneAuthorDTO, Author>().ReverseMap();
+            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
 
             #region CategoryProduct
-            //CreateMap<CreateOrUpdateBookAuthorDTO, BookAuthor>().ReverseMap();
-            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.BookPrice, opt => opt.MapFrom(src => src.Book.Price))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
-            //    .ForMember(dest => dest.AuthorAge, opt => opt.MapFrom(src => src.Author.Age));
+            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
+            #endregion
+
+            #region CategorySize
+            //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
             #endregion
 
             #region ClientFavorite
-            //CreateMap<CreateOrUpdateBookAuthorDTO, BookAuthor>().ReverseMap();
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
-            //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.BookPrice, opt => opt.MapFrom(src => src.Book.Price))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
-            //    .ForMember(dest => dest.AuthorAge, opt => opt.MapFrom(src => src.Author.Age));
             #endregion
 
-
-            #region OrderMaster
-            //CreateMap<CreateOrUpdateBookAuthorDTO, BookAuthor>().ReverseMap();
-            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
-            //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.BookPrice, opt => opt.MapFrom(src => src.Book.Price))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
-            //    .ForMember(dest => dest.AuthorAge, opt => opt.MapFrom(src => src.Author.Age));
+            #region Color
+            CreateMap<CUColorDTO, Color>().ReverseMap();
+            CreateMap<GetColorDTO, Color>().ReverseMap();
             #endregion
 
+            #region Coupon
+            CreateMap<CUCouponDTO, Coupon>().ReverseMap();
+            CreateMap<GetCouponDTO, Coupon>().ReverseMap();
+            #endregion
 
             #region OrderDetail
-            //CreateMap<CreateOrUpdateBookAuthorDTO, BookAuthor>().ReverseMap();
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
-            //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.BookPrice, opt => opt.MapFrom(src => src.Book.Price))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
-            //    .ForMember(dest => dest.AuthorAge, opt => opt.MapFrom(src => src.Author.Age));
             #endregion
 
-
-            #region ProductImage
-            //CreateMap<CreateOrUpdateBookAuthorDTO, BookAuthor>().ReverseMap();
+            #region OrderMaster
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
-            //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.BookPrice, opt => opt.MapFrom(src => src.Book.Price))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
-            //    .ForMember(dest => dest.AuthorAge, opt => opt.MapFrom(src => src.Author.Age));
             #endregion
 
+            #region OrderState
+            CreateMap<CUOrderStateDTO, OrderState>().ReverseMap();
+            CreateMap<GetOrderStateDTO, OrderState>().ReverseMap();
+            #endregion
 
-            #region ProductRating
-            //CreateMap<CreateOrUpdateBookAuthorDTO, BookAuthor>().ReverseMap();
+            #region Product
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
-            //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
-            //    .ForMember(dest => dest.BookPrice, opt => opt.MapFrom(src => src.Book.Price))
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
-            //    .ForMember(dest => dest.AuthorAge, opt => opt.MapFrom(src => src.Author.Age));
+            #endregion
+
+            #region ProductColor
+            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            #endregion
+
+            #region ProductColorImage
+            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            #endregion
+
+            #region ProductReview
+            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            #endregion
+
+            #region ProductSize
+            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            #endregion
+
+            #region Size
+            CreateMap<CUSizeDTO, Size>().ReverseMap();
+            CreateMap<GetSizeDTO, Size>().ReverseMap();
             #endregion
         }
     }
