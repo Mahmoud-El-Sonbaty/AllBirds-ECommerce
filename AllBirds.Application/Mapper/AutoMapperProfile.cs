@@ -94,12 +94,12 @@ namespace AllBirds.Application.Mapper
 
 
 
-            CreateMap<AdminAccRegisterDTOs, IdentityUser>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore()) 
-            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
-            .ReverseMap();
-            CreateMap<GetAccountAdminDTOs , IdentityUser>().ReverseMap();
-            CreateMap<LoginUserDTOs , IdentityUser>().ReverseMap();
+            //CreateMap<AdminAccRegisterDTOs, IdentityUser>()
+            //.ForMember(dest => dest.Id, opt => opt.Ignore()) 
+            //.ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+            //.ReverseMap();
+            //CreateMap<GetAccountAdminDTOs , IdentityUser>().ReverseMap();
+            //CreateMap<LoginUserDTOs , IdentityUser>().ReverseMap();
 
         }
     }

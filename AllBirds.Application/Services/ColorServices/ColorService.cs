@@ -30,7 +30,7 @@ namespace AllBirds.Application.Services.ColorServices
             if (colorObj is not null)
             {
                 colorObj.Name = cUColorDTO.Name;
-                colorObj.Code = cUColorDTO.Name;
+                colorObj.Code = cUColorDTO.Code;
                 await _colorRepository.SaveChangesAsync();
                 return _mapper.Map<CUColorDTO>(colorObj);
             }
