@@ -30,8 +30,9 @@ namespace AllBirds.Models
         public bool FreeShipping { get; set; } = false;
 
         public virtual ICollection<CategoryProduct>? Categories { get; set; }
-        public virtual ICollection<Color>? AvailableColors { get; set; }
+        public virtual ICollection<ProductColor>? AvailableColors { get; set; }
         public virtual ICollection<ProductSize>? AvailableSizes { get; set; }
         public virtual ICollection<ProductReview>? Reviews { get; set; }
+        public virtual ICollection<ClientFavorite>? ClientsFavoriteIt { get; set; }
     }
 }
