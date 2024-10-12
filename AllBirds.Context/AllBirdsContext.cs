@@ -11,6 +11,19 @@ namespace AllBirds.Context
     //}
     public class AllBirdsContext(DbContextOptions<AllBirdsContext> dbContextOptions) : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>(dbContextOptions)
     {
+        //public AllBirdsContext(DbContextOptions options) : base(options)
+        //{
+
+        //}
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Data Source=DESKTOP-52U8U14;Initial Catalog=FinalProject1;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");//.UseLazyLoadingProxies(true); ;
+        //    base.OnConfiguring(optionsBuilder);
+        //}
+
+        public DbSet<CategorySize> CategorySizes { get; set; }///Hossam add this
+
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryProduct> CategoryProducts { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -225,6 +238,44 @@ namespace AllBirds.Context
                     Created = DateTime.Now
                 }
             );
+            ///seed Category
+            modelBuilder.Entity<Category>().HasData(
+                   new Category
+                   {
+                       Id = 1,
+                     NameAr ="كتقورلا 1" ,
+                       NameEn="category 1",
+                       CreatedBy = 1,
+                       Created = DateTime.Now
+                   },
+                   new Category
+                   {
+                       Id = 2,
+                       NameAr = "كتقورلا 2",
+                       NameEn = "category 2",
+                       CreatedBy = 1,
+                       Created = DateTime.Now
+                   },
+                   new Category
+                   {
+                       Id = 3,
+                       NameAr = "كتقورلا 3",
+                       NameEn = "category 3",
+                       CreatedBy = 1,
+                       Created = DateTime.Now
+                   },
+                   new Category
+                   {
+                       Id = 4,
+                       NameAr = "كتقورلا4 ",
+                       NameEn = "category 4",
+                       CreatedBy = 1,
+                       Created = DateTime.Now
+                   }
+                 
+                   );
+
+
         }
         //public int SaveChanges(bool acceptAllChangesOnSuccess, int userId)
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

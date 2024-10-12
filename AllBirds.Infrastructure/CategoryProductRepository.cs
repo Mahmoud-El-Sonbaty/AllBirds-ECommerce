@@ -1,6 +1,5 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Context;
-using AllBirds.Infrastructure;
 using AllBirds.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AllBirds.Infrastructure
 {
-    public class CategoryRepository(AllBirdsContext context) : GenericRepository<Category, int>(context), ICategoryRepository
+    public class CategoryProductRepository(AllBirdsContext context) : GenericRepository<CategoryProduct, int>(context), ICategoryProductRepository
     {
     }
 }

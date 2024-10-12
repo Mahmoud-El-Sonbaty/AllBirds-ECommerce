@@ -13,11 +13,11 @@ namespace AllBirds.Models
         public string NameAr { get; set; }
 
         [MaxLength(40)]
-        public string NameEn { get; set; }
-        public int ParentCategoryId { get; set; }
+        public string? NameEn { get; set; }
+        public int? ParentCategoryId { get; set; }//not
         //public virtual Category? ParentCategory { get; set; }
-        public int Level { get; set; } = 0;
-        public bool IsParentCategory { get; set; } = false;
+        public int? Level { get; set; } = 0;///not
+        public bool? IsParentCategory { get; set; } = false;//not
         public string? ImagePath { get; set; }
         public virtual ICollection<CategoryProduct>? Products { get; set; }
         public virtual ICollection<CategorySize>? AvailableSizes { get; set; }

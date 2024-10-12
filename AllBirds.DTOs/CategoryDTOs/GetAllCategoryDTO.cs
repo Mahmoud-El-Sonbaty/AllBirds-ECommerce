@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 
 namespace AllBirds.DTOs.CategoryDTOs
 {
-    public class CUCategoryDTO
+    public class GetAllCategoryDTO
     {
-        public int Id { get; set; }
-        
+        ///public int Id { get; set; }
+
         [StringLength(40, MinimumLength = 4)]
         public string NameAr { get; set; }
-        
+
         [StringLength(40, MinimumLength = 4)]
         public string NameEn { get; set; }
+        //public IFormFile? ImageData { get; set; }
+
+        //public string? ImagePath { get; set; }
     }
 }
