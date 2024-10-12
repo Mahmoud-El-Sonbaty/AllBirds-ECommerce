@@ -29,7 +29,8 @@ namespace AllBirds.Application.Services.ColorServices
             Color? colorObj = (await _colorRepository.GetAllAsync()).FirstOrDefault(s => s.Id == cUColorDTO.Id && s.IsDeleted == false);
             if (colorObj is not null)
             {
-                colorObj.ColorCode = cUColorDTO.ColorCode;
+                colorObj.Name = cUColorDTO.Name;
+                colorObj.Code = cUColorDTO.Name;
                 await _colorRepository.SaveChangesAsync();
                 return _mapper.Map<CUColorDTO>(colorObj);
             }
