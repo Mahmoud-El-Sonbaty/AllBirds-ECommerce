@@ -25,6 +25,6 @@ namespace AllBirds.DTOs.ProductDTOs
         public string? DescriptionEn { get; set; }
         public bool FreeShipping { get; set; } = false;
         public List<int>? CategoriesId { get; set; }
-        public List<CUProductColorImageDTO>? ColorsImages { get; set; }
+        //public List<CUProductColorImageDTO>? ColorsImages { get; set; }
     }
 }

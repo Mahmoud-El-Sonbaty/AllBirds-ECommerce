@@ -22,4 +22,10 @@
     <ProjectReference Include="..\AllBirds.Infrastructure\AllBirds.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\css\" />
+    <Folder Include="wwwroot\assets\js\" />
+    <Folder Include="wwwroot\assets\vendors\" />
+  </ItemGroup>
+
 </Project>
