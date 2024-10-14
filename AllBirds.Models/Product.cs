@@ -28,8 +28,11 @@ namespace AllBirds.Models
         public int Discount { get; set; }
 
         public bool FreeShipping { get; set; } = false;
+        public int MainColorId { get; set; }
+        //public virtual ProductColor MainColor { get; set; }
 
         public virtual ICollection<CategoryProduct>? Categories { get; set; }
+        [InverseProperty("Product")]
         public virtual ICollection<ProductColor>? AvailableColors { get; set; }
         public virtual ICollection<ProductSize>? AvailableSizes { get; set; }
         public virtual ICollection<ProductReview>? Reviews { get; set; }
