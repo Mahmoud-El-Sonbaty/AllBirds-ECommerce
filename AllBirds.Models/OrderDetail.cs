@@ -12,16 +12,14 @@ namespace AllBirds.Models
     {
         public int OrderMasterId { get; set; }
         public virtual OrderMaster? OrderMaster { get; set; }
-        public int ProductId { get; set; }
-        public virtual ProductColor? Product { get; set; }
-        public int SizeId { get; set; }
-        public Size? SizePurchased { get; set; }
+        public int ProductColorSizeId { get; set; }
+        public virtual ProductColorSize? ProductColorSize { get; set; }
         public int Quantity { get; set; }
-
-        [MaxLength(128)]
-        public string? Notes { get; set; }
 
         [Column(TypeName = "money")]
         public decimal DetailPrice { get; set; }
+
+        [MaxLength(512)]
+        public string? Notes { get; set; }
     }
 }

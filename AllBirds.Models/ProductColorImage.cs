@@ -15,7 +15,7 @@ namespace AllBirds.Models
         [InverseProperty("Images")]
         public virtual ProductColor? ProductColor { get; set; }
 
-        [Required, MaxLength(255)]
+        [Required, MaxLength(1000)]
         public string ImagePath { get; set; }
     }
 }

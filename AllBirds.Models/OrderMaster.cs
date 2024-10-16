@@ -10,6 +10,8 @@ namespace AllBirds.Models
 {
     public class OrderMaster : BaseEntity<int>
     {
+        [MaxLength(100)]
+        public string OrderNo { get; set; }
         public int ClientId { get; set; }
         public virtual CustomUser? Client { get; set; }
 

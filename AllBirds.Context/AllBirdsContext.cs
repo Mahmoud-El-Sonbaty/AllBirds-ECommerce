@@ -13,7 +13,6 @@ namespace AllBirds.Context
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryProduct> CategoryProducts { get; set; }
-        //public DbSet<Client> Clients { get; set; }
         public DbSet<ClientFavorite> ClientFavorites { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
@@ -23,9 +22,12 @@ namespace AllBirds.Context
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductColor> ProductColors { get; set; }
         public DbSet<ProductColorImage> ProductColorImages { get; set; }
+        public DbSet<ProductColorSize> ProductColorSizes { get; set; }
+        public DbSet<ProductDetail> ProductDetails { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
-        public DbSet<ProductSize> ProductSizes { get; set; }
+        public DbSet<ProductSpecification> ProductSpecification { get; set; }
         public DbSet<Size> Sizes { get; set; }
+        public DbSet<Specification> Specifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -107,6 +109,44 @@ namespace AllBirds.Context
                 new Category { Id = 31, NameAr = "وصل حديثًا", NameEn = "New Arrivals", ParentCategoryId = 16, Level = 1, IsParentCategory = false, CreatedBy = 1, Created = DateTime.Now },
                 new Category { Id = 32, NameAr = "جوارب", NameEn = "Socks", ParentCategoryId = 0, Level = 0, IsParentCategory = false, CreatedBy = 1, Created = DateTime.Now },
                 new Category { Id = 33, NameAr = "عروض", NameEn = "Sale", ParentCategoryId = 0, Level = 0, IsParentCategory = false, CreatedBy = 1, Created = DateTime.Now }
+            );
+            // Seed Specifications
+            modelBuilder.Entity<Specification>().HasData(
+                new Specification { Id = 1, NameAr = "التفاصيل", NameEn = "Details", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 2, NameAr = "الأفضل من أجل", NameEn = "Best For", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 3, NameAr = "المواد", NameEn = "Material", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 4, NameAr = "المقاس", NameEn = "Fit", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 5, NameAr = "مكان الصنع", NameEn = "Where It’s Made", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 6, NameAr = "المواد فائقة النعومة", NameEn = "Super Soft Material", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 7, NameAr = "الابتكار الطبيعي", NameEn = "Natural Innovation", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 8, NameAr = "المواد المنعشة", NameEn = "Breezy Material", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 9, NameAr = "التصميم متعدد الاستخدامات", NameEn = "Versatile Design", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 10, NameAr = "الاستخدام", NameEn = "Use", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 11, NameAr = "المواد المنظمة للحرارة", NameEn = "Thermoregulating Material", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 12, NameAr = "الارتداد طوال اليوم", NameEn = "All-Day Bounce", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 13, NameAr = "الراحة أثناء التنقل", NameEn = "On-the-Go Convenience", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 14, NameAr = "ملاءمة كالجوارب", NameEn = "Sock-Like Fit", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 15, NameAr = "الراحة المبطنة", NameEn = "Cushioned Comfort", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 16, NameAr = "الجزء العلوي مصنوع من صوف ZQ", NameEn = "Upper made with ZQ Merino Wool", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 17, NameAr = "زيادة المتانة", NameEn = "Increased Durability", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 18, NameAr = "تحسين الشكل", NameEn = "Improved Shape", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 19, NameAr = "ملاءمة مطورة", NameEn = "Upgraded Fit", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 20, NameAr = "تعزيز داخلي", NameEn = "Internal Reinforcement", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 21, NameAr = "ثبات متعدد الاتجاهات", NameEn = "Multi-Directional Traction", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 22, NameAr = "راحة أثناء اللعب", NameEn = "On-Course Comfort", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 23, NameAr = "ثبات منتصف القدم", NameEn = "Midfoot Stability", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 24, NameAr = "ثبات في جميع الظروف", NameEn = "All-Condition Traction", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 25, NameAr = "تصميم يسهل الانزلاق", NameEn = "Easy Slip-On Design", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 26, NameAr = "تصميم مستقر ومستدام", NameEn = "Stabilizing, Sustainable Design", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 27, NameAr = "دعم إضافي", NameEn = "Extra Support", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 28, NameAr = "تصميم حديث", NameEn = "Modern Design", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 29, NameAr = "المواد الطبيعية", NameEn = "Natural Material", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 30, NameAr = "النعل الداخلي المدمج", NameEn = "Integrated Insole", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 31, NameAr = "صوف ZQRX المتجدد", NameEn = "ZQRX Regenerative Wool", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 32, NameAr = "تصميم خالد", NameEn = "Timeless Design", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 33, NameAr = "المواد", NameEn = "Materials", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 34, NameAr = "خليط المواد", NameEn = "Material Blend", CreatedBy = 1, Created = DateTime.Now },
+                new Specification { Id = 35, NameAr = "الوصف", NameEn = "Description", CreatedBy = 1, Created = DateTime.Now }
             );
         }
         //public int SaveChanges(bool acceptAllChangesOnSuccess, int userId)

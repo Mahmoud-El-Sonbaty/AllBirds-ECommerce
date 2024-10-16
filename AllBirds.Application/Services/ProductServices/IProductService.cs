@@ -13,7 +13,7 @@ namespace AllBirds.Application.Services.ProductServices
         public Task<CUProductDTO> UpdateAsync(CUProductDTO cUProductDTO);
         public Task<CUProductDTO> SoftDeleteAsync(int productId);
         public Task<CUProductDTO> HardDeleteAsync(int productId);
-        public Task<GetAllProductDTO> GetAllAsync();
+        public Task<List<GetAllProductDTO>> GetAllAsync();
         public Task<CUProductDTO> GetByIdAsync(int productId);
     }
 }

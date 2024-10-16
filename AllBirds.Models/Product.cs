@@ -10,20 +10,49 @@ namespace AllBirds.Models
 {
     public class Product : BaseEntity<int>
     {
-        [MaxLength(64)]
+        [MaxLength(100)]
+        public string ProductNo { get; set; }
+        [MaxLength(150)]
         public string NameAr { get; set; }
 
-        [MaxLength(64)]
+        [MaxLength(150)]
         public string NameEn { get; set; }
 
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
 
-        [MaxLength(25)]
-        public string? DescriptionAr { get; set; }
+        [MaxLength(500)]
+        public string? HighlightsAr { get; set; }
+        
+        [MaxLength(500)]
+        public string? HighlightsEn { get; set; }
 
-        [MaxLength(255)]
-        public string? DescriptionEn { get; set; }
+        [MaxLength(500)]
+        public string? SustainabilityAr { get; set; }
+        
+        [MaxLength(500)]
+        public string? SustainabilityEn { get; set; }
+
+        [MaxLength(1000)]
+        public string? SustainabilityMaterialsAr { get; set; }
+
+        [MaxLength(1000)]
+        public string? SustainabilityMaterialsEn { get; set; }
+
+
+        [MaxLength(600)]
+        public string? ShippingAndReturnAr { get; set; }
+
+        [MaxLength(600)]
+        public string? ShippingAndReturnsEn { get; set; }
+
+        [MaxLength(1000)]
+        public string? CareGuide { get; set; }
+        //[MaxLength(255)]
+        //public string? DescriptionAr { get; set; }
+
+        //[MaxLength(255)]
+        //public string? DescriptionEn { get; set; }
 
         public int Discount { get; set; }
 
@@ -34,8 +63,8 @@ namespace AllBirds.Models
         public virtual ICollection<CategoryProduct>? Categories { get; set; }
         [InverseProperty("Product")]
         public virtual ICollection<ProductColor>? AvailableColors { get; set; }
-        public virtual ICollection<ProductSize>? AvailableSizes { get; set; }
         public virtual ICollection<ProductReview>? Reviews { get; set; }
         public virtual ICollection<ClientFavorite>? ClientsFavoriteIt { get; set; }
+        public virtual ICollection<ProductSpecification>? Specifications { get; set; }
     }
 }

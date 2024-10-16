@@ -15,10 +15,10 @@ namespace AllBirds.Models
         public virtual CustomUser? Client { get; set; }
         public float Rating { get; set; }
 
-        [MaxLength(64)]
-        public string? RatingHead { get; set; }
+        [MaxLength(100)]
+        public string? Title { get; set; }
 
-        [MaxLength(128)]
+        [MaxLength(500)]
         public string? Review { get; set; }
     }
 }

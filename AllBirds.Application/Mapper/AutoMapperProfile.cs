@@ -2,6 +2,7 @@ using AllBirds.DTOs.AccountDTOs;
 using AllBirds.DTOs.ColorDTOs;
 using AllBirds.DTOs.CouponDTOs;
 using AllBirds.DTOs.OrderStateDTOs;
+using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.SizeDTOs;
 using AllBirds.Models;
 using AutoMapper;
@@ -63,6 +64,7 @@ namespace AllBirds.Application.Mapper
             #endregion
 
             #region Product
+            CreateMap<GetAllProductDTO, Product>().ReverseMap();
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
