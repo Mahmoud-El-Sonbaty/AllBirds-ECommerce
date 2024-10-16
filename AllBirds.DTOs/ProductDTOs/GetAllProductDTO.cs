@@ -12,5 +12,7 @@ namespace AllBirds.DTOs.ProductDTOs
         public string NameAr { get; set; }
         public string NameEn { get; set; }
         public decimal Price { get; set; }
+        public int Discount { get; set; }
+        public bool FreeShipping { get; set; }
     }
 }

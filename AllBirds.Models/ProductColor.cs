@@ -14,11 +14,11 @@ namespace AllBirds.Models
         public virtual Product? Product { get; set; }
         public int ColorId { get; set; }
         public virtual Color? Color { get; set; }
-        public int UnitsInStock { get; set; }
         //[ForeignKey(nameof(ProductColorImage))]
         public int MainImageId { get; set; }
         //public virtual ProductColorImage MainImage { get; set; }
         [InverseProperty("ProductColor")]
         public virtual ICollection<ProductColorImage>? Images { get; set; }
+        public virtual ICollection<ProductColorSize>? AvailableSizes { get; set; }
     }
 }

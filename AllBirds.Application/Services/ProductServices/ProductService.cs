@@ -1,4 +1,7 @@
-﻿using AllBirds.DTOs.ProductDTOs;
+﻿using AllBirds.Application.Contracts;
+using AllBirds.DTOs.ProductDTOs;
+using AllBirds.Models;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,32 +12,43 @@ namespace AllBirds.Application.Services.ProductServices
 {
     public class ProductService : IProductService
     {
-        public Task<CUProductDTO> CreateAsync(CUProductDTO cUProductDTO)
+        private readonly IProductRepository productrepoistory;
+
+        public IMapper mapper { get; }
+
+        public ProductService(IProductRepository _productRepository, IMapper _mapper)
+        {
+            productrepoistory = _productRepository;
+            mapper = _mapper;
+        }
+        public async Task<CUProductDTO> CreateAsync(CUProductDTO cUProductDTO)
         {
             throw new NotImplementedException();
         }
 
-        public Task<GetAllProductDTO> GetAllAsync()
+        public async Task<List<GetAllProductDTO>> GetAllAsync()
+        {
+            List<Product> productsList = [.. (await productrepoistory.GetAllAsync())];
+            List<GetAllProductDTO> result = mapper.Map<List<GetAllProductDTO>>(productsList);
+            return result;
+        }
+
+        public async Task<CUProductDTO> GetByIdAsync(int productId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CUProductDTO> GetByIdAsync(int productId)
+        public async Task<CUProductDTO> HardDeleteAsync(int productId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CUProductDTO> HardDeleteAsync(int productId)
+        public async Task<CUProductDTO> SoftDeleteAsync(int productId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CUProductDTO> SoftDeleteAsync(int productId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<CUProductDTO> UpdateAsync(CUProductDTO cUProductDTO)
+        public async Task<CUProductDTO> UpdateAsync(CUProductDTO cUProductDTO)
         {
             throw new NotImplementedException();
         }

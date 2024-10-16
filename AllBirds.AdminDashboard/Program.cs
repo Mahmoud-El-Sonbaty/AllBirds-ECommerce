@@ -1,7 +1,13 @@
 using AllBirds.Application.Contracts;
 using AllBirds.Application.Mapper;
 using AllBirds.Application.Services.AccountServices;
+using AllBirds.Application.Services.ColorServices;
+using AllBirds.Application.Services.CouponServices;
+using AllBirds.Application.Services.OrderStateServices;
+using AllBirds.Application.Services.ProductServices;
+using AllBirds.Application.Services.SizeServices;
 using AllBirds.Context;
+using AllBirds.Infrastructure;
 using AllBirds.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +26,20 @@ namespace AllBirds.AdminDashboard
                 options.UseSqlServer(connectionString));
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IColorService, ColorService>();
+            builder.Services.AddScoped<IColorRepository, ColorRepository>();
+            builder.Services.AddScoped<ISizeService, SizeService>();
+            builder.Services.AddScoped<ISizeRepository, SizeRepository>();
+            builder.Services.AddScoped<ICouponService, CouponService>();
+            builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+            builder.Services.AddScoped<IOrderStateService, OrderStateService>();
+            builder.Services.AddScoped<IOrderStateRepository, OrderStateRepository>();
+            //builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
+            //builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
+            //builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
+            //builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             //builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<CustomUser>(options =>
