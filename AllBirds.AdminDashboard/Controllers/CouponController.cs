@@ -15,7 +15,7 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var coupons = await _couponService.GetAllCouponsAsync();
+            var coupons = await _couponService.GetAllAsync();
             return View(coupons);
         }
 
@@ -25,11 +25,11 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CouponDTO couponDto)
+        public async Task<IActionResult> Create(CUCouponDTO couponDto)
         {
             if (ModelState.IsValid)
             {
-                await _couponService.AddCouponAsync(couponDto);
+                await _couponService.CreateAsync(couponDto);
                 return RedirectToAction(nameof(Index));
             }
             return View(couponDto);
@@ -37,7 +37,7 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var coupon = await _couponService.GetCouponByIdAsync(id);
+            var coupon = await _couponService.GetByIdAsync(id);
             if (coupon == null)
             {
                 return NotFound();
@@ -46,11 +46,11 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(CouponDTO couponDto)
+        public async Task<IActionResult> Edit(CUCouponDTO couponDto)
         {
             if (ModelState.IsValid)
             {
-                await _couponService.UpdateCouponAsync(couponDto);
+                await _couponService.UpdateAsync(couponDto);
                 return RedirectToAction(nameof(Index));
             }
             return View(couponDto);
@@ -58,7 +58,7 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var coupon = await _couponService.GetCouponByIdAsync(id);
+            var coupon = await _couponService.GetByIdAsync(id);
             if (coupon == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _couponService.DeleteCouponAsync(id);
+            await _couponService.SoftDeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

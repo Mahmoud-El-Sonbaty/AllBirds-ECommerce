@@ -15,7 +15,7 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var colors = await _colorService.GetAllColorsAsync();
+            var colors = await _colorService.GetAllAsync();
             return View(colors);
         }
 
@@ -25,11 +25,11 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ColorDTO colorDto)
+        public async Task<IActionResult> Create(CUColorDTO colorDto)
         {
             if (ModelState.IsValid)
             {
-                await _colorService.AddColorAsync(colorDto);
+                await _colorService.CreateAsync(colorDto);
                 return RedirectToAction(nameof(Index));
             }
             return View(colorDto);
@@ -37,7 +37,7 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var color = await _colorService.GetColorByIdAsync(id);
+            var color = await _colorService.GetByIdAsync(id);
             if (color == null)
             {
                 return NotFound();
@@ -46,11 +46,11 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(ColorDTO colorDto)
+        public async Task<IActionResult> Edit(CUColorDTO colorDto)
         {
             if (ModelState.IsValid)
             {
-                await _colorService.UpdateColorAsync(colorDto);
+                await _colorService.UpdateAsync(colorDto);
                 return RedirectToAction(nameof(Index));
             }
             return View(colorDto);
@@ -58,7 +58,7 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var color = await _colorService.GetColorByIdAsync(id);
+            var color = await _colorService.GetByIdAsync(id);
             if (color == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _colorService.DeleteColorAsync(id);
+            await _colorService.SoftDeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }
