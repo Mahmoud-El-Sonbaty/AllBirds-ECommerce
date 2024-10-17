@@ -24,6 +24,7 @@ namespace AllBirds.Application.Services.ProductServices
         public async Task<CUProductDTO> CreateAsync(CUProductDTO cUProductDTO)
         {
             Product mappedProduct = mapper.Map<Product>(cUProductDTO);
+            Console.WriteLine(mappedProduct.HighlightsAr[15]);
             Product createdProduct = await productrepoistory.CreateAsync(mappedProduct);
             if (createdProduct != null)
             {
