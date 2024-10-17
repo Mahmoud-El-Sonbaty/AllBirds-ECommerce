@@ -39,7 +39,6 @@ namespace AllBirds.Models
         [MaxLength(1000)]
         public string? SustainabilityMaterialsEn { get; set; }
 
-
         [MaxLength(600)]
         public string? ShippingAndReturnAr { get; set; }
 
@@ -47,7 +46,10 @@ namespace AllBirds.Models
         public string? ShippingAndReturnsEn { get; set; }
 
         [MaxLength(1000)]
-        public string? CareGuide { get; set; }
+        public string? CareGuideAr { get; set; }
+
+        [MaxLength(1000)]
+        public string? CareGuideEn { get; set; }
         //[MaxLength(255)]
         //public string? DescriptionAr { get; set; }
 

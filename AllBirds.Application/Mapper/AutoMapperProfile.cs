@@ -65,6 +65,38 @@ namespace AllBirds.Application.Mapper
 
             #region Product
             CreateMap<GetAllProductDTO, Product>().ReverseMap();
+            CreateMap<CUProductDTO, Product>()
+                .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => src.HighlightsAr != null && src.HighlightsAr.Count > 1
+                ? String.Join("~~@#$%&", src.HighlightsAr)
+                : null));
+            CreateMap<Product, CUProductDTO>()
+                .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => src.HighlightsAr != null
+                ? src.HighlightsAr.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
+                : null));
+            CreateMap<CUProductDTO, Product>()
+                .ForMember(dest => dest.HighlightsEn, opt => opt.MapFrom(src => src.HighlightsEn != null && src.HighlightsEn.Count > 1
+                ? String.Join("~@#$%&", src.HighlightsEn)
+                : null));
+            CreateMap<Product, CUProductDTO>()
+                .ForMember(dest => dest.HighlightsEn, opt => opt.MapFrom(src => src.HighlightsEn != null
+                ? src.HighlightsEn.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
+                : null));
+            CreateMap<CUProductDTO, Product>()
+                .ForMember(dest => dest.SustainabilityMaterialsAr, opt => opt.MapFrom(src => src.SustainabilityMaterialsAr != null && src.SustainabilityMaterialsAr.Count > 1
+                ? String.Join("~@#$%&", src.SustainabilityMaterialsAr)
+                : null));
+            CreateMap<Product, CUProductDTO>()
+                .ForMember(dest => dest.SustainabilityMaterialsAr, opt => opt.MapFrom(src => src.SustainabilityMaterialsAr != null
+                ? src.SustainabilityMaterialsAr.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
+                : null));
+            CreateMap<CUProductDTO, Product>()
+                .ForMember(dest => dest.SustainabilityMaterialsEn, opt => opt.MapFrom(src => src.SustainabilityMaterialsEn != null && src.SustainabilityMaterialsEn.Count > 1
+                ? String.Join("~@#$%&", src.SustainabilityMaterialsEn)
+                : null));
+            CreateMap<Product, CUProductDTO>()
+                .ForMember(dest => dest.SustainabilityMaterialsEn, opt => opt.MapFrom(src => src.SustainabilityMaterialsEn != null
+                ? src.SustainabilityMaterialsEn.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
+                : null));
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion

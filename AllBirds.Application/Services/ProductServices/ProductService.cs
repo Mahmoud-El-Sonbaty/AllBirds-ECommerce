@@ -13,7 +13,7 @@ namespace AllBirds.Application.Services.ProductServices
     public class ProductService : IProductService
     {
         private readonly IProductRepository productrepoistory;
-
+        //private readonly ICategoryProductService categoryProductService;
         public IMapper mapper { get; }
 
         public ProductService(IProductRepository _productRepository, IMapper _mapper)
@@ -23,7 +23,15 @@ namespace AllBirds.Application.Services.ProductServices
         }
         public async Task<CUProductDTO> CreateAsync(CUProductDTO cUProductDTO)
         {
-            throw new NotImplementedException();
+            Product mappedProduct = mapper.Map<Product>(cUProductDTO);
+            Product createdProduct = await productrepoistory.CreateAsync(mappedProduct);
+            if (createdProduct != null)
+            {
+                //await productrepoistory.SaveChangesAsync();
+                CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(createdProduct);
+                return mappedCUProductDTO;
+            }
+            return null;
         }
 
         public async Task<List<GetAllProductDTO>> GetAllAsync()
