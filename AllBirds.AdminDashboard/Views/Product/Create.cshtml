@@ -1,11 +1,11 @@
 ﻿@model AllBirds.DTOs.ProductDTOs.CUProductDTO
 @{
     ViewData["Title"] = "CreateProduct";
-    // SelectList selectListItems 
+    SelectList categoriesList = new(ViewBag.Categories, "Id", "NameEn", Model?.CategoriesId);
 }
 <!-- Plugin css for this page -->
-<link rel="stylesheet" href="../../assets/vendors/select2/select2.min.css">
-<link rel="stylesheet" href="../../assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+<link rel="stylesheet" href="~/assets/vendors/select2/select2.min.css">
+<link rel="stylesheet" href="~/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
 <!-- End plugin css for this page -->
 @section Navbar {
 
@@ -38,13 +38,6 @@
                                 </div>
                             </div>
                         </div>
-                        @* <div class="form-group">
-                            
-                                
-                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                                
-                            
-                        </div> *@
                         <div class="col-md-6">
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label" asp-for="Price"></label>
@@ -97,13 +90,8 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Categories</label>
                                 <div class="col-sm-9">
-                                    <select class="js-example-basic-multiple" multiple style="width: 100%" asp-for="CategoriesId">
-                                        @{
-                                            for (int i = 0; i < 5; i++)
-                                            {
-                                                <option value="@i">Option number @i</option>
-                                            }
-                                        }
+                                    <select class="js-example-basic-multiple" multiple style="width: 100%" asp-for="CategoriesId" asp-items="categoriesList">
+                                        
                                     </select>
                                     @* <span class="text-danger" asp-validation-for="CategoriesId"></span> *@
                                 </div>
@@ -207,7 +195,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="../../assets/vendors/select2/select2.min.js"></script>
-    <script src="../../assets/js/file-upload.js"></script>
-    <script src="../../assets/js/select2.js"></script>
+    <script src="~/assets/vendors/select2/select2.min.js"></script>
+    <script src="~/assets/js/file-upload.js"></script>
+    <script src="~/assets/js/select2.js"></script>
 } 

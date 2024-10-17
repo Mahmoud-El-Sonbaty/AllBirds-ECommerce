@@ -31,10 +31,10 @@ namespace AllBirds.DTOs.ProductDTOs
         public string? SustainabilityEn { get; set; }
 
         [StringLength(1000, MinimumLength = 10)]
-        public List<string>? SustainabilityMaterialsAr { get; set; }
+        public List<string>? SustainableMaterialsAr { get; set; }
 
         [StringLength(1000, MinimumLength = 10)]
-        public List<string>? SustainabilityMaterialsEn { get; set; }
+        public List<string>? SustainableMaterialsEn { get; set; }
 
         [StringLength(600, MinimumLength = 10)]
         public string? ShippingAndReturnsAr { get; set; }

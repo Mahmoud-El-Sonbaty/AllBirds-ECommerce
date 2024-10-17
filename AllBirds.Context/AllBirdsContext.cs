@@ -42,9 +42,11 @@ namespace AllBirds.Context
             // Seed OrderStates
             modelBuilder.Entity<OrderState>().HasData(
                 new OrderState { Id = 1, StateAr = "في العربة", StateEn = "In Cart", CreatedBy = 1, Created = DateTime.Now },
-                new OrderState { Id = 2, StateAr = "جاري التجهيز", StateEn = "Processing", CreatedBy = 1, Created = DateTime.Now },
-                new OrderState { Id = 3, StateAr = "خرج للتوصيل", StateEn = "Out For Delivery", CreatedBy = 1, Created = DateTime.Now },
-                new OrderState { Id = 4, StateAr = "تم التوصيل", StateEn = "Deliverd", CreatedBy = 1, Created = DateTime.Now }
+                new OrderState { Id = 2, StateAr = "قيد الإنتظار", StateEn = "Pending", CreatedBy = 1, Created = DateTime.Now },
+                new OrderState { Id = 3, StateAr = "تمت الموافقة", StateEn = "Approved", CreatedBy = 1, Created = DateTime.Now },
+                new OrderState { Id = 4, StateAr = "تم الإلغاء", StateEn = "Cancelled", CreatedBy = 1, Created = DateTime.Now }
+                //new OrderState { Id = 4, StateAr = "خرج للتوصيل", StateEn = "Out For Delivery", CreatedBy = 1, Created = DateTime.Now },
+                //new OrderState { Id = 5, StateAr = "تم التوصيل", StateEn = "Deliverd", CreatedBy = 1, Created = DateTime.Now }
             );
             // Seed Sizes
             modelBuilder.Entity<Size>().HasData(                

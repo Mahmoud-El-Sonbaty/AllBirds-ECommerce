@@ -14,7 +14,7 @@ namespace AllBirds.Application.Services.ProductServices
     {
         private readonly IProductRepository productrepoistory;
         //private readonly ICategoryProductService categoryProductService;
-        public IMapper mapper { get; }
+        public IMapper mapper;
 
         public ProductService(IProductRepository _productRepository, IMapper _mapper)
         {
@@ -23,15 +23,21 @@ namespace AllBirds.Application.Services.ProductServices
         }
         public async Task<CUProductDTO> CreateAsync(CUProductDTO cUProductDTO)
         {
+            bool productExist = (await productrepoistory.GetAllAsync()).Any(p => p.Id == cUProductDTO.Id && p.ProductNo == cUProductDTO.ProductNo);
+            if (productExist)
+            {
+                // product already exist
+                return null;
+            }
             Product mappedProduct = mapper.Map<Product>(cUProductDTO);
-            Console.WriteLine(mappedProduct.HighlightsAr[15]);
             Product createdProduct = await productrepoistory.CreateAsync(mappedProduct);
             if (createdProduct != null)
             {
-                //await productrepoistory.SaveChangesAsync();
+                await productrepoistory.SaveChangesAsync();
                 CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(createdProduct);
                 return mappedCUProductDTO;
             }
+            // product not created successfully
             return null;
         }
 
@@ -44,17 +50,55 @@ namespace AllBirds.Application.Services.ProductServices
 
         public async Task<CUProductDTO> GetByIdAsync(int productId)
         {
-            throw new NotImplementedException();
+            var getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
+            if (getProduct != null)
+            {
+                CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
+                return mappedCUProductDTO;
+            }
+            // product not found
+            return null;
         }
 
         public async Task<CUProductDTO> HardDeleteAsync(int productId)
         {
-            throw new NotImplementedException();
+            bool productExist = (await productrepoistory.GetAllAsync()).Any(p => p.Id == productId);
+            if (productExist)
+            {
+                // product not found
+                return null;
+            }
+            Product? getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId);
+            if (getProduct != null)
+            {
+                await productrepoistory.DeleteAsync(getProduct);
+                await productrepoistory.SaveChangesAsync();
+                CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
+                return mappedCUProductDTO;
+            }
+            // product not found
+            return null;
         }
 
         public async Task<CUProductDTO> SoftDeleteAsync(int productId)
         {
-            throw new NotImplementedException();
+            bool productExist = (await productrepoistory.GetAllAsync()).Any(p => p.Id == productId);
+            if (!productExist)
+            {
+                // product not found
+                return null;
+            }
+            Product? getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
+            if (getProduct != null)
+            {
+                getProduct.IsDeleted = true;
+                await productrepoistory.DeleteAsync(getProduct);
+                await productrepoistory.SaveChangesAsync();
+                CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
+                return mappedCUProductDTO;
+            }
+            // product soft deleted before
+            return null;
         }
 
         public async Task<CUProductDTO> UpdateAsync(CUProductDTO cUProductDTO)
