@@ -1,4 +1,6 @@
-﻿@* @model List<Allbirds.DTOs.ProductDTOs.GetAllProductDTO> *@
+﻿@using AllBirds.DTOs.ProductDTOs
+@model List<GetAllProductDTO>
+
 @{
     ViewData["Title"] = "Products";
 }
@@ -67,14 +69,14 @@
                                 @* <td> $14,500 </td> *@
                                 <td> @{String.Format("P", 20);} </td>
                                 @{
-                                    if(Model?.FreeShipping ?? false)
-                                    {
-                                        <td> <label class="badge badge-success">Eligible</label> </td>
-                                    }
-                                    else
-                                    {
-                                        <td> <div class="badge badge-danger">Not Eligible</div> </td>
-                                    }
+                                    // if(Model?. ?? false)
+                                    // {
+                                    //     <td> <label class="badge badge-success">Eligible</label> </td>
+                                    // }
+                                    // else
+                                    // {
+                                    //     <td> <div class="badge badge-danger">Not Eligible</div> </td>
+                                    // }
                                 }
                                 <td>
                                     <label class="badge badge-outline-success">Approved</label>
@@ -244,7 +246,7 @@
                                         Delete <i class="fas fa-trash-alt"></i>
                                     </button> *@
                                     <button type="button" class="btn btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                    <button type="button" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                                    <button type="button" asp-controller="Product" asp-route-id="4" asp-action="Update" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
                                     <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
                                 </td>
                             </tr>

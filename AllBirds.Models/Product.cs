@@ -62,6 +62,7 @@ namespace AllBirds.Models
         public int MainColorId { get; set; }
         //public virtual ProductColor MainColor { get; set; }
 
+        
         public virtual ICollection<CategoryProduct>? Categories { get; set; }
         [InverseProperty("Product")]
         public virtual ICollection<ProductColor>? AvailableColors { get; set; }

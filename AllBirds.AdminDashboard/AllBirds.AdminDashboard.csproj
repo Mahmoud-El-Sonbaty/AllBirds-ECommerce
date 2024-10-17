@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AllBirds.Application\AllBirds.Application.csproj" />
     <ProjectReference Include="..\AllBirds.Context\AllBirds.Context.csproj" />
+    <ProjectReference Include="..\AllBirds.DTOs\AllBirds.DTOs.csproj" />
     <ProjectReference Include="..\AllBirds.Infrastructure\AllBirds.Infrastructure.csproj" />
   </ItemGroup>
 

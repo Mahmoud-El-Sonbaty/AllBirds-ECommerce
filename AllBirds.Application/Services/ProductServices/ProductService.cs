@@ -44,7 +44,9 @@ namespace AllBirds.Application.Services.ProductServices
 
         public async Task<CUProductDTO> GetByIdAsync(int productId)
         {
-            throw new NotImplementedException();
+           var prdGet = (await productrepoistory.GetAllAsync()).FirstOrDefault(P => P.Id == productId && !P.IsDeleted);
+
+            return mapper.Map<CUProductDTO>(prdGet);
         }
 
         public async Task<CUProductDTO> HardDeleteAsync(int productId)
@@ -59,7 +61,18 @@ namespace AllBirds.Application.Services.ProductServices
 
         public async Task<CUProductDTO> UpdateAsync(CUProductDTO cUProductDTO)
         {
-            throw new NotImplementedException();
+            bool CheckInDB = (await productrepoistory.GetAllAsync()).Any(P => P.Id == cUProductDTO.Id && !P.IsDeleted);
+            if(CheckInDB)
+            {
+                Product prdUpdat = mapper.Map<Product>(cUProductDTO);
+                Product prdUpdated = await productrepoistory.UpdateAsync(prdUpdat);
+                await productrepoistory.SaveChangesAsync();
+                return mapper.Map<CUProductDTO>(prdUpdated);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
