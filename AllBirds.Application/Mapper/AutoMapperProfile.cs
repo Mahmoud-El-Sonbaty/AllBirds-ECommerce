@@ -66,9 +66,9 @@ namespace AllBirds.Application.Mapper
             #region Product
             CreateMap<GetAllProductDTO, Product>().ReverseMap();
             CreateMap<CUProductDTO, Product>()
-                .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => src.HighlightsAr != null && src.HighlightsAr.Count > 1
-                ? String.Join("~~@#$%&", src.HighlightsAr)
-                : null));
+                .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => src.HighlightsAr == null
+                ? null
+                : src.HighlightsAr));
             CreateMap<Product, CUProductDTO>()
                 .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => src.HighlightsAr != null
                 ? src.HighlightsAr.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
