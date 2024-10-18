@@ -8,12 +8,16 @@ namespace AllBirds.Application.Contracts
 {
     public interface IGenericRepository<TEntity, TId>
     {
+        ////Hossam add this line
+        public ValueTask<TEntity> GetOneAsync(TId id);
+     
         public Task<TEntity> CreateAsync(TEntity Entity);
         public Task<TEntity> UpdateAsync(TEntity Entity);
 
         public Task<TEntity> DeleteAsync(TEntity Entity);
         public Task<IQueryable<TEntity>> GetAllAsync();
         //public Task<TEntity> GetOneAsync(TId id);
+        ///
         public Task<int> SaveChangesAsync();
     }
 }

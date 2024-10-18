@@ -6,7 +6,11 @@ using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.SizeDTOs;
 using AllBirds.Models;
 using AutoMapper;
-
+using AllBirds.DTOs.CategoryDTOs;
+using AllBirds.Models;
+using AllBirds.DTOs.CategorySizeDTOS;
+using AllBirds.DTOs.CategorySizeDTOS;
+using AllBirds.DTOs.CategoryProductDTOS;
 namespace AllBirds.Application.Mapper
 {
     public class AutoMapperProfile : Profile
@@ -19,11 +23,17 @@ namespace AllBirds.Application.Mapper
             #endregion
 
             #region Category
+            CreateMap<CreateOrUpdateCategoryDTO, Category>().ReverseMap();
+            CreateMap<GetAllCategoryDTO, Category>().ReverseMap();
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
 
             #region CategoryProduct
+            //CreateMap<CreateOrUpdateBookAuthorDTO, BookAuthor>().ReverseMap();
+            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
             #endregion
@@ -31,6 +41,9 @@ namespace AllBirds.Application.Mapper
             #region CategorySize
             //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
+            CreateMap<CreateOrUpdateCategorySizeDTO, CategorySize>().ReverseMap();
+            CreateMap<GetAllCategorySizeDTO, CategorySize>().ReverseMap();
+            CreateMap<GetOneCategorySizeDTO, CategorySize>().ReverseMap();
             #endregion
 
             #region ClientFavorite
