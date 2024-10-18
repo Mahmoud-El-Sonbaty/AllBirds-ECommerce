@@ -21,7 +21,7 @@ namespace AllBirds.Application.Mapper
             #endregion
 
             #region Category
-            CreateMap<CreateOrUpdateCategoryDTO, Category>().ReverseMap();
+            CreateMap<CUCategoryDTO, Category>().ReverseMap();
             CreateMap<GetAllCategoryDTO, Category>().ReverseMap();
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AllBirds.DTOs.CategoryDTOs  
 {
    
-    public class CreateOrUpdateCategoryDTO
+    public class CUCategoryDTO
     {
         public int Id { get; set; }
         

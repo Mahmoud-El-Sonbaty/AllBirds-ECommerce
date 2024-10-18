@@ -17,9 +17,9 @@ namespace AllBirds.Application.Services.CategoryServices
             mapper = _mapper;
         }
 
-        public async Task<ResultView<CreateOrUpdateCategoryDTO>> CreateAsync(CreateOrUpdateCategoryDTO entity)
+        public async Task<ResultView<CUCategoryDTO>> CreateAsync(CUCategoryDTO entity)
         {
-            ResultView<CreateOrUpdateCategoryDTO> resultView = new();
+            ResultView<CUCategoryDTO> resultView = new();
             try
             {
                 bool Exist = (await categoryRepository.GetAllAsync()).Any(c => (c.NameEn == entity.NameEn) || (c.NameAr == entity.NameAr));
@@ -33,7 +33,7 @@ namespace AllBirds.Application.Services.CategoryServices
                 {
                     Category category = mapper.Map<Category>(entity);
                     Category successCategory = await categoryRepository.CreateAsync(category);
-                    CreateOrUpdateCategoryDTO successCategoryDTO = mapper.Map<CreateOrUpdateCategoryDTO>(successCategory);
+                    CUCategoryDTO successCategoryDTO = mapper.Map<CUCategoryDTO>(successCategory);
                     await categoryRepository.SaveChangesAsync();
                     resultView.IsSuccess = true;
                     resultView.Data = successCategoryDTO;
@@ -50,9 +50,9 @@ namespace AllBirds.Application.Services.CategoryServices
             return resultView;
         }
 
-        public async Task<ResultView<CreateOrUpdateCategoryDTO>> UpdateAsync(CreateOrUpdateCategoryDTO entity)
+        public async Task<ResultView<CUCategoryDTO>> UpdateAsync(CUCategoryDTO entity)
         {
-            ResultView<CreateOrUpdateCategoryDTO> resultView = new();
+            ResultView<CUCategoryDTO> resultView = new();
             try
             {
                 bool exist = (await categoryRepository.GetAllAsync()).Any(c => c.Id == entity.Id);
@@ -65,7 +65,7 @@ namespace AllBirds.Application.Services.CategoryServices
                 }
                 Category category = mapper.Map<Category>(entity);
                 Category successCategory = await categoryRepository.UpdateAsync(category);
-                CreateOrUpdateCategoryDTO successCategoryDTO = mapper.Map<CreateOrUpdateCategoryDTO>(successCategory);
+                CUCategoryDTO successCategoryDTO = mapper.Map<CUCategoryDTO>(successCategory);
                 await categoryRepository.SaveChangesAsync();
                 resultView.IsSuccess = true;
                 resultView.Data = successCategoryDTO;
