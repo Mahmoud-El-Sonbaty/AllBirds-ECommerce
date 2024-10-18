@@ -44,7 +44,7 @@ namespace AllBirds.Application.Services.ProductServices
 
         public async Task<List<GetAllProductDTO>> GetAllAsync()
         {
-            List<Product> productsList = [.. (await productrepoistory.GetAllAsync())];
+            List<Product> productsList = [.. (await productrepoistory.GetAllAsync()).Where(p => !p.IsDeleted)];
             List<GetAllProductDTO> result = mapper.Map<List<GetAllProductDTO>>(productsList);
             return result;
         }
@@ -52,7 +52,7 @@ namespace AllBirds.Application.Services.ProductServices
         public async Task<CUProductDTO> GetByIdAsync(int productId)
         {
 
-            Product? getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
+            Product? getProduct = (await productrepoistory.GetAllAsync()).Include(p => p.Categories).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
             if (getProduct is not null)
             {
                 CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
@@ -95,7 +95,7 @@ namespace AllBirds.Application.Services.ProductServices
             if (getProduct != null)
             {
                 getProduct.IsDeleted = true;
-                await productrepoistory.DeleteAsync(getProduct);
+                //await productrepoistory.DeleteAsync(getProduct);
                 await productrepoistory.SaveChangesAsync();
                 CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
                 return mappedCUProductDTO;

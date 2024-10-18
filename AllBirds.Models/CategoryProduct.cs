@@ -14,8 +14,3 @@ namespace AllBirds.Models
         public virtual Product? Product { get; set; }
     }
 }
-
-
-
-
-

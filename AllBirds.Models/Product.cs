@@ -40,7 +40,7 @@ namespace AllBirds.Models
         public string? SustainableMaterialsEn { get; set; }
 
         [MaxLength(600)]
-        public string? ShippingAndReturnAr { get; set; }
+        public string? ShippingAndReturnsAr { get; set; }
 
         [MaxLength(600)]
         public string? ShippingAndReturnsEn { get; set; }

@@ -4,11 +4,11 @@
     {
         public TId Id { get; set; }
         public DateTime? Created { get; set; }
-        public TId? CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
         public DateTime? Updated { get; set; }
-        public TId? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public DateTime? Deleted { get; set; }
-        public TId? DeletedBy { get; set; }
+        public int? DeletedBy { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

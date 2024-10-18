@@ -1,6 +1,8 @@
 using AllBirds.Application.Contracts;
 using AllBirds.Application.Mapper;
 using AllBirds.Application.Services.AccountServices;
+using AllBirds.Application.Services.CategoryProductServices;
+using AllBirds.Application.Services.CategoryServices;
 using AllBirds.Application.Services.ColorServices;
 using AllBirds.Application.Services.CouponServices;
 using AllBirds.Application.Services.OrderStateServices;
@@ -36,11 +38,14 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddScoped<ICouponRepository, CouponRepository>();
             builder.Services.AddScoped<IOrderStateService, OrderStateService>();
             builder.Services.AddScoped<IOrderStateRepository, OrderStateRepository>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryProductService, CategoryProductService>();
+            builder.Services.AddScoped<ICategoryProductRepository, CategoryProductRepository>();
             //builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
             //builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
             //builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
             //builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
-            //builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<CustomUser>(options =>
             {
