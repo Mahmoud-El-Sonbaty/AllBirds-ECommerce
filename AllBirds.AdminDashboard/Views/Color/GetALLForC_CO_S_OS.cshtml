@@ -1,0 +1,130 @@
+﻿@using AllBirds.DTOs.ColorDTOs
+
+@model GetAll
+
+
+<div class="row">
+    @* ================================= *@
+
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Color Table</h4>
+                <p class="card-description">
+                    Add class <code>.table</code>
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var i in Model.cUColorDTOs)
+                            {
+                                <tr>
+                                    <td>@i.Code</td>
+                                    <td>@i.Name</td>
+                                  </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ================================= *@
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Size Table</h4>
+                <p class="card-description">
+                    Add class <code>.table</code>
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>SizeNumber</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var i in Model.cUSizeDTOs)
+                            {
+                                <tr>
+                                    <td>@i.SizeNumber</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ================================= *@
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Coupon Table</h4>
+                <p class="card-description">
+                    Add class <code>.table</code>
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Discount</th>
+                                <th>IsActive</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var i in Model.cUCoupons)
+                            {
+                                <tr>
+                                    <td>@i.Code</td>
+                                    <td>@i.Discount</td>
+                                    <td>@i.IsActive</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ================================= *@
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">OrderState Table</h4>
+                <p class="card-description">
+                    Add class <code>.table</code>
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>StateAr</th>
+                                <th>StateEn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var i in Model.OrderStateDTOs)
+                            {
+                                <tr>
+                                    <td>@i.StateAr</td>
+                                    <td>@i.StateEn</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ================================= *@
+
+</div>
