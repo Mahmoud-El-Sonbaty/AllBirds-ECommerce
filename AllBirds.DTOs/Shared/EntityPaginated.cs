@@ -4,15 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AllBirds.DTOs._ٍShared
+namespace AllBirds.DTOs.Shared
 {
     public class EntityPaginated<T>
     {
-        public List<T> Data { get; set; }
-
+        public List<T>? Data { get; set; }
         public int Count { get; set; }
-
-
-
     }
 }

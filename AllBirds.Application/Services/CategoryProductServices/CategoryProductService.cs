@@ -1,32 +1,20 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.CategoryServices;
-using AllBirds.DTOs._ٍShared;
+using AllBirds.DTOs.Shared;
 using AllBirds.DTOs.CategoryProductDTOS;
-
-//using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.Models;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AllBirds.Application.Services.CategoryProductServices
 {
-    public class CategoryProductService
-   : ICategoryProductService
+    public class CategoryProductService : ICategoryProductService
     {
+        private readonly ICategoryProductRepository categoryProductRepository;
+        private readonly IMapper mapper;
 
-
-
-        private ICategoryProductRepository CategoryProductRepository;
-        private IMapper mapper;
-
-
-        public CategoryProductService(ICategoryProductRepository _CategoryProductRepository, IMapper _mapper)
+        public CategoryProductService(ICategoryProductRepository _categoryProductRepository, IMapper _mapper)
         {
-            CategoryProductRepository = _CategoryProductRepository;
+            categoryProductRepository = _categoryProductRepository;
             mapper = _mapper;
         }
 
@@ -35,11 +23,11 @@ namespace AllBirds.Application.Services.CategoryProductServices
             ResultView<CreateOrUpdateCategoryProductDTO> resultView = new ResultView<CreateOrUpdateCategoryProductDTO>();
             try
             {
-                bool Exist = (await CategoryProductRepository.GetAllAsync()).Any(c => (c.CategoryId == Entity.CategoryId) && (c.ProductId == Entity.ProductId));
+                bool Exist = (await categoryProductRepository.GetAllAsync()).Any(c => (c.CategoryId == Entity.CategoryId) && (c.ProductId == Entity.ProductId));
                 if (Exist)
                 {
                     resultView.IsSuccess = false;
-                    resultView.Entity = null;
+                    resultView.Data = null;
                     resultView.Msg = $"Category ({Entity.Id}) IS  Already Found";
 
                 }
@@ -51,11 +39,11 @@ namespace AllBirds.Application.Services.CategoryProductServices
                     CategoryProduct category = mapper.Map<CategoryProduct>(Entity);
 
 
-                    CategoryProduct SuccessCategory = await CategoryProductRepository.CreateAsync(category);
+                    CategoryProduct SuccessCategory = await categoryProductRepository.CreateAsync(category);
                     CreateOrUpdateCategoryProductDTO SuccessCategoryDTO = mapper.Map<CreateOrUpdateCategoryProductDTO>(SuccessCategory);
-                    CategoryProductRepository.SaveChangesAsync();
+                    categoryProductRepository.SaveChangesAsync();
                     resultView.IsSuccess = true;
-                    resultView.Entity = SuccessCategoryDTO;
+                    resultView.Data = SuccessCategoryDTO;
                     resultView.Msg = $"Category ({Entity.Id}) Created Successfully";
 
 
@@ -67,7 +55,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
             {
 
                 resultView.IsSuccess = false;
-                resultView.Entity = null;
+                resultView.Data = null;
                 resultView.Msg = $"Error Happen While Creating Category " + ex.Message;
 
             }
@@ -81,31 +69,31 @@ namespace AllBirds.Application.Services.CategoryProductServices
             ResultView<CreateOrUpdateCategoryProductDTO> resultView = new ResultView<CreateOrUpdateCategoryProductDTO>();
             try
             {
-                bool Exist = (await CategoryProductRepository.GetAllAsync()).Any(c => c.Id == Entity.Id);
+                bool Exist = (await categoryProductRepository.GetAllAsync()).Any(c => c.Id == Entity.Id);
                 if (Exist==false)
                 {
                     resultView.IsSuccess = false;
-                    resultView.Entity = null;
+                    resultView.Data = null;
                     resultView.Msg = $"Category ({Entity.Id}) IS  Notfound Found";
                     return resultView;
                 }
 
-                bool sameCategoryProductExist = (await CategoryProductRepository.GetAllAsync()).Any(ba => ba.CategoryId == Entity.CategoryId && ba.ProductId == Entity.ProductId);
+                bool sameCategoryProductExist = (await categoryProductRepository.GetAllAsync()).Any(ba => ba.CategoryId == Entity.CategoryId && ba.ProductId == Entity.ProductId);
                 if(sameCategoryProductExist)
                 {
                     resultView.IsSuccess = false;
-                    resultView.Entity = null;
+                    resultView.Data = null;
                     resultView.Msg = $"Category ({Entity.Id}) IS  Notfound Found";
                     return resultView;
                 }
 
                 CategoryProduct category = mapper.Map<CategoryProduct>(Entity);
-                CategoryProduct SuccessCategory = await CategoryProductRepository.UpdateAsync(category);
+                CategoryProduct SuccessCategory = await categoryProductRepository.UpdateAsync(category);
 
                 CreateOrUpdateCategoryProductDTO SuccessCategoryDTO = mapper.Map<CreateOrUpdateCategoryProductDTO>(SuccessCategory);
-                CategoryProductRepository.SaveChangesAsync();
+                categoryProductRepository.SaveChangesAsync();
                 resultView.IsSuccess = true;
-                resultView.Entity = SuccessCategoryDTO;
+                resultView.Data = SuccessCategoryDTO;
                 resultView.Msg = $"Category ({Entity.Id}) update Successfully";
                 return resultView;
             }
@@ -113,7 +101,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
             {
 
                 resultView.IsSuccess = false;
-                resultView.Entity = null;
+                resultView.Data = null;
                 resultView.Msg = $"Error Happen While update Category " + ex.Message;
                 return resultView;
             }
@@ -125,7 +113,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
         public async Task<List<GetAllCategoryProductDTO>> GetAllAsync()
         {
             ////import to show  IsDeleted==false only
-            var SuccessCategorys = (await CategoryProductRepository.GetAllAsync())
+            var SuccessCategorys = (await categoryProductRepository.GetAllAsync())
                 .Select(a => a.IsDeleted == false).ToList();
 
 
@@ -140,12 +128,12 @@ namespace AllBirds.Application.Services.CategoryProductServices
             ResultView<GetOneCategoryProductDTO> resultView = new ResultView<GetOneCategoryProductDTO>();
             try
             {
-                CategoryProduct category = await CategoryProductRepository.GetOneAsync(id);
-                if (category != null && category.IsDeleted == false)
+                CategoryProduct? category = (await categoryProductRepository.GetAllAsync()).FirstOrDefault(cp => cp.Id == id && !cp.IsDeleted);
+                if (category != null)
                 {
                     GetOneCategoryProductDTO SuccessCategoryDTO = mapper.Map<GetOneCategoryProductDTO>(category);
                     resultView.IsSuccess = true;
-                    resultView.Entity = SuccessCategoryDTO;
+                    resultView.Data = SuccessCategoryDTO;
                     resultView.Msg = $"category {category.Id}is found";
 
                     return resultView;
@@ -153,7 +141,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
                 else
                 {
                     resultView.IsSuccess = false;
-                    resultView.Entity = null;
+                    resultView.Data = null;
                     resultView.Msg = $"category {category.Id}is not found";
 
                     return resultView;
@@ -162,7 +150,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
             catch (Exception ex)
             {
                 resultView.IsSuccess = false;
-                resultView.Entity = null;
+                resultView.Data = null;
                 resultView.Msg = $"Error Happen While find Category " + ex.Message;
 
                 return resultView;
@@ -184,28 +172,25 @@ namespace AllBirds.Application.Services.CategoryProductServices
                 CategoryProduct category = mapper.Map<CategoryProduct>(Entity);
                 // GetOneCategoryDTO SuccessCategoryDTO = mapper.Map<GetOneCategoryDTO>(category);
 
-                CategoryProduct SuccessCategory = await CategoryProductRepository.GetOneAsync(category.Id);
-
-
-
+                CategoryProduct SuccessCategory = (await categoryProductRepository.GetAllAsync()).FirstOrDefault(cp => cp.Id == category.Id);
                 if (SuccessCategory != null)
                 {
 
-                    CategoryProduct SuccessCategory2 = await CategoryProductRepository.DeleteAsync(SuccessCategory);
+                    CategoryProduct SuccessCategory2 = await categoryProductRepository.DeleteAsync(SuccessCategory);
 
                     GetOneCategoryProductDTO SuccessCategoryDTO = mapper.Map<GetOneCategoryProductDTO>(SuccessCategory2);
 
                     resultView.IsSuccess = true;
-                    resultView.Entity = SuccessCategoryDTO;
+                    resultView.Data = SuccessCategoryDTO;
                     resultView.Msg = $"category {category.Id}is found";
-                    CategoryProductRepository.SaveChangesAsync();
+                    categoryProductRepository.SaveChangesAsync();
                     return resultView;
 
                 }
                 else
                 {
                     resultView.IsSuccess = false;
-                    resultView.Entity = null;
+                    resultView.Data = null;
                     resultView.Msg = $"category {category.Id}is not found";
 
                     return resultView;
@@ -214,7 +199,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
             catch (Exception ex)
             {
                 resultView.IsSuccess = false;
-                resultView.Entity = null;
+                resultView.Data = null;
                 resultView.Msg = $"Error Happen While find Category " + ex.Message;
 
                 return resultView;
@@ -235,9 +220,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
                 CategoryProduct category = mapper.Map<CategoryProduct>(Entity);
                 // GetOneCategoryDTO SuccessCategoryDTO = mapper.Map<GetOneCategoryDTO>(category);
 
-                CategoryProduct SuccessCategory = await CategoryProductRepository.GetOneAsync(category.Id);
-
-
+                CategoryProduct SuccessCategory = (await categoryProductRepository.GetAllAsync()).FirstOrDefault(cp => cp.Id == category.Id);
 
                 if (SuccessCategory != null)
                 {
@@ -247,7 +230,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
                     GetOneCategoryProductDTO SuccessCategoryDTO = mapper.Map<GetOneCategoryProductDTO>(SuccessCategory);
 
                     resultView.IsSuccess = true;
-                    resultView.Entity = SuccessCategoryDTO;
+                    resultView.Data = SuccessCategoryDTO;
                     resultView.Msg = $"category {category.Id}is found";
                     // categoryRepository.SaveChangesAsync();
                     return resultView;
@@ -256,7 +239,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
                 else
                 {
                     resultView.IsSuccess = false;
-                    resultView.Entity = null;
+                    resultView.Data = null;
                     resultView.Msg = $"category {category.Id}is not found";
 
                     return resultView;
@@ -265,7 +248,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
             catch (Exception ex)
             {
                 resultView.IsSuccess = false;
-                resultView.Entity = null;
+                resultView.Data = null;
                 resultView.Msg = $"Error Happen While find Category " + ex.Message;
 
                 return resultView;
@@ -276,11 +259,9 @@ namespace AllBirds.Application.Services.CategoryProductServices
 
 
         }
-        public Task<int> SaveChangesAsync()
-        {
-            return CategoryProductRepository.SaveChangesAsync();
-        }
-
-
+        //public Task<int> SaveChangesAsync()
+        //{
+        //    return categoryProductRepository.SaveChangesAsync();
+        //}
     }
 }

@@ -19,12 +19,7 @@ namespace AllBirds.Infrastructure
             context = _context;
             dbset = _context.Set<TEntity>();
         }
-        ///Hossam add
-        public ValueTask<TEntity> GetOneAsync(TId id)
-        {
-            return dbset.FindAsync(id);
 
-        }
         public async Task<TEntity> CreateAsync(TEntity Entity) => (await dbset.AddAsync(Entity)).Entity;
 
         public Task<TEntity> UpdateAsync(TEntity Entity) => Task.FromResult(dbset.Update(Entity).Entity);

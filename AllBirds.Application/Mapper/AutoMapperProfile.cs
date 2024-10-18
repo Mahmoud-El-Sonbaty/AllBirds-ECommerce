@@ -7,8 +7,6 @@ using AllBirds.DTOs.SizeDTOs;
 using AllBirds.Models;
 using AutoMapper;
 using AllBirds.DTOs.CategoryDTOs;
-using AllBirds.Models;
-using AllBirds.DTOs.CategorySizeDTOS;
 using AllBirds.DTOs.CategorySizeDTOS;
 using AllBirds.DTOs.CategoryProductDTOS;
 namespace AllBirds.Application.Mapper
