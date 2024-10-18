@@ -135,7 +135,6 @@ namespace AllBirds.Application.Mapper
                 ? String.Join("~@#$%&", list)
                 : list.FirstOrDefault();
         }
-
         private static List<string>? SplitJoinedString(string? str) => str is not null ? str.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList() : null;
     }
 }

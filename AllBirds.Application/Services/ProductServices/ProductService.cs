@@ -2,6 +2,7 @@
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,14 +51,16 @@ namespace AllBirds.Application.Services.ProductServices
 
         public async Task<CUProductDTO> GetByIdAsync(int productId)
         {
-            var getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
-            if (getProduct != null)
+
+            Product? getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
+            if (getProduct is not null)
             {
                 CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
                 return mappedCUProductDTO;
             }
             // product not found
             return null;
+
         }
 
         public async Task<CUProductDTO> HardDeleteAsync(int productId)
@@ -103,7 +106,23 @@ namespace AllBirds.Application.Services.ProductServices
 
         public async Task<CUProductDTO> UpdateAsync(CUProductDTO cUProductDTO)
         {
-            throw new NotImplementedException();
+            bool CheckInDB = (await productrepoistory.GetAllAsync()).Any(P => P.Id == cUProductDTO.Id && !P.IsDeleted);
+            if(CheckInDB)
+            {
+                Product prdUpdat = mapper.Map<Product>(cUProductDTO);
+                Product prdUpdated = await productrepoistory.UpdateAsync(prdUpdat);
+                //foreach (int catId in cUProductDTO.CategoriesId)
+                //{
+                //    var cat = new CategoryProduct() {  CategoryId = catId, ProductId = cUProductDTO.Id };
+                //    //ICategoryRepository.createAsync(cat)
+                //}
+                await productrepoistory.SaveChangesAsync();
+                return mapper.Map<CUProductDTO>(prdUpdated);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

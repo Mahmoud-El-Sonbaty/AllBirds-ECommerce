@@ -56,6 +56,7 @@ namespace AllBirds.Models
         public bool FreeShipping { get; set; } = false;
         public int MainColorId { get; set; }
 
+        
         public virtual ICollection<CategoryProduct>? Categories { get; set; }
         [InverseProperty("Product")]
         public virtual ICollection<ProductColor>? AvailableColors { get; set; }

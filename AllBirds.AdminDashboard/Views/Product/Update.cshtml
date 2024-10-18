@@ -1,0 +1,208 @@
+﻿@model AllBirds.DTOs.ProductDTOs.CUProductDTO
+@{
+    SelectList CategoryList = new SelectList(ViewBag.Categories, "Id", "NameEn", Model?.CategoriesId);
+}
+
+<!-- Plugin css for this page -->
+<link rel="stylesheet" href="../../assets/vendors/select2/select2.min.css">
+<link rel="stylesheet" href="../../assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+<!-- End plugin css for this page -->
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+<h1>CreateProduct</h1>
+
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                @* <h4 class="card-title">CreateProduct</h4> *@
+                <form class="form-sample" asp-action="Update">
+                    <p class="card-description"> Main Info </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="ProductNo"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="ProductNo" />
+                                    <span class="text-danger" asp-validation-for="ProductNo"></span>
+                                </div>
+                            </div>
+                        </div>
+                        @* <div class="form-group">
+
+
+                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+
+
+                        </div> *@
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="Price"></label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-primary text-white">$</span>
+                                        </div>
+                                        <input class="form-control" asp-for="Price" aria-label="Amount (to the nearest dollar)" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">.00</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-danger" asp-validation-for="Price"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="NameEn"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="NameEn" />
+                                    <span class="text-danger" asp-validation-for="NameEn"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="NameAr"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="NameAr" />
+                                    <span class="text-danger" asp-validation-for="NameAr"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="Discount"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="Discount" />
+                                    <span class="text-danger" asp-validation-for="Discount"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Categories</label>
+                                <div class="col-sm-9">
+                                    <select class="js-example-basic-multiple" asp-items="CategoryList" multiple style="width: 100%" asp-for="CategoriesId">
+
+                                    </select>
+                                    @* <span class="text-danger" asp-validation-for="CategoriesId"></span> *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="card-description"> Details </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="ShippingAndReturnsEn"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="ShippingAndReturnsEn" />
+                                    <span class="text-danger" asp-validation-for="ShippingAndReturnsEn"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="ShippingAndReturnsAr"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="ShippingAndReturnsAr" />
+                                    <span class="text-danger" asp-validation-for="ShippingAndReturnsAr"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="HighlightsEn"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="HighlightsEn" />
+                                    @* <span class="text-danger" asp-validation-for="HighlightsEn"></span> *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="HighlightsAr"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="HighlightsAr" />
+                                    @* <span class="text-danger" asp-validation-for="HighlightsAr"></span> *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="SustainabilityEn"></label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" rows="4" asp-for="SustainabilityEn"></textarea>
+                                    <span class="text-danger" asp-validation-for="SustainabilityEn"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="SustainabilityAr"></label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" rows="4" asp-for="SustainabilityAr"></textarea>
+                                    <span class="text-danger" asp-validation-for="SustainabilityAr"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="CareGuideEn"></label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" rows="4" asp-for="CareGuideEn"></textarea>
+                                    <span class="text-danger" asp-validation-for="CareGuideEn"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="CareGuideAr"></label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" rows="4" asp-for="CareGuideAr"></textarea>
+                                    <span class="text-danger" asp-validation-for="CareGuideAr"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check form-check-flat form-check-primary">
+                        <label asp-for="FreeShipping" class="form-check-label">
+                            <input class="form-check-input" asp-for="FreeShipping"> Free Shipping
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Update Product</button>
+                    <a asp-controller="Product"  asp-action="Update" class="btn btn-dark">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="../../assets/vendors/select2/select2.min.js"></script>
+    <script src="../../assets/js/file-upload.js"></script>
+    <script src="../../assets/js/select2.js"></script>
+} 
