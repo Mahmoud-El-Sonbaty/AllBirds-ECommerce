@@ -66,37 +66,16 @@ namespace AllBirds.Application.Mapper
             #region Product
             CreateMap<GetAllProductDTO, Product>().ReverseMap();
             CreateMap<CUProductDTO, Product>()
-                .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => src.HighlightsAr == null
-                ? null
-                : src.HighlightsAr));
+                .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => JoinStringList(src.HighlightsAr)))
+                .ForMember(dest => dest.HighlightsEn, opt => opt.MapFrom(src => JoinStringList(src.HighlightsEn)))
+                .ForMember(dest => dest.SustainableMaterialsAr, opt => opt.MapFrom(src => JoinStringList(src.SustainableMaterialsAr)))
+                .ForMember(dest => dest.SustainableMaterialsEn, opt => opt.MapFrom(src => JoinStringList(src.SustainableMaterialsEn)));
+
             CreateMap<Product, CUProductDTO>()
-                .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => src.HighlightsAr != null
-                ? src.HighlightsAr.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
-                : null));
-            CreateMap<CUProductDTO, Product>()
-                .ForMember(dest => dest.HighlightsEn, opt => opt.MapFrom(src => src.HighlightsEn != null && src.HighlightsEn.Count > 1
-                ? String.Join("~@#$%&", src.HighlightsEn)
-                : null));
-            CreateMap<Product, CUProductDTO>()
-                .ForMember(dest => dest.HighlightsEn, opt => opt.MapFrom(src => src.HighlightsEn != null
-                ? src.HighlightsEn.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
-                : null));
-            CreateMap<CUProductDTO, Product>()
-                .ForMember(dest => dest.SustainabilityMaterialsAr, opt => opt.MapFrom(src => src.SustainabilityMaterialsAr != null && src.SustainabilityMaterialsAr.Count > 1
-                ? String.Join("~@#$%&", src.SustainabilityMaterialsAr)
-                : null));
-            CreateMap<Product, CUProductDTO>()
-                .ForMember(dest => dest.SustainabilityMaterialsAr, opt => opt.MapFrom(src => src.SustainabilityMaterialsAr != null
-                ? src.SustainabilityMaterialsAr.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
-                : null));
-            CreateMap<CUProductDTO, Product>()
-                .ForMember(dest => dest.SustainabilityMaterialsEn, opt => opt.MapFrom(src => src.SustainabilityMaterialsEn != null && src.SustainabilityMaterialsEn.Count > 1
-                ? String.Join("~@#$%&", src.SustainabilityMaterialsEn)
-                : null));
-            CreateMap<Product, CUProductDTO>()
-                .ForMember(dest => dest.SustainabilityMaterialsEn, opt => opt.MapFrom(src => src.SustainabilityMaterialsEn != null
-                ? src.SustainabilityMaterialsEn.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList()
-                : null));
+                .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => SplitJoinedString(src.HighlightsAr)))
+                .ForMember(dest => dest.HighlightsEn, opt => opt.MapFrom(src => SplitJoinedString(src.HighlightsEn)))
+                .ForMember(dest => dest.SustainableMaterialsAr, opt => opt.MapFrom(src => SplitJoinedString(src.SustainableMaterialsAr)))
+                .ForMember(dest => dest.SustainableMaterialsEn, opt => opt.MapFrom(src => SplitJoinedString(src.SustainableMaterialsEn)));
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
@@ -136,5 +115,15 @@ namespace AllBirds.Application.Mapper
             //CreateMap<LoginUserDTOs , IdentityUser>().ReverseMap();
 
         }
+        private static string? JoinStringList(List<string>? list)
+        {
+            if (list == null)
+                return null;
+
+            return list.Count > 1
+                ? String.Join("~@#$%&", list)
+                : list.FirstOrDefault();
+        }
+        private static List<string>? SplitJoinedString(string? str) => str is not null ? str.Split("~@#$%&", StringSplitOptions.RemoveEmptyEntries).ToList() : null;
     }
 }

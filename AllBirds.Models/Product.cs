@@ -34,10 +34,10 @@ namespace AllBirds.Models
         public string? SustainabilityEn { get; set; }
 
         [MaxLength(1000)]
-        public string? SustainabilityMaterialsAr { get; set; }
+        public string? SustainableMaterialsAr { get; set; }
 
         [MaxLength(1000)]
-        public string? SustainabilityMaterialsEn { get; set; }
+        public string? SustainableMaterialsEn { get; set; }
 
         [MaxLength(600)]
         public string? ShippingAndReturnAr { get; set; }
@@ -50,17 +50,11 @@ namespace AllBirds.Models
 
         [MaxLength(1000)]
         public string? CareGuideEn { get; set; }
-        //[MaxLength(255)]
-        //public string? DescriptionAr { get; set; }
-
-        //[MaxLength(255)]
-        //public string? DescriptionEn { get; set; }
 
         public int Discount { get; set; }
 
         public bool FreeShipping { get; set; } = false;
         public int MainColorId { get; set; }
-        //public virtual ProductColor MainColor { get; set; }
 
         
         public virtual ICollection<CategoryProduct>? Categories { get; set; }

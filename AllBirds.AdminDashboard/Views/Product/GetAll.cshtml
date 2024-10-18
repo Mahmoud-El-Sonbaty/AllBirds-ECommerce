@@ -1,6 +1,7 @@
 ﻿@using AllBirds.DTOs.ProductDTOs
 @model List<GetAllProductDTO>
 
+
 @{
     ViewData["Title"] = "Products";
 }
@@ -51,205 +52,47 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div class="form-check form-check-muted m-0">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input">
-                                        </label>
-                                    </div>
-                                </td>
-                                @* <td>
-                                    <img src="assets/images/faces/face1.jpg" alt="image" />
-                                    <span class="pl-2">Henry Klein</span>
-                                </td> *@
-                                <td> 02312 </td>
-                                <td> Product 1 </td>
-                                <td> @{String.Format("C2", 14500);} </td>
-                                @* <td> $14,500 </td> *@
-                                <td> @{String.Format("P", 20);} </td>
-                                @{
-                                    // if(Model?. ?? false)
-                                    // {
-                                    //     <td> <label class="badge badge-success">Eligible</label> </td>
-                                    // }
-                                    // else
-                                    // {
-                                    //     <td> <div class="badge badge-danger">Not Eligible</div> </td>
-                                    // }
-                                }
-                                <td>
-                                    <label class="badge badge-outline-success">Approved</label>
-                                </td>
-                                <td>
-                                    <label class="badge badge-outline-danger">Approved</label>
-                                </td>
-                                <td>
-                                    <label class="badge badge-outline-success">Approved</label>
-                                </td>
-                                <td>
-                                    @* <button type="button" class="btn btn-outline-primary btn-icon-text">
-                                        Details <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary btn-icon-text">
-                                        Edit <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger btn-icon-text">
-                                        Delete <i class="fas fa-trash-alt"></i>
-                                    </button> *@
-                                    <button type="button" class="btn btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                    <button type="button" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
-                                    <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check form-check-muted m-0">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input">
-                                        </label>
-                                    </div>
-                                </td>
-                                @* <td>
-                                    <img src="assets/images/faces/face2.jpg" alt="image" />
-                                    <span class="pl-2">Estella Bryan</span>
-                                </td> *@
-                                <td> 02312 </td>
-                                <td> Website </td>
-                                <td> $14,500 </td>
-                                <td> 20% </td>
-                                <td> <label class="badge badge-success">Eligible</label> </td>
-                                <td> <label class="badge badge-outline-success">Eligible</label> </td>
-                                <td> <label class="badge badge-outline-success">Eligible</label> </td>
-                                <td>
-                                    <div class="badge badge-outline-warning">Pending</div>
-                                </td>
-                                <td>
-                                    @* <button type="button" class="btn btn-outline-primary btn-icon-text">
-                                        Details <i class="fas fa-info-circle"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary btn-icon-text">
-                                        Edit <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger btn-icon-text">
-                                        Delete <i class="fas fa-trash-alt"></i>
-                                    </button> *@
-                                    <button type="button" class="btn btn-outline-primary"><i class="fas fa-info-circle"></i></button>
-                                    <button type="button" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
-                                    <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check form-check-muted m-0">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input">
-                                        </label>
-                                    </div>
-                                </td>
-                                @* <td>
-                                    <img src="assets/images/faces/face5.jpg" alt="image" />
-                                    <span class="pl-2">Lucy Abbott</span>
-                                </td> *@
-                                <td> 02312 </td>
-                                <td> App design </td>
-                                <td> $14,500 </td>
-                                <td> 13% </td>
-                                <td> <label class="badge badge-outline-success">Eligible</label> </td>
-                                <td> <label class="badge badge-outline-success">Eligible</label> </td>
-                                <td> <label class="badge badge-outline-success">Eligible</label> </td>
-                                <td>
-                                    <div class="badge badge-outline-danger">Rejected</div>
-                                </td>
-                                <td>
-                                    @* <button type="button" class="btn btn-outline-primary btn-icon-text">
-                                        Details <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary btn-icon-text">
-                                        Edit <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger btn-icon-text">
-                                        Delete <i class="fas fa-trash-alt"></i>
-                                    </button> *@
-                                    <button type="button" class="btn btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                    <button type="button" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
-                                    <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check form-check-muted m-0">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input">
-                                        </label>
-                                    </div>
-                                </td>
-                                @* <td>
-                                    <img src="assets/images/faces/face3.jpg" alt="image" />
-                                    <span class="pl-2">Peter Gill</span>
-                                </td> *@
-                                <td> 02312 </td>
-                                <td> Development </td>
-                                <td> $14,500 </td>
-                                <td> 10 %</td>
-                                <td> <label class="badge badge-outline-danger">Eligible</label> </td>
-                                <td> <label class="badge badge-outline-danger">Eligible</label> </td>
-                                <td> <label class="badge badge-outline-danger">Eligible</label> </td>
-                                <td>
-                                    <label class="badge badge-outline-success">Approved</label>
-                                </td>
-                                <td>
-                                   @*  <button type="button" class="btn btn-outline-primary btn-icon-text">
-                                        Details <i class="fas fa-info-circle"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary btn-icon-text">
-                                        Edit <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger btn-icon-text">
-                                        Delete <i class="fas fa-trash-alt"></i>
-                                    </button> *@
-                                    <button type="button" class="btn btn-outline-primary"><i class="fas fa-info-circle"></i></button>
-                                    <button type="button" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
-                                    <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check form-check-muted m-0">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input">
-                                        </label>
-                                    </div>
-                                </td>
-                                @* <td>
-                                    <img src="assets/images/faces/face4.jpg" alt="image" />
-                                    <span class="pl-2">Sallie Reyes</span>
-                                </td> *@
-                                <td> 02312 </td>
-                                <td> Website </td>
-                                <td> $14,500 </td>
-                                <td> 5 %</td>
-                                <td> <label class="badge badge-outline-success">Eligible</label> </td>
-                                <td> <label class="badge badge-outline-success">Eligible</label> </td>
-                                <td> <label class="badge badge-outline-success">Eligible</label> </td>
-                                <td>
-                                    <label class="badge badge-outline-success">Approved</label>
-                                </td>
-                                <td>
-                                    @* <button type="button" class="btn btn-outline-primary btn-icon-text">
-                                        Details <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary btn-icon-text">
-                                        Edit <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger btn-icon-text">
-                                        Delete <i class="fas fa-trash-alt"></i>
-                                    </button> *@
-                                    <button type="button" class="btn btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                    <button type="button" asp-controller="Product" asp-route-id="4" asp-action="Update" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></button>
-                                    <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
+                            @foreach (GetAllProductDTO prd in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="form-check form-check-muted m-0">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" class="form-check-input">
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td> @prd.ProductNo </td>
+                                    <td> @prd.NameEn </td>
+                                    <td> @prd.Price.ToString("C2") </td>
+                                    <td> @prd.Discount.ToString("P") </td>
+                                    @{
+                                        if(prd.FreeShipping)
+                                        {
+                                            <td> <label class="badge badge-success">Eligible</label> </td>
+                                        }
+                                        else
+                                        {
+                                            <td> <lablel class="badge badge-danger">Not Eligible</lablel> </td>
+                                        }
+                                    }
+                                    <td>
+                                        colors
+                                    </td>
+                                    <td>
+                                        sizes
+                                    </td>
+                                    <td>
+                                        units in stock
+                                    </td>
+                                    <td>
+   
+                                         <a type="button" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                         <a type="button" asp-action="Update" asp-controller="Product" asp-route-id="@prd.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                         <a type="button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a> 
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
