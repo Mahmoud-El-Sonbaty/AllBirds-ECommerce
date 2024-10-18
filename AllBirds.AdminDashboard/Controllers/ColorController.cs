@@ -1,4 +1,7 @@
 ﻿using AllBirds.Application.Services.ColorServices;
+using AllBirds.Application.Services.CouponServices;
+using AllBirds.Application.Services.OrderStateServices;
+using AllBirds.Application.Services.SizeServices;
 using AllBirds.DTOs.ColorDTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,12 +10,33 @@ namespace AllBirds.AdminDashboard.Controllers
     public class ColorController : Controller
     {
         private readonly IColorService _colorService;
+        private readonly ISizeService _sizeService;
+        private readonly IOrderStateService _orderStateService;
+        private readonly ICouponService _couponService;
 
-        public ColorController(IColorService colorService)
+        public ColorController(IColorService colorService,ISizeService sizeService,IOrderStateService orderStateService,ICouponService couponService)
         {
             _colorService = colorService;
+            _sizeService = sizeService;
+            _orderStateService = orderStateService;
+            _couponService = couponService;
         }
+        public async Task<IActionResult> GetALLForC_CO_S_OS()
+        {
 
+            var AllColor=await _colorService.GetAllAsync();
+            var AllSize=await _sizeService.GetAllAsync();
+            var AllCoupon=await _couponService.GetAllAsync();
+            var AllOrderState=await _orderStateService.GetAllAsync();
+            var Model = new GetAll
+            {
+                cUColorDTOs =AllColor,
+                cUSizeDTOs =AllSize,
+                cUCoupons=AllCoupon,
+                OrderStateDTOs=AllOrderState,
+            };
+            return View(Model);
+        }
         public async Task<IActionResult> Index()
         {
             var colors = await _colorService.GetAllAsync();
