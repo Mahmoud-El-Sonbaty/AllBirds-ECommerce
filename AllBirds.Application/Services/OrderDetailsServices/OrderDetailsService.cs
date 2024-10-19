@@ -3,6 +3,7 @@ using AllBirds.DTOs.OrderDetailsDTOs;
 using AllBirds.DTOs.OrderMasterDTOs;
 using AllBirds.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,8 +34,14 @@ namespace AllBirds.Application.Services.OrderDetailsServices
 
         public async Task<List<GetAllOrderDetailsDTO>> GetAllAsync()
         {
-            var order =( await orderDetailsRepository.GetAllAsync()).Where(b=>!b.IsDeleted);
-            return mapper.Map<List<GetAllOrderDetailsDTO>>(order);
+            var order =( await orderDetailsRepository.GetAllAsync()).Where(b=>!b.IsDeleted)
+                .Include(c=>c.ProductColorSize.Size.SizeNumber)
+                .Include(r=>r.ProductColorSize.ProductColor.Product)
+                .Include(a=>a.ProductColorSize.ProductColor.Color)
+                .Include(m=>m.ProductColorSize.ProductColor.Images.FirstOrDefault(d=>d.ProductColorId==m.ProductColorSize.ProductColor.MainImageId));
+
+            var mapping = mapper.Map<List<GetAllOrderDetailsDTO>>(order);
+            return  mapping;
         }
 
         public async Task<List<GetAllOrderDetailsDTO>> GetAllWithDeletedAsync()

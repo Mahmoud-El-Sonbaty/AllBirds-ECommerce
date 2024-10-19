@@ -81,8 +81,8 @@
                             <td> @Model.DiscountPerctnage +"%" </td>
                             <td> @Model.Total</td>
                             <td>
-                                <button class="btn btn-inverse-success for inverse buttons p-2  m-1" onclick="changingState(6,@Model.Id)">Aprove</button>
-                                <button class="btn btn-inverse-danger  for inverse buttons p-2  m-1" onclick="changingState(11,@Model.Id)">Rejecte</button>
+                                <button class="btn btn-inverse-success for inverse buttons p-2  m-1" onclick="changingState(3,@Model.Id)">Aprove</button>
+                                <button class="btn btn-inverse-danger  for inverse buttons p-2  m-1" onclick="changingState(4,@Model.Id)">Rejecte</button>
 
                             </td>
                         </tr>
@@ -100,10 +100,10 @@
 
 
 
-    function changingState(state, order) {
+    function changingState(state, orderID) {
         console.log(id)
         $.ajax({
-            url: `/OrderMaster/changingState/${state}&&${order}`,
+            url: `/OrderMaster/changingState/${state}&&${orderID}`,
             type: 'GET',
             // success: function (res) {
             //     $("#Table").html(res);

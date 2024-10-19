@@ -25,6 +25,21 @@ namespace AllBirds.Application.Services.OrderServices
             _mapper= Mapper;
             orderDetailsService=_orderDetailService;
         }
+
+        public async Task<bool> ChangingStateAsync(int StateId, int OrderID)
+        {
+           var item =  await _OrderMasterRepository.GetOneAsync(OrderID);
+            if (item != null)
+            {
+                item.OrderStateId = StateId;
+                await _OrderMasterRepository.SaveChangesAsync();
+                return true;
+            }
+            
+            return false;
+
+        }
+
         public async Task<createOrderMasterDTO> CreateAsync(createOrderMasterDTO createOrderMDTo)
         {
             OrderMaster mapedorder=_mapper.Map<OrderMaster>(createOrderMDTo);

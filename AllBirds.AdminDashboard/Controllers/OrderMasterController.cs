@@ -4,6 +4,7 @@ using AllBirds.Application.Services.OrderStateServices;
 using AllBirds.DTOs.OrderDetailsDTOs;
 using AllBirds.DTOs.OrderMasterDTOs;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
@@ -21,16 +22,23 @@ namespace AllBirds.AdminDashboard.Controllers
             return View();
 
         }
-        public IActionResult changingState(int stateID ,createOrderMasterDTO orderNo)
+        public async Task< IActionResult> changingState(int stateID ,int orderID )
         {
-            createOrderMasterDTO createorder = new createOrderMasterDTO();
-            createorder = orderNo;
-            createorder.OrderStateId = stateID;
+            
 
+           var item= await OrderService.ChangingStateAsync(stateID, orderID);
+            if (item)
+            {
+                return RedirectToAction("GetAllOrderMasters");
 
-            OrderService.UpdateAsync(createorder);
+            }
+            else
+            {
+                Debug.WriteLine("order not Found");
+                return RedirectToAction("GetAllOrderMasters");
 
-            return RedirectToAction("GetAllOrderMasters");
+            }
+
         }
 
         public async Task<IActionResult> GetAllOrderMasters()

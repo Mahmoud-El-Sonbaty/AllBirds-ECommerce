@@ -7,6 +7,7 @@
                 <table class="table table-hover table-striped">
                     <thead>
                         <tr>
+                            <th>Product Image</th>
                             <th>Product</th>
                             <th>Color</th>
                             <th>Size</th>
@@ -16,20 +17,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                        
-                            @foreach( var item in Model.ProductColorSize)
-                            {
-                                <td>@item.ProductName</td>
-                                <td>@item.ColorName</td>
-
-                            }
+                       
                             
-
-                            <td>@Model.</td>
-                            <td>53275535</td>
-                            <!-- <td class="text-success"> 98.05% <i class="mdi mdi-arrow-up"></i></td> -->
-                            <td><label class="badge badge-warning">In progress</label></td>
-                        </tr>
+                            <td>
+                                <img class="img-xs rounded" src="@Model.ProductColorSizeImage.MainImage" alt="image">
+                            </td>
+                            <td> @Model.ProductColorSizeImage.ProductNameEN</td>
+                            <td>@Model.ProductColorSizeImage.ColorNameEN</td>
+                            <td>@Model.ProductColorSizeImage.Size</td>
+                            <td>@Model.Quantity</td>
+                            <td>@Model.DetailPrice</td>
                     </tbody>
                 </table>
             </div>

@@ -16,5 +16,6 @@ namespace AllBirds.Application.Services.OrderServices
         public Task<List<GetAllOrderMastersDTO>> GetAllAsync();
         public Task<List<GetAllOrderMastersDTO>> GetAllWithDeletedAsync();
         public Task<GetOneOdrerMasterDTO> GetByIdAsync(int OrderId);
+        public  Task<bool> ChangingStateAsync(int StateId,int OrderID);
     }
 }

@@ -64,10 +64,18 @@ namespace AllBirds.Application.Mapper
             #region OrderDetail
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
-            CreateMap<GetAllOrderDetailsDTO, OrderDetail>().ReverseMap();
+            CreateMap<GetAllOrderDetailsDTO, OrderDetail>().ReverseMap()
+                .ForMember(dest=>dest.OrderMasterNo,opt=>opt.MapFrom(src=>src.OrderMaster.OrderNo));
             CreateMap<GetOneOrderDetailsDTO, OrderDetail>().ReverseMap();
             CreateMap<CreateOrderDetailsDTO, OrderDetail>().ReverseMap();
-            CreateMap<ProductColorSizeDTO, ProductColor>().ReverseMap();
+            CreateMap<OrderDetail,ProductColorSizeImageDTO>()
+                .ForMember(dest=>dest.ColorNameAR,opt=>opt.MapFrom(src=>src.ProductColorSize.ProductColor.Color.NameAr))
+                .ForMember(dest=>dest.ColorNameEN,opt=>opt.MapFrom(src=>src.ProductColorSize.ProductColor.Color.NameEn))
+                .ForMember(dest=>dest.ProductNameAR,opt=>opt.MapFrom(src=>src.ProductColorSize.ProductColor.Product.NameAr))
+                .ForMember(dest=>dest.ProductNameEN,opt=>opt.MapFrom(src=>src.ProductColorSize.ProductColor.Product.NameEn))
+                .ForMember(dest=>dest.Size,opt=>opt.MapFrom(src=>src.ProductColorSize.Size.SizeNumber))
+                .ForMember(dest=>dest.MainImage,opt=>opt.MapFrom(src=>src.ProductColorSize.ProductColor.Images.FirstOrDefault().ImagePath))
+                ;
             #endregion
 
             #region OrderMaster
