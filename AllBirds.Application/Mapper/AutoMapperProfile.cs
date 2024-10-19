@@ -9,6 +9,8 @@ using AutoMapper;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.CategorySizeDTOS;
 using AllBirds.DTOs.CategoryProductDTOS;
+using AllBirds.DTOs.OrderDetailsDTOs;
+using AllBirds.DTOs.OrderMasterDTOs;
 namespace AllBirds.Application.Mapper
 {
     public class AutoMapperProfile : Profile
@@ -62,11 +64,29 @@ namespace AllBirds.Application.Mapper
             #region OrderDetail
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            CreateMap<GetAllOrderDetailsDTO, OrderDetail>().ReverseMap();
+            CreateMap<GetOneOrderDetailsDTO, OrderDetail>().ReverseMap();
+            CreateMap<CreateOrderDetailsDTO, OrderDetail>().ReverseMap();
+            CreateMap<ProductColorSizeDTO, ProductColor>().ReverseMap();
             #endregion
 
             #region OrderMaster
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+
+
+            CreateMap<GetAllOrderMastersDTO, OrderMaster>().ReverseMap()
+                  .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => $"{src.Client.FirstName} {src.Client.LastName}"))
+                .ForMember(dest => dest.OrderStateName, opt => opt.MapFrom(src => src.OrderState.StateEn))
+                .ForMember(dest => dest.DiscountPerctnage, opt => opt.MapFrom(src => $"{src.Coupon.Discount} %"))
+                .ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.Coupon.Discount * src.Total));
+
+            CreateMap<createOrderMasterDTO, OrderMaster>().ReverseMap();
+            CreateMap<GetOneOdrerMasterDTO, OrderMaster>().ReverseMap()
+                .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => $"{src.Client.FirstName} {src.Client.LastName}"))
+                .ForMember(dest => dest.OrderStateName, opt => opt.MapFrom(src => src.OrderState.StateEn))
+                .ForMember(dest => dest.DiscountPerctnage, opt => opt.MapFrom(src => $"{src.Coupon.Discount} %"))
+                .ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.Coupon.Discount * src.Total));
             #endregion
 
             #region OrderState
