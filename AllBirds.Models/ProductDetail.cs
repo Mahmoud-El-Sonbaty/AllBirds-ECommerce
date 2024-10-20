@@ -11,19 +11,19 @@ namespace AllBirds.Models
     {
 
         [MaxLength(60)]
-        public string TitleAr { get; set; }
+        public string? TitleAr { get; set; }
 
         [MaxLength(60)]
-        public string TitleEn { get; set; }
+        public string? TitleEn { get; set; }
 
         [MaxLength(800)]
-        public string DescriptionAr { get; set; }
+        public string? DescriptionAr { get; set; }
 
         [MaxLength(800)]
-        public string DescriptionEn { get; set; }
+        public string? DescriptionEn { get; set; }
 
         [MaxLength(1000)]
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
         public int ProductId { get; set; }
         public virtual Product? Product { get; set; }
     }
