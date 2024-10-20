@@ -25,7 +25,7 @@
         <div class="card">
             <div class="card-body">
                 @* <h4 class="card-title">CreateProduct</h4> *@
-                <form class="form-sample" method="post" asp-action="Create">
+                <form class="form-sample" method="post" asp-action="Create" >
                     <p class="card-description"> Main Info </p>
                     <div class="row">
                         <div class="col-md-6">
@@ -64,6 +64,8 @@
                                     <span class="text-danger" asp-validation-for="ImageData"></span>
                                 </div>
                             </div>
+                            <input hidden asp-for="ProductId" value="ViewBag.ProductId" />
+
                         </div>
                         
                     </div>

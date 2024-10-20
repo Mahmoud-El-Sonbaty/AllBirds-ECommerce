@@ -26,7 +26,8 @@
             <div class="card-body">
                 <h4 class="card-title">AllProducts</h4>
                 <p class="card-description">
-                    <a class="btn btn-primary" asp-controller="ProductDetail" asp-action="Create"><i class="fas fa-plus"></i> New</a>
+                
+                    <a class="btn btn-primary" asp-controller="ProductDetail" asp-route-id="@ViewBag.ProductId" asp-action="Create"><i class="fas fa-plus"></i> New</a>
                 </p>
                 <div class="table-responsive">
                     <table class="table table-striped">
