@@ -11,10 +11,16 @@ namespace AllBirds.Models
     {
 
         [MaxLength(60)]
-        public string Title { get; set; }
+        public string TitleAr { get; set; }
+
+        [MaxLength(60)]
+        public string TitleEn { get; set; }
 
         [MaxLength(800)]
-        public string Description { get; set; }
+        public string DescriptionAr { get; set; }
+
+        [MaxLength(800)]
+        public string DescriptionEn { get; set; }
 
         [MaxLength(1000)]
         public string ImagePath { get; set; }
