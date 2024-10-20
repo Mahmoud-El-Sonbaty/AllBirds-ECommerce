@@ -13,7 +13,6 @@ namespace AllBirds.Application.Contracts
 
         public Task<TEntity> DeleteAsync(TEntity Entity);
         public Task<IQueryable<TEntity>> GetAllAsync();
-        //public Task<TEntity> GetOneAsync(TId id);
         public Task<int> SaveChangesAsync();
     }
 }

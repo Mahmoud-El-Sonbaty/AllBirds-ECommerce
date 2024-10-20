@@ -4,6 +4,7 @@ using AllBirds.Context;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
+using AllBirds.DTOs.ProductDetailDTOs;
 
 namespace AllBirds.Infrastructure
 {
@@ -30,6 +31,8 @@ namespace AllBirds.Infrastructure
 
         //public async Task<TEntity> GetOneAsync(TId id) =>
         //    await dbset.FirstOrDefaultAsync(e => e.Id.Equals(id) && e.IsDeleted == false);
+
+        //public async Task<TEntity> GetByIdAsync(TId id) => await dbset.FindAsync(id);
 
         public Task<int> SaveChangesAsync() => context.SaveChangesAsync();
     }
