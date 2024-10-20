@@ -55,7 +55,7 @@ namespace AllBirds.AdminDashboard.Controllers
             }
             return View(sizeDto);
         }
-
+        //
         public async Task<IActionResult> Delete(int id)
         {
             var size = await _sizeService.GetByIdAsync(id);
@@ -66,12 +66,20 @@ namespace AllBirds.AdminDashboard.Controllers
             return View(size);
         }
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, bool hardDelete)
         {
-            await _sizeService.SoftDeleteAsync(id);
+            if (hardDelete)
+            {
+                await _sizeService.HardDeleteAsync(id);
+            }
+            else
+            {
+                await _sizeService.SoftDeleteAsync(id);
+            }
             return RedirectToAction(nameof(Index));
         }
     }
 
 }
+

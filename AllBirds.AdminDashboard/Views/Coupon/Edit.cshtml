@@ -1,0 +1,30 @@
+﻿@using AllBirds.DTOs.CouponDTOs
+@model CUCouponDTO
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Edit Coupon</h4>
+        <form method="post">
+            <div class="form-group">
+                <label for="Code">Coupon Code</label>
+                <input type="text" class="form-control" id="Code" name="Code" value="@Model.Code" required>
+            </div>
+            <div class="form-group">
+                <label for="Discount">Discount</label>
+                <input type="number" class="form-control" id="Discount" name="Discount" value="@Model.Discount" required>
+            </div>
+            <div class="form-group">
+                <label for="IsActive">Status</label>
+                <select class="form-control" id="IsActive" name="IsActive" required>
+
+                    @* error here?? *@
+
+               @*      <option value="true" @(Model.IsActive ? "selected='selected'" : "")>Active</option>
+                    <option value="false" @(!Model.IsActive ? "selected='selected'" : "")>Inactive</option> *@
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Save</button>
+            <a href="@Url.Action("Index")" class="btn btn-dark">Cancel</a>
+        </form>
+    </div>
+</div>
