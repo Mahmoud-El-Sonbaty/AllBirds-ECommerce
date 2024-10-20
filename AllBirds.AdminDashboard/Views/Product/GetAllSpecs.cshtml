@@ -1,0 +1,185 @@
+﻿@model ResultView<List<GetProductSpecificationDTO>>
+@{
+    ViewData["Title"] = "GetAllSpecs";
+}
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+<!-- Plugin css for this page -->
+<link rel="stylesheet" href="~/assets/vendors/select2/select2.min.css">
+<link rel="stylesheet" href="~/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+<!-- End plugin css for this page -->
+
+<h1>GetAllSpecs</h1>
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Basic Table</h4>
+                <p class="card-description">
+                    <button id="newBtn" class="btn btn-primary" onclick='addNewRow()'><i class="fas fa-plus"></i> New Specification</button>
+                    @* <a class="btn btn-primary" asp-controller="Product" asp-action="AddProductSpec"><i class="fas fa-plus"></i> New</a> *@
+                </p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product No.</th>
+                                <th>Product Name</th>
+                                <th>Specification Name</th>
+                                <th>Specification Content</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.IsSuccess)
+                            {
+                                @foreach (GetProductSpecificationDTO prdSpec in Model.Data)
+                                {
+                                    <tr>
+                                        <td>@prdSpec.ProductNo</td>
+                                        <td>@prdSpec.ProductNameEn</td>
+                                        <td>@prdSpec.SpecificationNameEn</td>
+                                        <td>@prdSpec.Content</td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
+                                            <a asp-action="DeletePrdSpec" asp-controller="Product" asp-route-id="@prdSpec.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                }                                
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td colspan="5">
+                                        <h1>No Specifications Available For This Product</h1>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/assets/vendors/select2/select2.min.js"></script>
+    <script src="~/assets/js/select2.js"></script>
+    <script>
+        let tBody = document.getElementsByTagName("tbody");
+        console.log(tBody);
+        const specs = @Html.Raw(Json.Serialize(ViewBag.Specs?.Data ?? new List<dynamic>()));
+        const prdId = @Html.Raw(Json.Serialize(Model.Data.FirstOrDefault().ProductId));
+        function addNewRow() {
+            newBtn.setAttribute("disabled", true);
+            newBtn.setAttribute("class", "btn btn-secondary");
+
+            let specsOptions = "";
+            if (specs && specs.length > 0) {
+                for (const spec of specs) {
+                    specsOptions += `<option value="${spec.id}">${spec.nameEn}</option>`;
+                }
+            }
+            console.log(specs)
+            // Append the new row
+            tBody[0].insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td>@Html.Raw(Model.Data.FirstOrDefault().ProductNo)</td>
+                    <td>@Html.Raw(Model.Data.FirstOrDefault().ProductNameEn)</td>
+                    <td>
+                        <select class="js-example-basic-single" style="width: 100%" >
+                            ${specsOptions}
+                        </select>
+                    </td>
+                    <td><input class="form-control" type="text" placeholder="Content" /></td>
+                    <td>
+                        <button type="button" onclick="savePrdSpec(event)" class="btn btn-outline-success"><i class="fas fa-check"></i></button>
+                        <button type="button" onclick="removeRow(event)" class="btn btn-outline-danger"><i class="fas fa-cancel"></i></button>
+                    </td>
+                </tr>
+            `);
+        }
+        function removeRow(evt) {
+            newBtn.setAttribute("class", "btn btn-primary");
+            newBtn.removeAttribute("disabled");
+            // console.log(evt);
+            // console.log(evt.target);
+            // console.log(evt.target.parentElement);
+            // console.log(evt.target.parentElement.parentElement);
+            // console.log(evt.target.parentElement.parentElement.parentElement);
+            evt.target.children.length ? evt.target.parentElement.parentElement.remove() : evt.target.parentElement.parentElement.parentElement.remove();
+        }
+        function savePrdSpec(evt) {
+            newBtn.setAttribute("class", "btn btn-primary");
+            newBtn.removeAttribute("disabled");
+            let lastTd = evt.target.children.length ? evt.target.parentElement : evt.target.parentElement.parentElement;
+            let specSelectTd = lastTd.previousElementSibling.previousElementSibling;
+            let choosenSpecId = specSelectTd.children[0].value;
+            let contentTd = lastTd.previousElementSibling;
+            contentTd.innerHTML = contentTd.children[0].value;
+            // send request and take the prd spec id created in the database to put it in the href
+            lastTd.innerHTML = `
+                        <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
+                        <a href="/Product/DeletePrdSpec/5345" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                `;
+            specSelectTd.textContent = specSelectTd.children[0].selectedOptions[0].textContent;
+        }
+        let oldContent = "";
+        let oldSpecName = "";
+        let latestPrdSpecIdClicked = 0;
+        function openPrdSpecToEdit(evt) {
+            let lastTd = evt.target.children.length ? evt.target.parentElement : evt.target.parentElement.parentElement;
+            let prdSpecId = lastTd.children[1].href.split("/").reverse()[0];
+            latestPrdSpecIdClicked = prdSpecId;
+            lastTd.innerHTML = `<button type="button" onclick="saveEdit(event)" class="btn btn-outline-success"><i class="fas fa-check"></i></button>
+                                <button type="button" onclick="cancelEdit(event)" class="btn btn-outline-danger"><i class="fas fa-cancel"></i></button>`;
+            let contentTd = lastTd.previousElementSibling;
+            let specTd = lastTd.previousElementSibling.previousElementSibling;
+            oldContent = contentTd.textContent;
+            oldSpecName = specTd.textContent;
+            contentTd.innerHTML = `<input class="form-control" type="text" value="${lastTd.previousElementSibling.textContent}" />`;
+            let specsOptions = "";
+            if (specs && specs.length > 0) {
+                for (const spec of specs) {
+                    if (spec.nameEn == specTd.textContent)
+                        specsOptions += `<option selected value="${spec.id}">${spec.nameEn}</option>`;
+                    specsOptions += `<option value="${spec.id}">${spec.nameEn}</option>`;
+
+                }
+            }
+            specTd.innerHTML = `<select class="js-example-basic-single" style="width: 100%" >${specsOptions}</select>`;
+        }
+        function cancelEdit(evt) {
+            let lastTd = evt.target.children.length ? evt.target.parentElement : evt.target.parentElement.parentElement;
+            let contentTd = lastTd.previousElementSibling;
+            let specTd = lastTd.previousElementSibling.previousElementSibling;
+            contentTd.textContent = oldContent;
+            specTd.textContent = oldSpecName;
+            lastTd.innerHTML = `
+                <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
+                <a href="/Product/DeletePrdSpec/${latestPrdSpecIdClicked}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
+        }
+        function saveEdit(evt) {
+            let lastTd = evt.target.children.length ? evt.target.parentElement : evt.target.parentElement.parentElement;
+            lastTd.innerHTML = `
+                <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
+                <a href="/Product/DeletePrdSpec/${latestPrdSpecIdClicked}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
+            let contentTd = lastTd.previousElementSibling;
+            let specTd = lastTd.previousElementSibling.previousElementSibling;
+            let choosenSpecId = specTd.children[0].value;
+            contentTd.innerHTML = contentTd.children[0].value;
+            specTd.textContent = specTd.children[0].selectedOptions[0].textContent;
+            // send request and take the prd spec id created in the database to put it in the route
+        }
+    </script>
+}

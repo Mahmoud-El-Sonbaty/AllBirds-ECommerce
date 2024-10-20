@@ -41,7 +41,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
 
                     CategoryProduct SuccessCategory = await categoryProductRepository.CreateAsync(category);
                     CreateOrUpdateCategoryProductDTO SuccessCategoryDTO = mapper.Map<CreateOrUpdateCategoryProductDTO>(SuccessCategory);
-                    categoryProductRepository.SaveChangesAsync();
+                    await categoryProductRepository.SaveChangesAsync();
                     resultView.IsSuccess = true;
                     resultView.Data = SuccessCategoryDTO;
                     resultView.Msg = $"Category ({Entity.Id}) Created Successfully";
@@ -91,7 +91,7 @@ namespace AllBirds.Application.Services.CategoryProductServices
                 CategoryProduct SuccessCategory = await categoryProductRepository.UpdateAsync(category);
 
                 CreateOrUpdateCategoryProductDTO SuccessCategoryDTO = mapper.Map<CreateOrUpdateCategoryProductDTO>(SuccessCategory);
-                categoryProductRepository.SaveChangesAsync();
+                await categoryProductRepository.SaveChangesAsync();
                 resultView.IsSuccess = true;
                 resultView.Data = SuccessCategoryDTO;
                 resultView.Msg = $"Category ({Entity.Id}) update Successfully";
@@ -177,13 +177,13 @@ namespace AllBirds.Application.Services.CategoryProductServices
                 {
 
                     CategoryProduct SuccessCategory2 = await categoryProductRepository.DeleteAsync(SuccessCategory);
+                    await categoryProductRepository.SaveChangesAsync();
 
                     GetOneCategoryProductDTO SuccessCategoryDTO = mapper.Map<GetOneCategoryProductDTO>(SuccessCategory2);
 
                     resultView.IsSuccess = true;
                     resultView.Data = SuccessCategoryDTO;
                     resultView.Msg = $"category {category.Id}is found";
-                    categoryProductRepository.SaveChangesAsync();
                     return resultView;
 
                 }
@@ -225,14 +225,11 @@ namespace AllBirds.Application.Services.CategoryProductServices
                 if (SuccessCategory != null)
                 {
                     SuccessCategory.IsDeleted = true;
-                    //Category SuccessCategory2 = await categoryRepository.DeleteAsync(SuccessCategory);
-
                     GetOneCategoryProductDTO SuccessCategoryDTO = mapper.Map<GetOneCategoryProductDTO>(SuccessCategory);
-
                     resultView.IsSuccess = true;
                     resultView.Data = SuccessCategoryDTO;
                     resultView.Msg = $"category {category.Id}is found";
-                    // categoryRepository.SaveChangesAsync();
+                    await categoryProductRepository.SaveChangesAsync();
                     return resultView;
 
                 }
@@ -259,9 +256,9 @@ namespace AllBirds.Application.Services.CategoryProductServices
 
 
         }
-        //public Task<int> SaveChangesAsync()
-        //{
-        //    return categoryProductRepository.SaveChangesAsync();
-        //}
+        public async Task<int> SaveChangesAsync()
+        {
+            return await categoryProductRepository.SaveChangesAsync();
+        }
     }
 }

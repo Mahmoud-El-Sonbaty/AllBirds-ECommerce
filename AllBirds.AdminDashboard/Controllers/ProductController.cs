@@ -1,8 +1,12 @@
 
 using AllBirds.Application.Services.CategoryServices;
 using AllBirds.Application.Services.ProductServices;
+using AllBirds.Application.Services.ProductSpecificationServices;
+using AllBirds.Application.Services.SpecificationServices;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.ProductDTOs;
+using AllBirds.DTOs.ProductSpecificationDTOs;
+using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
@@ -11,13 +15,17 @@ namespace AllBirds.AdminDashboard.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductService productservice;
-        private readonly ICategoryService categoryservice;
+        private readonly IProductService productService;
+        private readonly IProductSpecificationService productSpecService;
+        private readonly ICategoryService categoryService;
+        private readonly ISpecificationService specificationService;
 
-        public ProductController(IProductService _productService, ICategoryService _categoryService)
+        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService)
         {
-            productservice = _productService;
-            categoryservice = _categoryService;
+            productService = _productService;
+            categoryService = _categoryService;
+            productSpecService = _productSpecservice;
+            specificationService = _specificationService;
         }
         public IActionResult Index()
         {
@@ -27,7 +35,7 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<GetAllProductDTO> getAllProductDTOs = (await productservice.GetAllAsync());
+            List<GetAllProductDTO> getAllProductDTOs = (await productService.GetAllAsync());
             return View(getAllProductDTOs);
 
         }
@@ -35,7 +43,7 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            List<GetAllCategoryDTO> allCategoryDTOs = await categoryservice.GetAllAsync();
+            List<GetAllCategoryDTO> allCategoryDTOs = await categoryService.GetAllAsync();
             ViewBag.Categories = allCategoryDTOs;
             return View();
         }
@@ -45,7 +53,7 @@ namespace AllBirds.AdminDashboard.Controllers
         {
             if (ModelState.IsValid)
             {
-                CUProductDTO createdProduct = await productservice.CreateAsync(cUProductDTO);
+                CUProductDTO createdProduct = await productService.CreateAsync(cUProductDTO);
                 return RedirectToAction("GetAll");
             }
             return View();
@@ -54,9 +62,9 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            List<GetAllCategoryDTO> allCategoryDTOs = await categoryservice.GetAllAsync();
+            List<GetAllCategoryDTO> allCategoryDTOs = await categoryService.GetAllAsync();
             ViewBag.Categories = allCategoryDTOs;
-            var Prd = await productservice.GetByIdAsync(id);
+            var Prd = await productService.GetByIdAsync(id);
             return View(Prd);
         }
 
@@ -65,7 +73,7 @@ namespace AllBirds.AdminDashboard.Controllers
         {
             if (ModelState.IsValid)
             {
-                CUProductDTO createdProduct = await productservice.UpdateAsync(cUProductDTO);
+                CUProductDTO createdProduct = await productService.UpdateAsync(cUProductDTO);
                 if (createdProduct is not null)
                 {
                     return RedirectToAction("GetAll");
@@ -81,13 +89,49 @@ namespace AllBirds.AdminDashboard.Controllers
         {
             if (id > 0)
             {
-                CUProductDTO deletedProduct = await productservice.SoftDeleteAsync(id);
+                CUProductDTO deletedProduct = await productService.SoftDeleteAsync(id);
                 if (deletedProduct is not null)
                 {
                     return RedirectToAction("GetAll");
                 }
             }
             return null;
+        }
+
+        /////////////////////////////////////////////////// Product Specifications//////////////////////////////////////////////////////////////
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllSpecs(int id)
+        {
+            if (id > 0)
+            {
+                ResultView<List<GetProductSpecificationDTO>> getProductSpecs = (await productSpecService.GetByProductIdAsync(id));
+                ViewBag.Specs = await specificationService.GetAllAsync();
+                return getProductSpecs.IsSuccess ? View(getProductSpecs) : View();
+            }
+            else
+            {
+                return RedirectToAction("GetAll");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddProductSpec()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProductSpec(CUProductSpecificationDTO productSpec)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeletePrdSpec(int id)
+        {
+            ResultView<GetProductSpecificationDTO> deletedSpec = await productSpecService.HardDeleteAsync(id);
+            return Redirect($"/Product/GetAllSpecs/{id}");
         }
     }
 }

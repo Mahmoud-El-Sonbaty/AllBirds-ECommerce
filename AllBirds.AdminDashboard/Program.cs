@@ -7,7 +7,9 @@ using AllBirds.Application.Services.ColorServices;
 using AllBirds.Application.Services.CouponServices;
 using AllBirds.Application.Services.OrderStateServices;
 using AllBirds.Application.Services.ProductServices;
+using AllBirds.Application.Services.ProductSpecificationServices;
 using AllBirds.Application.Services.SizeServices;
+using AllBirds.Application.Services.SpecificationServices;
 using AllBirds.Context;
 using AllBirds.Infrastructure;
 using AllBirds.Models;
@@ -27,25 +29,54 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddDbContext<AllBirdsContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+            // Account
             builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IColorService, ColorService>();
-            builder.Services.AddScoped<IColorRepository, ColorRepository>();
-            builder.Services.AddScoped<ISizeService, SizeService>();
-            builder.Services.AddScoped<ISizeRepository, SizeRepository>();
-            builder.Services.AddScoped<ICouponService, CouponService>();
-            builder.Services.AddScoped<ICouponRepository, CouponRepository>();
-            builder.Services.AddScoped<IOrderStateService, OrderStateService>();
-            builder.Services.AddScoped<IOrderStateRepository, OrderStateRepository>();
+            // Category
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            // CategoryProduct
             builder.Services.AddScoped<ICategoryProductService, CategoryProductService>();
             builder.Services.AddScoped<ICategoryProductRepository, CategoryProductRepository>();
-            //builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
-            //builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
+            // ClientFavorite
+
+            // Color
+            builder.Services.AddScoped<IColorService, ColorService>();
+            builder.Services.AddScoped<IColorRepository, ColorRepository>();
+            // Coupon
+            builder.Services.AddScoped<ICouponService, CouponService>();
+            builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+            // OrderDetail
             //builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
             //builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+            // OrderMaster
+            //builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
+            //builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
+            // OrderState
+            builder.Services.AddScoped<IOrderStateService, OrderStateService>();
+            builder.Services.AddScoped<IOrderStateRepository, OrderStateRepository>();
+            // Product
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            // ProductColor
+
+            // ProductColorImage
+
+            // ProductColorSize
+
+            // ProductDetail
+
+            // ProductReview
+
+            // ProductSpecification
+            builder.Services.AddScoped<IProductSpecificationService, ProductSpecificationService>();
+            builder.Services.AddScoped<IProductSpecificationRepository, ProductSpecificationRepository>();
+            // Size
+            builder.Services.AddScoped<ISizeService, SizeService>();
+            builder.Services.AddScoped<ISizeRepository, SizeRepository>();
+            // Specification
+            builder.Services.AddScoped<ISpecificationService, SpecificationService>();
+            builder.Services.AddScoped<ISpecificationRepository, SpecificationRepository>();
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<CustomUser>(options =>
             {

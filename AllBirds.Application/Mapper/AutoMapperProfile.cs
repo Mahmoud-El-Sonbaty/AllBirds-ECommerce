@@ -9,6 +9,8 @@ using AutoMapper;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.CategorySizeDTOS;
 using AllBirds.DTOs.CategoryProductDTOS;
+using AllBirds.DTOs.SpecificationDTOs;
+using AllBirds.DTOs.ProductSpecificationDTOs;
 namespace AllBirds.Application.Mapper
 {
     public class AutoMapperProfile : Profile
@@ -103,19 +105,39 @@ namespace AllBirds.Application.Mapper
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
 
+            #region ProductColorSize
+            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            #endregion
+
+            #region ProductDetail
+            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
+            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            #endregion
+
             #region ProductReview
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
 
-            #region ProductSize
-            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            #region ProductSpecification
+            CreateMap<CUProductSpecificationDTO, ProductSpecification>().ReverseMap();
+            CreateMap<ProductSpecification, GetProductSpecificationDTO>()
+                .ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
+                .ForMember(dest => dest.ProductNameAr, opt => opt.MapFrom(src => src.Product.NameAr))
+                .ForMember(dest => dest.ProductNameEn, opt => opt.MapFrom(src => src.Product.NameEn))
+                .ForMember(dest => dest.SpecificationNameAr, opt => opt.MapFrom(src => src.Specification.NameAr))
+                .ForMember(dest => dest.SpecificationNameEn, opt => opt.MapFrom(src => src.Specification.NameEn));
             #endregion
 
             #region Size
             CreateMap<CUSizeDTO, Size>().ReverseMap();
             CreateMap<GetSizeDTO, Size>().ReverseMap();
+            #endregion
+
+            #region Specification
+            CreateMap<CUSpecificationDTO, Specification>().ReverseMap();
+            CreateMap<GetSpecificationDTO, Specification>().ReverseMap();
             #endregion
 
 
