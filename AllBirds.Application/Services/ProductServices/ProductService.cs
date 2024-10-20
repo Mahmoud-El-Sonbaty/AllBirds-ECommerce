@@ -53,6 +53,7 @@ namespace AllBirds.Application.Services.ProductServices
         {
 
             Product? getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
+            Product? getProduct1 = (await productrepoistory.GetAllAsync()).Include(P => P.Categories).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
             if (getProduct is not null)
             {
                 CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
@@ -111,11 +112,11 @@ namespace AllBirds.Application.Services.ProductServices
             {
                 Product prdUpdat = mapper.Map<Product>(cUProductDTO);
                 Product prdUpdated = await productrepoistory.UpdateAsync(prdUpdat);
-                //foreach (int catId in cUProductDTO.CategoriesId)
-                //{
-                //    var cat = new CategoryProduct() {  CategoryId = catId, ProductId = cUProductDTO.Id };
-                //    //ICategoryRepository.createAsync(cat)
-                //}
+                /*foreach (int catId in cUProductDTO.CategoriesId)
+                {
+                    var cat = new CategoryProduct() {  CategoryId = catId, ProductId = cUProductDTO.Id };
+                    //ICategoryRepository.createAsync(cat)
+                }*/
                 await productrepoistory.SaveChangesAsync();
                 return mapper.Map<CUProductDTO>(prdUpdated);
             }

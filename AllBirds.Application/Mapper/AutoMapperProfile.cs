@@ -9,6 +9,7 @@ using AutoMapper;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.CategorySizeDTOS;
 using AllBirds.DTOs.CategoryProductDTOS;
+using AllBirds.DTOs.ProductDetailDTOs;
 namespace AllBirds.Application.Mapper
 {
     public class AutoMapperProfile : Profile
@@ -90,6 +91,16 @@ namespace AllBirds.Application.Mapper
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
+
+
+            #region ProductDetails
+            CreateMap<ProductDetail, CUProductDetails>().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
+            CreateMap<ProductDetail, GetAllProductDetailsDTOS>().ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
+                .ForMember(dest => dest.NameEn, opt => opt.MapFrom(src => src.Product.NameEn))
+                .ForMember(dest => dest.NameAr, opt => opt.MapFrom(src => src.Product.NameAr));
+
+            #endregion
+
 
             #region ProductColor
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()

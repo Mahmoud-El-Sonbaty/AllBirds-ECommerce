@@ -1,0 +1,85 @@
+﻿@model AllBirds.DTOs.ProductDetailDTOs.CUProductDetails
+@{
+    ViewData["Title"] = "UpdateProductDetails";
+}
+<!-- Plugin css for this page -->
+<link rel="stylesheet" href="~/assets/vendors/select2/select2.min.css">
+<link rel="stylesheet" href="~/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+<!-- End plugin css for this page -->
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+<h1>Create Product Details</h1>
+
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                @* <h4 class="card-title">CreateProduct</h4> *@
+                <form class="form-sample" method="post" asp-action="Update">
+                    <p class="card-description"> Main Info </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="Title"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="Title" />
+                                    <span class="text-danger" asp-validation-for="Title"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="Description"></label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-primary text-white">$</span>
+                                        </div>
+                                        <input class="form-control" asp-for="Description" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">.00</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-danger" asp-validation-for="Description"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="ImageData"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="ImageData" />
+                                    <span class="text-danger" asp-validation-for="ImageData"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mr-2">Update</button>
+                    <a asp-controller="ProductDetail" asp-action="Update" class="btn btn-dark">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/assets/vendors/select2/select2.min.js"></script>
+    <script src="~/assets/js/file-upload.js"></script>
+    <script src="~/assets/js/select2.js"></script>
+} 

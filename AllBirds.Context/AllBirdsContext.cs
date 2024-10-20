@@ -163,43 +163,7 @@ namespace AllBirds.Context
                 new Specification { Id = 34, NameAr = "خليط المواد", NameEn = "Material Blend", CreatedBy = 1, Created = DateTime.Now },
                 new Specification { Id = 35, NameAr = "الوصف", NameEn = "Description", CreatedBy = 1, Created = DateTime.Now }
             );
-            ///seed Category
-            modelBuilder.Entity<Category>().HasData(
-                   new Category
-                   {
-                       Id = 1,
-                     NameAr ="كتقورلا 1" ,
-                       NameEn="category 1",
-                       CreatedBy = 1,
-                       Created = DateTime.Now
-                   },
-                   new Category
-                   {
-                       Id = 2,
-                       NameAr = "كتقورلا 2",
-                       NameEn = "category 2",
-                       CreatedBy = 1,
-                       Created = DateTime.Now
-                   },
-                   new Category
-                   {
-                       Id = 3,
-                       NameAr = "كتقورلا 3",
-                       NameEn = "category 3",
-                       CreatedBy = 1,
-                       Created = DateTime.Now
-                   },
-                   new Category
-                   {
-                       Id = 4,
-                       NameAr = "كتقورلا4 ",
-                       NameEn = "category 4",
-                       CreatedBy = 1,
-                       Created = DateTime.Now
-                   }
-                 
-                   );
-
+           
 
         }
         //public int SaveChanges(bool acceptAllChangesOnSuccess, int userId)

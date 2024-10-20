@@ -4,6 +4,7 @@ using AllBirds.Application.Services.AccountServices;
 using AllBirds.Application.Services.ColorServices;
 using AllBirds.Application.Services.CouponServices;
 using AllBirds.Application.Services.OrderStateServices;
+using AllBirds.Application.Services.ProductDetailService;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.SizeServices;
 using AllBirds.Context;
@@ -11,6 +12,9 @@ using AllBirds.Infrastructure;
 using AllBirds.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
+using NuGet.Packaging;
+
 
 namespace AllBirds.AdminDashboard
 {
@@ -27,7 +31,11 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductDetailsService, ProductDetailsService>();
+
+            //=========================================================
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductDetailsRepository, ProductDetailsRepository>();
             builder.Services.AddScoped<IColorService, ColorService>();
             builder.Services.AddScoped<IColorRepository, ColorRepository>();
             builder.Services.AddScoped<ISizeService, SizeService>();
@@ -76,9 +84,9 @@ namespace AllBirds.AdminDashboard
             });
             //builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
-
+            
             var app = builder.Build();
-
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

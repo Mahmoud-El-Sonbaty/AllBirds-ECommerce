@@ -9,6 +9,7 @@ namespace AllBirds.Models
 {
     public class ProductDetail : BaseEntity<int>
     {
+
         [MaxLength(60)]
         public string Title { get; set; }
 
