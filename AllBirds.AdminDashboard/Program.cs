@@ -44,12 +44,6 @@ namespace AllBirds.AdminDashboard
             // ClientFavorite
 
             // Color
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IProductDetailsService, ProductDetailsService>();
-
-            //=========================================================
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IProductDetailsRepository, ProductDetailsRepository>();
             builder.Services.AddScoped<IColorService, ColorService>();
             builder.Services.AddScoped<IColorRepository, ColorRepository>();
             // Coupon
@@ -74,7 +68,8 @@ namespace AllBirds.AdminDashboard
             // ProductColorSize
 
             // ProductDetail
-
+            builder.Services.AddScoped<IProductDetailsService, ProductDetailsService>();
+            builder.Services.AddScoped<IProductDetailsRepository, ProductDetailsRepository>();
             // ProductReview
 
             // ProductSpecification

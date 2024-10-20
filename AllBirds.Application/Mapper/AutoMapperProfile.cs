@@ -2,7 +2,7 @@ using AutoMapper;
 using AllBirds.Models;
 using AllBirds.DTOs.AccountDTOs;
 using AllBirds.DTOs.CategoryDTOs;
-using AllBirds.DTOs.CategoryProductDTOS;
+using AllBirds.DTOs.CategoryProductDTOs;
 using AllBirds.DTOs.CategorySizeDTOS;
 using AllBirds.DTOs.ColorDTOs;
 using AllBirds.DTOs.CouponDTOs;
@@ -10,15 +10,10 @@ using AllBirds.DTOs.OrderDetailsDTOs;
 using AllBirds.DTOs.OrderMasterDTOs;
 using AllBirds.DTOs.OrderStateDTOs;
 using AllBirds.DTOs.ProductDTOs;
+using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.SizeDTOs;
 using AllBirds.DTOs.SpecificationDTOs;
-using AllBirds.Models;
-using AutoMapper;
-using AllBirds.DTOs.CategoryDTOs;
-using AllBirds.DTOs.CategorySizeDTOS;
-using AllBirds.DTOs.CategoryProductDTOS;
-using AllBirds.DTOs.ProductDetailDTOs;
 namespace AllBirds.Application.Mapper
 {
     public class AutoMapperProfile : Profile
@@ -129,7 +124,6 @@ namespace AllBirds.Application.Mapper
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
 
-
             #region ProductDetails
             CreateMap<ProductDetail, CUProductDetails>().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
             CreateMap<ProductDetail, GetAllProductDetailsDTOS>().ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
@@ -137,7 +131,6 @@ namespace AllBirds.Application.Mapper
                 .ForMember(dest => dest.NameAr, opt => opt.MapFrom(src => src.Product.NameAr));
 
             #endregion
-
 
             #region ProductColor
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
@@ -183,8 +176,6 @@ namespace AllBirds.Application.Mapper
             CreateMap<CUSpecificationDTO, Specification>().ReverseMap();
             CreateMap<GetSpecificationDTO, Specification>().ReverseMap();
             #endregion
-
-
 
             //CreateMap<AdminAccRegisterDTOs, IdentityUser>()
             //.ForMember(dest => dest.Id, opt => opt.Ignore()) 

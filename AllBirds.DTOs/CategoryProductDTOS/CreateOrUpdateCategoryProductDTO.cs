@@ -1,12 +1,10 @@
-﻿using AllBirds.DTOs.CategoryDTOs;
-using AllBirds.DTOs.CategoryProductDTOS;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AllBirds.DTOs.CategoryProductDTOS
+namespace AllBirds.DTOs.CategoryProductDTOs
 {
     public class CreateOrUpdateCategoryProductDTO
     {
