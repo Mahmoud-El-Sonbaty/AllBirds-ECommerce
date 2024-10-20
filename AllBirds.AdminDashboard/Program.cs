@@ -16,10 +16,6 @@ using AllBirds.Infrastructure;
 using AllBirds.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-using NuGet.Packaging;
-
-
 namespace AllBirds.AdminDashboard
 {
     public class Program
