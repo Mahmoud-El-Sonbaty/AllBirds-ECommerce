@@ -86,8 +86,8 @@ namespace AllBirds.Context
             );
             // Seed Colors
             modelBuilder.Entity<Color>().HasData(
-                new Color { Id = 1, Name = "color1", Code = "31243", CreatedBy = 1, Created = DateTime.Now },
-                new Color { Id = 2, Name = "color2", Code = "31243", CreatedBy = 1, Created = DateTime.Now }
+                new Color { Id = 1, NameAr = "color1", NameEn = "color1", Code = "31243", CreatedBy = 1, Created = DateTime.Now },
+                new Color { Id = 2, NameAr = "color2", NameEn = "color2", Code = "31243", CreatedBy = 1, Created = DateTime.Now }
             );
             // Seed Categories
             modelBuilder.Entity<Category>().HasData(

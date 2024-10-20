@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
-    public class ProductDetailConroller : Controller
+    public class ProductDetailController : Controller
     {
         private readonly IProductDetailsService productDetailsService;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public ProductDetailConroller(IProductDetailsService _producDetailstService, IWebHostEnvironment _webHostEnvironment)
+        public ProductDetailController(IProductDetailsService _producDetailstService, IWebHostEnvironment _webHostEnvironment)
         {
             productDetailsService = _producDetailstService;
             webHostEnvironment = _webHostEnvironment;
