@@ -21,7 +21,7 @@ namespace AllBirds.Application.Services.ProductDetailService
         }
         public async Task<ResultView<CUProductDetails>> CreateProductDetails(CUProductDetails cUProductDetails)
         {
-            bool existPrdDetails = (await productDetailsRepository.GetAllAsync()).Any(P => P.Title == cUProductDetails.Title || P.Description == cUProductDetails.Description);
+            bool existPrdDetails = (await productDetailsRepository.GetAllAsync()).Any(P => P.TitleEn == cUProductDetails.Title || P.DescriptionEn == cUProductDetails.Description);
             if (existPrdDetails)
             {
                 return new ResultView<CUProductDetails>() { Data = null, IsSuccess = false, Msg = $"Product Detail Title : ({cUProductDetails.Title}) Already Exist" };
