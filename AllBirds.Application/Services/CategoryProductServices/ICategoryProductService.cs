@@ -1,6 +1,6 @@
 ﻿using AllBirds.DTOs.Shared;
 using AllBirds.DTOs.CategoryDTOs;
-using AllBirds.DTOs.CategoryProductDTOS;
+using AllBirds.DTOs.CategoryProductDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

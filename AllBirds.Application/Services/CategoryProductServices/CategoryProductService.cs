@@ -1,7 +1,7 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.CategoryServices;
 using AllBirds.DTOs.Shared;
-using AllBirds.DTOs.CategoryProductDTOS;
+using AllBirds.DTOs.CategoryProductDTOs;
 using AllBirds.Models;
 using AutoMapper;
 

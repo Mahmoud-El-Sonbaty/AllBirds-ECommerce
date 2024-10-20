@@ -15,6 +15,9 @@ namespace AllBirds.Models
         public Product? Product { get; set; }
 
         [MaxLength(1500)]
-        public string Content { get; set; }
+        public string? ContentAr { get; set; }
+
+        [MaxLength(1500)]
+        public string? ContentEn { get; set; }
     }
 }
