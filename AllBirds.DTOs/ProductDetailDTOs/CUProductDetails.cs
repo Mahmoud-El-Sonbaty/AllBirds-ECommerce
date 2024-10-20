@@ -24,6 +24,6 @@ namespace AllBirds.DTOs.ProductDetailDTOs
         [MaxLength(1000)]
         public string? ImagePath { get; set; }
         [Required]
-        public int? ProductId { get; set; }
+        public int ProductId { get; set; }
     }
 }

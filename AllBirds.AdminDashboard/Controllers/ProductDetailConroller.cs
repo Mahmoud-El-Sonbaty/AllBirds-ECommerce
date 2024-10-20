@@ -24,11 +24,11 @@ namespace AllBirds.AdminDashboard.Controllers
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int id)
         {
-            CUProductDetails cUProductDetails = new CUProductDetails();
+            ViewBag.ProductId = id;
 
-            return View(cUProductDetails);
+            return View();
         }
 
         [HttpPost]
@@ -74,10 +74,10 @@ namespace AllBirds.AdminDashboard.Controllers
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> AllProductDetails()
+        public async Task<IActionResult> AllProductDetails(int id)
         {
-            List<GetAllProductDetailsDTOS> getAllProductDTOs = await productDetailsService.GetAllProductDetails();
-
+            List<GetAllProductDetailsDTOS> getAllProductDTOs = await productDetailsService.GetAllProductDetails(id);
+            ViewBag.ProductId = id;
             return View(getAllProductDTOs);
 
         }

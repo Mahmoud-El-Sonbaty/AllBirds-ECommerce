@@ -13,7 +13,7 @@ namespace AllBirds.Application.Services.ProductDetailService
         public Task<ResultView<CUProductDetails>> CreateProductDetails(CUProductDetails cUProductDetails);
         public Task<ResultView<CUProductDetails>> UpdateProductDetails(CUProductDetails cUProductDetails);
         public Task<ResultView<CUProductDetails>> HardDeletePrdDetails(CUProductDetails cUProductDetails);
-        public Task<List<GetAllProductDetailsDTOS>> GetAllProductDetails();
+        public Task<List<GetAllProductDetailsDTOS>> GetAllProductDetails(int id);
         public Task<ResultView<GetAllProductDetailsDTOS>> GetOnePrdDetails(int id);
 
 

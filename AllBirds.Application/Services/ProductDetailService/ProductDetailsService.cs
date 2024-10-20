@@ -61,9 +61,9 @@ namespace AllBirds.Application.Services.ProductDetailService
             }
         }
 
-        public async Task<List<GetAllProductDetailsDTOS>> GetAllProductDetails()
+        public async Task<List<GetAllProductDetailsDTOS>> GetAllProductDetails(int id)
         {
-            List<ProductDetail> getAllProduct = [.. (await productDetailsRepository.GetAllAsync())];
+            List<ProductDetail> getAllProduct = [.. (await productDetailsRepository.GetAllAsync()).Where(P => P.ProductId == id && !P.IsDeleted)];
 
             if (getAllProduct is not null)
             {
