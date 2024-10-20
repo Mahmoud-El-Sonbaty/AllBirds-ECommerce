@@ -10,7 +10,10 @@ namespace AllBirds.Models
     public class Color : BaseEntity<int>
     {
         [MaxLength(32)]
-        public string Name { get; set; }
+        public string NameAr { get; set; }
+        [MaxLength(32)]
+
+        public string NameEn { get; set; }
 
         [MaxLength(10)]
         public string Code { get; set; }
