@@ -11,11 +11,14 @@ namespace AllBirds.AdminDashboard.Controllers
     public class OrderMasterController : Controller
     {
         public IOrderMasterService OrderService { get; set; }
+        public IOrderStateService OrderSateService { get; set; }
 
-        public OrderMasterController(IOrderMasterService _orderService
+        public OrderMasterController(IOrderMasterService _orderService,
+                                       IOrderStateService _orderSate
                                       )
         {
-            this.OrderService = _orderService;  
+            this.OrderService = _orderService; 
+            this.OrderSateService = _orderSate;
         }
         public IActionResult Index()
         {
@@ -44,8 +47,9 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> GetAllOrderMasters()
         {
             var OrderMaster = (await OrderService.GetAllAsync()).ToList();
-            
-           
+
+            var orderState = OrderSateService.GetAllAsync();
+            ViewBag.OrderSate = orderState;
             return View(OrderMaster);
 
         }
