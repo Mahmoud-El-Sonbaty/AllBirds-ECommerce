@@ -47,7 +47,7 @@ namespace AllBirds.AdminDashboard.Controllers
             ViewBag.Categories = allCategoryDTOs;
             return View();
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Create(CUProductDTO cUProductDTO)
         {
@@ -115,16 +115,29 @@ namespace AllBirds.AdminDashboard.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> AddProductSpec()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public async Task<IActionResult> AddProductSpec(CUProductSpecificationDTO productSpec)
+        public async Task<IActionResult> AddProductSpec([FromBody] CUProductSpecificationDTO cUproductSpec)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                ResultView<CUProductSpecificationDTO> res = await productSpecService.CreateAsync(cUproductSpec);
+                return res.IsSuccess ? Json(new { success = true, id = res.Data!.Id }) : Json(new { success = false, message = $"creation not successfull {res.Msg}" });
+            }
+
+            // If the model is invalid, return an error response
+            return Json(new { success = false, message = "Invalid data" });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProductSpec([FromBody] CUProductSpecificationDTO cUproductSpec)
+        {
+            if (ModelState.IsValid)
+            {
+                ResultView<CUProductSpecificationDTO> res = await productSpecService.UpdateAsync(cUproductSpec);
+                return res.IsSuccess ? Json(new { success = true, id = res.Data!.Id }) : Json(new { success = false, message = $"creation not successfull {res.Msg}" });
+            }
+
+            // If the model is invalid, return an error response
+            return Json(new { success = false, message = "Invalid data" });
         }
 
         [HttpGet]
