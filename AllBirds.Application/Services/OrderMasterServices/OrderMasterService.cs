@@ -218,7 +218,7 @@ namespace AllBirds.Application.Services.OrderServices
                 {
                     result.IsSuccess = true;
                     result.Data = _mapper.Map<GetOneOdrerMasterDTO>(ordermaster);
-                    result.Msg = $"get order number {ordermaster.OrderNo} done  ";
+                    result.Msg = $"Get Order Number {ordermaster.OrderNo} Done  ";
 
 
                 }
@@ -226,7 +226,7 @@ namespace AllBirds.Application.Services.OrderServices
                 {
                     result.IsSuccess = false;
                     result.Data = null;
-                    result.Msg = " order is not found Empty ";
+                    result.Msg = "Order Is Not Founds";
                 }
 
             }
@@ -234,7 +234,7 @@ namespace AllBirds.Application.Services.OrderServices
             {
                 result.IsSuccess = false;
                 result.Data = null;
-                result.Msg = $"Error Happen While get the order With Id {OrderId} " + ex.Message;
+                result.Msg = $"Error Happen While Get The Order With Id {OrderId} " + ex.Message;
 
             }
             return result;
@@ -268,7 +268,7 @@ namespace AllBirds.Application.Services.OrderServices
                 {
                     result.IsSuccess = false;
                     result.Data = null;
-                    result.Msg = " order is not found Empty ";
+                    result.Msg = "Order is not found";
                 }
 
             }
@@ -276,7 +276,7 @@ namespace AllBirds.Application.Services.OrderServices
             {
                 result.IsSuccess = false;
                 result.Data = null;
-                result.Msg = $"Error Happen While Delete the order With Id {OrderID} " + ex.Message;
+                result.Msg = $"Error Happen While Delete the Order With Id {OrderID} " + ex.Message;
 
             }
             return result;
@@ -331,7 +331,7 @@ namespace AllBirds.Application.Services.OrderServices
             {
                 result.IsSuccess = false;
                 result.Data = null;
-                result.Msg = $"Error Happen While Delete the order With Id {OrderID} " + ex.Message;
+                result.Msg = $"Error Happen While Delete The Order With Id {OrderID} " + ex.Message;
 
             }
             return result;
