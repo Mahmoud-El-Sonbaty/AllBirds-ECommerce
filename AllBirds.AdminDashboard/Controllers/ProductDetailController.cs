@@ -1,20 +1,15 @@
-﻿using AllBirds.Application.Services.CategoryServices;
-using AllBirds.Application.Services.ProductDetailService;
-using AllBirds.Application.Services.ProductServices;
-using AllBirds.DTOs.AccountDTOs;
-using AllBirds.DTOs.CategoryDTOs;
+﻿using AllBirds.Application.Services.ProductDetailService;
 using AllBirds.DTOs.ProductDetailDTOs;
-using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
-    public class ProductDetailConroller : Controller
+    public class ProductDetailController : Controller
     {
         private readonly IProductDetailsService productDetailsService;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public ProductDetailConroller(IProductDetailsService _producDetailstService, IWebHostEnvironment _webHostEnvironment)
+        public ProductDetailController(IProductDetailsService _producDetailstService, IWebHostEnvironment _webHostEnvironment)
         {
             productDetailsService = _producDetailstService;
             webHostEnvironment = _webHostEnvironment;
