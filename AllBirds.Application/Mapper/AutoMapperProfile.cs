@@ -125,7 +125,8 @@ namespace AllBirds.Application.Mapper
             #endregion
 
             #region ProductDetails
-            CreateMap<ProductDetail, CUProductDetails>().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
+            CreateMap<ProductDetail, CRProductDetails>().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
+            CreateMap<ProductDetail, UpdateProductDetail>().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
             CreateMap<ProductDetail, GetAllProductDetailsDTOS>().ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
                 .ForMember(dest => dest.NameEn, opt => opt.MapFrom(src => src.Product.NameEn))
                 .ForMember(dest => dest.NameAr, opt => opt.MapFrom(src => src.Product.NameAr));

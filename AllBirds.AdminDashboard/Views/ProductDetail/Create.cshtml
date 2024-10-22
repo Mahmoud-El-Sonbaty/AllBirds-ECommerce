@@ -1,4 +1,5 @@
-﻿@model AllBirds.DTOs.ProductDetailDTOs.CUProductDetails
+﻿@using AllBirds.DTOs.ProductDetailDTOs
+@model AllBirds.DTOs.Shared.ResultView<CRProductDetails>
 @{
     ViewData["Title"] = "CreateProductDetails";
 }
@@ -25,32 +26,49 @@
         <div class="card">
             <div class="card-body">
                 @* <h4 class="card-title">CreateProduct</h4> *@
-                <form class="form-sample" method="post" asp-action="Create" >
+                <form class="form-sample" enctype="multipart/form-data" method="post" asp-action="Create">
                     <p class="card-description"> Main Info </p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label" asp-for="Title"></label>
+                                <label class="col-sm-3 col-form-label" asp-for="Data.TitleEn"></label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" asp-for="Title" />
-                                    <span class="text-danger" asp-validation-for="Title"></span>
+                                    <input class="form-control" asp-for="Data.TitleEn" />
+                                    <span class="text-danger" asp-validation-for="Data.TitleEn"></span>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="Data.TitleAr"></label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" asp-for="Data.TitleAr" />
+                                    <span class="text-danger" asp-validation-for="Data.TitleAr"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label" asp-for="Description"></label>
+                                <label class="col-sm-3 col-form-label" asp-for="Data.DescriptionEn"></label>
                                 <div class="col-sm-9">
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text bg-primary text-white">$</span>
-                                        </div>
-                                        <input class="form-control" asp-for="Description" />
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">.00</span>
-                                        </div>
+
+                                        <input class="form-control" asp-for="Data.DescriptionEn" />
+
                                     </div>
-                                    <span class="text-danger" asp-validation-for="Description"></span>
+                                    <span class="text-danger" asp-validation-for="Data.DescriptionEn"></span>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" asp-for="Data.DescriptionAr"></label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+
+                                        <input class="form-control" asp-for="Data.DescriptionAr" />
+                                    </div>
+                                    <span class="text-danger" asp-validation-for="Data.DescriptionAr"></span>
                                 </div>
                             </div>
                         </div>
@@ -58,13 +76,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label" asp-for="ImageData"></label>
+                                <label class="col-sm-3 col-form-label" asp-for="Data.ImageData"></label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" asp-for="ImageData" />
-                                    <span class="text-danger" asp-validation-for="ImageData"></span>
+                                    <input class="form-control" asp-for="Data.ImageData" />
+                                    <span class="text-danger" asp-validation-for="Data.ImageData"></span>
                                 </div>
                             </div>
-                            <input hidden asp-for="ProductId" value="ViewBag.ProductId" />
+                            <input hidden asp-for="Data.ProductId" value="@ViewBag.ProductId" />
 
                         </div>
                         
@@ -72,7 +90,22 @@
 
                     <button type="submit" class="btn btn-primary mr-2">Create</button>
                     <a asp-controller="ProductDetail" asp-action="AllProductDetails" class="btn btn-dark">Cancel</a>
+
                 </form>
+                @if (Model.IsSuccess)
+                {
+                    <h4 class="text-success mg-5" style="text-align:center">
+                        @Model.Msg
+                    </h4>
+                }
+                else
+                {
+                    <h4 class="text-danger mg-5" style="text-align:center">
+                        @Model.Msg
+                    </h4>
+                }
+
+
             </div>
         </div>
     </div>
