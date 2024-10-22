@@ -1,5 +1,4 @@
-﻿@using AllBirds.DTOs.ProductDTOs
-@model List<GetAllProductDTO>
+﻿@model ResultView<List<GetAllProductDTO>>
 
 
 @{
@@ -45,6 +44,7 @@
                                 <th> Price </th>
                                 <th> Discount </th>
                                 <th> Free Shipping </th>
+                                <th> Deleted </th>
                                 @* <th> Available Colors </th>
                                 <th> Units In Stock </th>
                                 <th> Available Sizes </th> *@
@@ -52,7 +52,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (GetAllProductDTO prd in Model)
+                            @foreach (GetAllProductDTO prd in Model.Data)
                             {
                                 <tr>
                                     <td>
@@ -76,7 +76,18 @@
                                             <td> <lablel class="badge badge-danger">Not Eligible</lablel> </td>
                                         }
                                     }
-                                    @* <td>
+                                    
+                                    @{
+                                        if(prd.IsDeleted)
+                                        {
+                                            <td> <label class="badge badge-danger">Deleted</label> </td>
+                                        }
+                                        else
+                                        {
+                                            <td> <lablel class="badge badge-success">Present</lablel> </td>
+                                        }
+                                    }
+                                    @*<td>
                                         colors
                                     </td>
                                     <td>

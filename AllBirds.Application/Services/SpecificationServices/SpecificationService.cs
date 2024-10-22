@@ -157,7 +157,7 @@ namespace AllBirds.Application.Services.SpecificationServices
                 {
                     resultView.IsSuccess = false;
                     resultView.Data = null;
-                    resultView.Msg = $"Specification {specExist?.NameEn} Not Found";
+                    resultView.Msg = $"Specification {id} Not Found";
                     return resultView;
                 }
             }

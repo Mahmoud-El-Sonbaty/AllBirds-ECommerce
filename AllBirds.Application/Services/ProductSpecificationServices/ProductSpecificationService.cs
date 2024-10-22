@@ -70,11 +70,12 @@ namespace AllBirds.Application.Services.ProductSpecificationServices
                     resultView.Msg = $"Product Specification ({entity.Id}) Doesn't Exist";
                     return resultView;
                 }
-                else if ((await productSpecRepository.GetAllAsync()).Any(ps => ps.SpecificationId == entity.SpecificationId && ps.ProductId == entity.ProductId))
+                else if ((await productSpecRepository.GetAllAsync()).Any(ps => ps.SpecificationId == entity.SpecificationId && ps.ProductId == entity.ProductId
+                && ps.ContentAr == entity.ContentAr && ps.ContentEn == entity.ContentEn))
                 {
                     resultView.IsSuccess = false;
                     resultView.Data = null;
-                    resultView.Msg = $"Specification ({entity.SpecificationId}) Already Exist For The Same Product ({entity.ProductId})";
+                    resultView.Msg = $"Specification ({entity.SpecificationId}) Already Exist For The Same Product ({entity.ProductId}) With The Same Content Arabic And English";
                     return resultView;
                 }
                 ProductSpecification specification = mapper.Map<ProductSpecification>(entity);

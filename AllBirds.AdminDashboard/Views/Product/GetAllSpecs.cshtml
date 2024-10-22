@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="~/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
 <!-- End plugin css for this page -->
 
-@* <div class="alert alert-success text-dark" role="alert"> You successfully read this important alert message. </div> *@
+<div id="msgDiv" class="alert alert-success text-dark" role="alert"> <span>@Model.Msg</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button></div>
 
 <h1>GetAllSpecs</h1>
 <div class="row">
@@ -43,7 +43,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.IsSuccess)
+                            @if (Model.IsSuccess && Model.Data.Count > 0)
                             {
                                 @foreach (GetProductSpecificationDTO prdSpec in Model.Data)
                                 {
@@ -151,6 +151,8 @@
                         specSelectTd.textContent = specSelectTd.children[0].selectedOptions[0].textContent;
                         lastTd.innerHTML = `<button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
                             <a href="/Product/DeletePrdSpec/${res.id}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
+                        msgDiv.style = "display: block;";
+                        msgDiv.children[0].textContent = res.message;
                     }
                     else {
                         alert(res.message);
@@ -222,6 +224,8 @@
                         specTd.textContent = specTd.children[0].selectedOptions[0].textContent;
                         lastTd.innerHTML = `<button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
                             <a href="/Product/DeletePrdSpec/${latestPrdSpecIdClicked}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
+                        msgDiv.style = "display: block;";
+                        msgDiv.children[0].textContent = res.message;
                     }
                     else {
                         alert(res.message);

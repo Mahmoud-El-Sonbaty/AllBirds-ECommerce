@@ -15,5 +15,6 @@ namespace AllBirds.DTOs.ProductDTOs
         public decimal Price { get; set; }
         public int Discount { get; set; }
         public bool FreeShipping { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -111,8 +111,8 @@ namespace AllBirds.Application.Mapper
                 .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => JoinStringList(src.HighlightsAr)))
                 .ForMember(dest => dest.HighlightsEn, opt => opt.MapFrom(src => JoinStringList(src.HighlightsEn)))
                 .ForMember(dest => dest.SustainableMaterialsAr, opt => opt.MapFrom(src => JoinStringList(src.SustainableMaterialsAr)))
-                .ForMember(dest => dest.SustainableMaterialsEn, opt => opt.MapFrom(src => JoinStringList(src.SustainableMaterialsEn)));
-                //.ForMember(dest => dest.Categories, opt => opt.MapFrom(src => new CategoryProduct() { CategoryId = src.CategoriesId[0], ProductId = src.Id }));
+                .ForMember(dest => dest.SustainableMaterialsEn, opt => opt.MapFrom(src => JoinStringList(src.SustainableMaterialsEn)))
+                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.CategoriesId.Select(c => new CategoryProduct() { CategoryId = c, ProductId = src.Id })));
 
             CreateMap<Product, CUProductDTO>()
                 .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => SplitJoinedString(src.HighlightsAr)))

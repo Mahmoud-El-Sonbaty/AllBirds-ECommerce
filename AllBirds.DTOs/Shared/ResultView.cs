@@ -10,6 +10,6 @@ namespace AllBirds.DTOs.Shared
     {
         public T? Data { get; set; }
         public bool IsSuccess { get; set; }
-        public string Msg { get; set; }
+        public string? Msg { get; set; }
     }
 }

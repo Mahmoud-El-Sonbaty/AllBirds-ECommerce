@@ -35,7 +35,7 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<GetAllProductDTO> getAllProductDTOs = (await productService.GetAllAsync());
+            ResultView<List<GetAllProductDTO>> getAllProductDTOs = (await productService.GetAllAsync());
             return View(getAllProductDTOs);
 
         }
@@ -51,12 +51,15 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CUProductDTO cUProductDTO)
         {
+            var ff = Request;
             if (ModelState.IsValid)
             {
-                CUProductDTO createdProduct = await productService.CreateAsync(cUProductDTO);
-                return RedirectToAction("GetAll");
+                ResultView<CUProductDTO> createRes = await productService.CreateAsync(cUProductDTO);
+                if (createRes.IsSuccess)
+                    return RedirectToAction("GetAll");
+                return View(createRes);
             }
-            return View();
+            return View(new ResultView<CUProductDTO>() { IsSuccess = false, Msg = $"{ModelState.ErrorCount} errors", Data = null });
         }
 
         [HttpGet]
@@ -68,35 +71,35 @@ namespace AllBirds.AdminDashboard.Controllers
             return View(Prd);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Update(CUProductDTO cUProductDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                CUProductDTO createdProduct = await productService.UpdateAsync(cUProductDTO);
-                if (createdProduct is not null)
-                {
-                    return RedirectToAction("GetAll");
-                }
-                else
-                    return View();
-            }
-            return View();
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> Update(CUProductDTO cUProductDTO)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        CUProductDTO createdProduct = await productService.UpdateAsync(cUProductDTO);
+        //        if (createdProduct is not null)
+        //        {
+        //            return RedirectToAction("GetAll");
+        //        }
+        //        else
+        //            return View();
+        //    }
+        //    return View();
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            if (id > 0)
-            {
-                CUProductDTO deletedProduct = await productService.SoftDeleteAsync(id);
-                if (deletedProduct is not null)
-                {
-                    return RedirectToAction("GetAll");
-                }
-            }
-            return null;
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    if (id > 0)
+        //    {
+        //        CUProductDTO deletedProduct = await productService.SoftDeleteAsync(id);
+        //        if (deletedProduct is not null)
+        //        {
+        //            return RedirectToAction("GetAll");
+        //        }
+        //    }
+        //    return null;
+        //}
 
         /////////////////////////////////////////////////// Product Specifications//////////////////////////////////////////////////////////////
 
@@ -121,19 +124,20 @@ namespace AllBirds.AdminDashboard.Controllers
             if (ModelState.IsValid)
             {
                 ResultView<CUProductSpecificationDTO> res = await productSpecService.CreateAsync(cUproductSpec);
-                return res.IsSuccess ? Json(new { success = true, id = res.Data!.Id }) : Json(new { success = false, message = $"creation not successfull {res.Msg}" });
+                return res.IsSuccess ? Json(new { success = true, id = res.Data!.Id, message = res.Msg }) : Json(new { success = false, message = res.Msg });
             }
 
             // If the model is invalid, return an error response
             return Json(new { success = false, message = "Invalid data" });
         }
+
         [HttpPost]
         public async Task<IActionResult> UpdateProductSpec([FromBody] CUProductSpecificationDTO cUproductSpec)
         {
             if (ModelState.IsValid)
             {
                 ResultView<CUProductSpecificationDTO> res = await productSpecService.UpdateAsync(cUproductSpec);
-                return res.IsSuccess ? Json(new { success = true, id = res.Data!.Id }) : Json(new { success = false, message = $"creation not successfull {res.Msg}" });
+                return res.IsSuccess ? Json(new { success = true, id = res.Data!.Id, message = res.Msg }) : Json(new { success = false, message = res.Msg });
             }
 
             // If the model is invalid, return an error response
@@ -143,8 +147,10 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> DeletePrdSpec(int id)
         {
-            ResultView<GetProductSpecificationDTO> deletedSpec = await productSpecService.HardDeleteAsync(id);
-            return Redirect($"/Product/GetAllSpecs/{id}");
+            ResultView<GetProductSpecificationDTO> res = await productSpecService.HardDeleteAsync(id);
+            if (res.IsSuccess)
+                return Redirect($"/Product/GetAllSpecs/{res.Data.ProductId}");
+            return Json(new { success = false, message = res.Msg });
         }
     }
 }
