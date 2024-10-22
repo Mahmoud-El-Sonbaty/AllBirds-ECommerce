@@ -9,7 +9,9 @@
         <form asp-action="Create" method="post" class="forms-sample">
             <div class="form-group">
                 <label for="ColorName">Color Name</label>
-                <input type="text" class="form-control" id="ColorName" name="Name" value="@Model.Name" placeholder="Enter color name" />
+                <input type="text" class="form-control" asp-for="Name" />
+                <label for="ColorName">Color Code</label>
+                <input type="text" class="form-control" asp-for="Code" />
             </div>
 
             <button type="submit" class="btn btn-primary mr-2">Create</button>

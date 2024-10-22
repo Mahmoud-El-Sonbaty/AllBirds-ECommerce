@@ -54,7 +54,7 @@ namespace AllBirds.AdminDashboard.Controllers
             if (ModelState.IsValid)
             {
                 await _colorService.CreateAsync(colorDto);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(GetALLForC_CO_S_OS));
             }
             return View(colorDto);
         }

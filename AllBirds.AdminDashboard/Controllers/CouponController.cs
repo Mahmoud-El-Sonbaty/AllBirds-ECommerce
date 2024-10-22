@@ -1,7 +1,6 @@
 ﻿using AllBirds.Application.Services.CouponServices;
 using AllBirds.DTOs.CouponDTOs;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
@@ -34,7 +33,7 @@ namespace AllBirds.AdminDashboard.Controllers
             if (ModelState.IsValid)
             {
                 await _couponService.CreateAsync(couponDto);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("GetALLForC_CO_S_OS", "Color");
             }
             return View(couponDto);
         }
@@ -57,7 +56,7 @@ namespace AllBirds.AdminDashboard.Controllers
             if (ModelState.IsValid)
             {
                 await _couponService.UpdateAsync(couponDto);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("GetALLForC_CO_S_OS","Color");
             }
             return View(couponDto);
         }
