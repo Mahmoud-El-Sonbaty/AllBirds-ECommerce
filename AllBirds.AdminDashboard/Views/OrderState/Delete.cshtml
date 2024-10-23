@@ -1,0 +1,18 @@
+﻿@* @model OrderState *@
+@using AllBirds.DTOs.OrderStateDTOs
+
+@model CUOrderStateDTO
+
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Delete Order State</h4>
+        <p>Are you sure you want to delete the order state <strong>@Model.StateEn</strong>?</p>
+        <form method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" name="hardDelete" value="true" class="btn btn-danger">Delete Permanently</button>
+            <button type="submit" name="hardDelete" value="false" class="btn btn-warning">Soft Delete</button>
+            <a href="@Url.Action("Index")" class="btn btn-dark">Cancel</a>
+        </form>
+    </div>
+</div>
