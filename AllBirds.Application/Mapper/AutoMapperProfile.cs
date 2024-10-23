@@ -14,6 +14,7 @@ using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.SizeDTOs;
 using AllBirds.DTOs.SpecificationDTOs;
+using AllBirds.DTOs.ProductColorImageDTOs;
 namespace AllBirds.Application.Mapper
 {
     public class AutoMapperProfile : Profile
@@ -138,10 +139,10 @@ namespace AllBirds.Application.Mapper
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
 
-            #region ProductColorImage
-            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
-            #endregion
+           
+            CreateMap<ProductColorImage, CUProductColorImageDTO> ().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
+            CreateMap<ProductColorImage, GetAllCategoryProductDTO>().ReverseMap();
+
 
             #region ProductColorSize
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()

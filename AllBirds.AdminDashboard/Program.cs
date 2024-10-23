@@ -6,6 +6,7 @@ using AllBirds.Application.Services.CategoryServices;
 using AllBirds.Application.Services.ColorServices;
 using AllBirds.Application.Services.CouponServices;
 using AllBirds.Application.Services.OrderStateServices;
+using AllBirds.Application.Services.ProductColorImageServices;
 using AllBirds.Application.Services.ProductDetailService;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
@@ -60,7 +61,8 @@ namespace AllBirds.AdminDashboard
             // ProductColor
 
             // ProductColorImage
-
+            builder.Services.AddScoped<IProductColorImageRepository, ProductColorImageRepository>();
+            builder.Services.AddScoped<IProductColotImageService, ProductColorImageService>();
             // ProductColorSize
 
             // ProductDetail

@@ -150,20 +150,22 @@ namespace AllBirds.Application.Services.ProductDetailService
             }
 
 
-       
-                string[] path = cUProductDetails.ImagePath.Split("~@#$%&", 2, StringSplitOptions.RemoveEmptyEntries);
 
-                string uploadFolder = path[0].Trim();
+            string[] path = cUProductDetails.ImagePath.Split("~@#$%&", 2, StringSplitOptions.RemoveEmptyEntries);
 
+            //string uploadFolder = path[0].Trim();
+
+            
             string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
             string oldFilePath = Path.Combine(rootPath, path[0].TrimStart('/'));
+            var Check = Directory.GetCurrentDirectory();
 
             if (System.IO.File.Exists(oldFilePath))
-                {
-                    System.IO.File.Delete(oldFilePath);
-                }
-            
+            {
+                System.IO.File.Delete(oldFilePath);
+            }
+
             string uniqueFileName = Guid.NewGuid().ToString() + "_" + cUProductDetails.ImageData.FileName;
             string filePath = Path.Combine(path[1], uniqueFileName);
 

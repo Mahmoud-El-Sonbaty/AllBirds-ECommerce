@@ -1,4 +1,5 @@
-﻿using AllBirds.DTOs.Shared;
+﻿using AllBirds.DTOs.ProductColorImageDTOs;
+using AllBirds.DTOs.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,14 @@ namespace AllBirds.Application.Services.ProductColorImageServices
 {
     public interface IProductColotImageService
     {
-        //public async Task<ResultView<>>
+        public Task<ResultView< CUProductColorImageDTO>> CreateProductColorImage(CUProductColorImageDTO cUProductColorImageDTO);
+
+        public Task<ResultView<CUProductColorImageDTO>> UpdateProductColorImageDTO(CUProductColorImageDTO cUProductColorImageDTO);
+
+        public Task<List<GetAllProductColorImageDTO>> GetAllProductColorImage(int Id);
+
+        public Task<ResultView<CUProductColorImageDTO>> HardDeleteProductColorImage(CUProductColorImageDTO cUProductColorImageDTO);
+
+
     }
 }

@@ -12,7 +12,7 @@ namespace AllBirds.DTOs.ProductColorImageDTOs
     public class CUProductColorImageDTO
     {
         public int Id { get; set; }
-
+        [Required]
         public int ProductColorId { get; set; }
 
         public IFormFile? ImageData { get; set; }
