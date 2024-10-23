@@ -1,9 +1,23 @@
-﻿@model GetAllOrderMastersDTO
+﻿@model List<GetAllOrderMastersDTO>
 @{
     ViewData["Title"] = "GetAllOrderMasters";
+    SelectList OrderState = new(ViewBag.OrderSate, "Id", "StateEn");
 }
 
-<div class="col-lg-12 grid-margin stretch-card">
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+
+<div class="col-lg-12 grid-margin stretch-card" >
     <div class="card">
         <div class="card-body">
             <div class="table-responsive ">
@@ -22,25 +36,27 @@
                     </thead>
                     <tbody>
 
+                        @foreach(var item in Model)
+                        {
 
                         <tr>
                             
-                            <td>@Model.OrderNo </td>
-                            <td>@Model.ClientName </td>
+                            <td>@item.OrderNo </td>
+                                <td>@item.ClientName </td>
                             <td>
-                                @if (Model.OrderStateId == 1)
+                               @if (item.OrderStateId == 1)
                                 {
                                     <div class="progress">
                                         <div class="progress-bar bg-primary" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 }
-                                else if (Model.OrderStateId == 2)
+                               else if (item.OrderStateId == 2)
                                 {
                                     <div class="progress">
                                         <div class="progress-bar bg-secondary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 }
-                                else if (Model.OrderStateId == 3)
+                               else if (item.OrderStateId == 3)
                                 {
                                     <div class="progress">
                                         <div class="progress-bar bg-info" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
@@ -56,36 +72,42 @@
                             </td>
 
                             <td>
-                                @if (Model.OrderStateId == 1)
+                                @if (item.OrderStateId == 1)
                                 {
-                                    <label class="badge badge-primary">@Model.OrderStateName</label>
+                                        <label class="badge badge-primary">@item.OrderStateName</label>
                                 }
-                                else if (Model.OrderStateId == 2)
+                                    else if (item.OrderStateId == 2)
                                 {
-                          
-                                    <label class="badge badge-secondary">@Model.OrderStateName</label>
+
+                                        <label class="badge badge-secondary">@item.OrderStateName</label>
 
                                 }
-                                else if (Model.OrderStateId == 3)
+                                    else if (item.OrderStateId == 3)
                                 {
-                                    <label class="badge badge-info">@Model.OrderStateName</label>
+                                        <label class="badge badge-info">@item.OrderStateName</label>
 
                                 }
                                 else
                                 {
-                              
-                                    <label class="badge badge-success">@Model.OrderStateName</label>
+
+                                        <label class="badge badge-success">@item.OrderStateName</label>
 
                                 }
                              </td>
-                            <td> @Model.DiscountPerctnage +"%" </td>
-                            <td> @Model.Total</td>
+                                <td> @item.DiscountPerctnage +"%" </td>
+                                <td> @item.Total</td>
                             <td>
-                                <button class="btn btn-inverse-success for inverse buttons p-2  m-1" onclick="changingState(3,@Model.Id)">Aprove</button>
-                                <button class="btn btn-inverse-danger  for inverse buttons p-2  m-1" onclick="changingState(4,@Model.Id)">Rejecte</button>
+             @*                     <button class="btn btn-inverse-success for inverse buttons p-2  m-1" onclick="changingState(3,@Model.Id)">Aprove</button>
+                                 <button class="btn btn-inverse-danger  for inverse buttons p-2  m-1" onclick="changingState(4,@Model.Id)">Rejecte</button> *@
 
+                                <div class="mb-3" >
+                                        <select class="form-select bg-warning text-dark" aria-label="Action select" style="width: auto; "  asp-items="OrderState" onchange="changingState(this.value, @item.Id)">
+                                     </select> 
+                                </div>
                             </td>
                         </tr>
+                            
+                        }
 
                     </tbody>
                 </table>
@@ -101,15 +123,17 @@
 
 
     function changingState(state, orderID) {
-        console.log(id)
         $.ajax({
-            url: `/OrderMaster/changingState/${state}&&${orderID}`,
+            url: `/OrderMaster/changingState/?stateID=${state}&&orderID=${orderID}`,
             type: 'GET',
-            // success: function (res) {
-            //     $("#Table").html(res);
-
-
-            // }
+              success: function (res) {
+                console.log("State changed successfully for Order ID: ", orderID);
+                // Optional: If you want to reload part of the page or update a section
+                // $("#Table").html(res);
+            },
+            error: function (err) {
+                console.error("Error changing state", err);
+            }
         });
     }
 

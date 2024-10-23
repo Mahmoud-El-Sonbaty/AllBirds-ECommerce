@@ -5,7 +5,10 @@ using AllBirds.Application.Services.CategoryProductServices;
 using AllBirds.Application.Services.CategoryServices;
 using AllBirds.Application.Services.ColorServices;
 using AllBirds.Application.Services.CouponServices;
+using AllBirds.Application.Services.OrderDetailsServices;
+using AllBirds.Application.Services.OrderServices;
 using AllBirds.Application.Services.OrderStateServices;
+using AllBirds.Application.Services.ProductColorServices;
 using AllBirds.Application.Services.ProductDetailService;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
@@ -47,11 +50,11 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddScoped<ICouponService, CouponService>();
             builder.Services.AddScoped<ICouponRepository, CouponRepository>();
             // OrderDetail
-            //builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
-            //builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+            builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
+            builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             // OrderMaster
-            //builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
-            //builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
+            builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
+            builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
             // OrderState
             builder.Services.AddScoped<IOrderStateService, OrderStateService>();
             builder.Services.AddScoped<IOrderStateRepository, OrderStateRepository>();
@@ -61,7 +64,8 @@ namespace AllBirds.AdminDashboard
             // ProductColor
 
             // ProductColorImage
-
+            builder.Services.AddScoped<IProductColorService, ProductColorService>();
+            builder.Services.AddScoped<IProductColorRepository, ProductColorRepository>();
             // ProductColorSize
 
             // ProductDetail

@@ -1,4 +1,5 @@
 ﻿using AllBirds.DTOs.OrderDetailsDTOs;
+using AllBirds.DTOs.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace AllBirds.Application.Services.OrderDetailsServices
 {
     public interface IOrderDetailsService
     {
-        public Task<CreateOrderDetailsDTO> CreateAsync(CreateOrderDetailsDTO createOrderMDTo);
-        public Task<CreateOrderDetailsDTO> UpdateAsync(CreateOrderDetailsDTO createOrderMDTo);
-        public Task<GetOneOrderDetailsDTO> SoftDeleteAsync(int OrderID);
-        public Task<GetOneOrderDetailsDTO> HardDeleteAsync(int OrderID);
-        public Task<List<GetAllOrderDetailsDTO>> GetAllAsync();
-        public Task<List<GetAllOrderDetailsDTO>> GetAllWithDeletedAsync();
-        public Task<GetOneOrderDetailsDTO> GetByIdAsync(int OrderId);
+        public Task<ResultView<CreateOrderDetailsDTO>> CreateAsync(CreateOrderDetailsDTO createOrderMDTo);
+        public Task<ResultView<CreateOrderDetailsDTO>> UpdateAsync(CreateOrderDetailsDTO createOrderMDTo);
+        public Task<ResultView<GetOneOrderDetailsDTO>> SoftDeleteAsync(int OrderID);
+        public Task<ResultView<GetOneOrderDetailsDTO>> HardDeleteAsync(int OrderID);
+        public Task<ResultView<List<GetAllOrderDetailsDTO>>> GetAllAsync();
+        public Task<ResultView<List<GetAllOrderDetailsDTO>>> GetAllWithDeletedAsync();
+        public Task<ResultView<GetOneOrderDetailsDTO>> GetByIdAsync(int OrderId);
     }
 }

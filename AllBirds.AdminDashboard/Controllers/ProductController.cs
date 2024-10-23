@@ -1,9 +1,11 @@
 
 using AllBirds.Application.Services.CategoryServices;
+using AllBirds.Application.Services.ProductColorServices;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
 using AllBirds.Application.Services.SpecificationServices;
 using AllBirds.DTOs.CategoryDTOs;
+using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
@@ -19,13 +21,15 @@ namespace AllBirds.AdminDashboard.Controllers
         private readonly IProductSpecificationService productSpecService;
         private readonly ICategoryService categoryService;
         private readonly ISpecificationService specificationService;
+        private readonly IProductColorService productColorService;
 
-        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService)
+        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService, IProductColorService _productColorService)
         {
             productService = _productService;
             categoryService = _categoryService;
             productSpecService = _productSpecservice;
             specificationService = _specificationService;
+            productColorService = _productColorService;
         }
         public IActionResult Index()
         {
@@ -167,5 +171,24 @@ namespace AllBirds.AdminDashboard.Controllers
                 return Redirect($"/Product/GetAllSpecs/{res.Data.ProductId}");
             return Json(new { success = false, message = res.Msg });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProductColors()
+        {
+
+            var PrColor = await productColorService.GetAllAsync();
+            if (PrColor.IsSuccess)
+            {
+                return View(PrColor.Data);
+            }
+            else
+            {
+
+                ViewBag.ErrMsg = PrColor.Msg;
+                return View();
+            }
+        }
+
+
     }
 }

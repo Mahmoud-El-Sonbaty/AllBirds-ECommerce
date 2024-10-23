@@ -9,6 +9,7 @@ using AllBirds.DTOs.CouponDTOs;
 using AllBirds.DTOs.OrderDetailsDTOs;
 using AllBirds.DTOs.OrderMasterDTOs;
 using AllBirds.DTOs.OrderStateDTOs;
+using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
@@ -130,6 +131,28 @@ namespace AllBirds.Application.Mapper
             #endregion
 
             #region ProductColor
+
+            CreateMap<CreateProductColorDTO,ProductColor>().ReverseMap();
+            CreateMap<GetALlProductColorDTO, ProductColor>().ReverseMap()
+                .ForMember(dest => dest.ColorNameAr, opt => opt.MapFrom(src => src.Color.NameAr))
+                .ForMember(dest => dest.ColorNameEn, opt => opt.MapFrom(src => src.Color.NameEn))
+                .ForMember(dest => dest.ColorCode, opt => opt.MapFrom(src => src.Color.Code))
+                .ForMember(dest => dest.PNameAr, opt => opt.MapFrom(src => src.Product.NameAr))
+                .ForMember(dest => dest.PNameEn, opt => opt.MapFrom(src => src.Product.NameEn))
+                .ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
+                .ForMember(dest=>dest.MainImagePath,opt=>opt.MapFrom(src=>src.Images.FirstOrDefault(p=>p.Id==src.MainImageId).ImagePath))
+                ;
+            CreateMap<GetOneProductColorDTO, ProductColor>().ReverseMap()
+                .ForMember(dest => dest.ColorNameAr, opt => opt.MapFrom(src => src.Color.NameAr))
+                .ForMember(dest => dest.ColorNameEn, opt => opt.MapFrom(src => src.Color.NameEn))
+                .ForMember(dest => dest.ColorCode, opt => opt.MapFrom(src => src.Color.Code))
+                .ForMember(dest => dest.PNameAr, opt => opt.MapFrom(src => src.Product.NameAr))
+                .ForMember(dest => dest.PNameEn, opt => opt.MapFrom(src => src.Product.NameEn))
+                .ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
+                .ForMember(dest => dest.MainImagePath, opt => opt.MapFrom(src => src.Images.FirstOrDefault(p => p.Id == src.MainImageId).ImagePath))
+                .ForMember(dest=>dest.Sizes,opt=>opt.MapFrom(src=>src.AvailableSizes.Select(r=>r.Size.SizeNumber).ToList()))
+                .ForMember(dest=>dest.Images,opt=>opt.MapFrom(src=>src.Images.Select(r=>r.ImagePath).ToList()));
+
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion

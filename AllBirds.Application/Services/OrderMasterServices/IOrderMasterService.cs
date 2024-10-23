@@ -1,4 +1,6 @@
-﻿using AllBirds.DTOs.OrderMasterDTOs;
+﻿using AllBirds.DTOs.CategorySizeDTOS;
+using AllBirds.DTOs.OrderMasterDTOs;
+using AllBirds.DTOs.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +11,13 @@ namespace AllBirds.Application.Services.OrderServices
 {
     public interface IOrderMasterService
     {
-        public Task<createOrderMasterDTO> CreateAsync(createOrderMasterDTO createOrderMDTo);
-        public Task<createOrderMasterDTO> UpdateAsync(createOrderMasterDTO createOrderMDTo);
-        public Task<GetOneOdrerMasterDTO> SoftDeleteAsync(int OrderID);
-        public Task<GetOneOdrerMasterDTO> HardDeleteAsync(int OrderID);
-        public Task<List<GetAllOrderMastersDTO>> GetAllAsync();
-        public Task<List<GetAllOrderMastersDTO>> GetAllWithDeletedAsync();
-        public Task<GetOneOdrerMasterDTO> GetByIdAsync(int OrderId);
-        public  Task<bool> ChangingStateAsync(int StateId,int OrderID);
+        public Task<ResultView<createOrderMasterDTO>> CreateAsync(createOrderMasterDTO createOrderMDTo);
+        public Task<ResultView<createOrderMasterDTO>> UpdateAsync(createOrderMasterDTO createOrderMDTo);
+        public Task<ResultView<GetOneOdrerMasterDTO>> SoftDeleteAsync(int OrderID);
+        public Task<ResultView<GetOneOdrerMasterDTO>> HardDeleteAsync(int OrderID);
+        public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllAsync();
+        public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllWithDeletedAsync();
+        public Task<ResultView<GetOneOdrerMasterDTO>> GetByIdAsync(int OrderId);
+        public Task<ResultView<bool>> ChangingStateAsync(int StateId,int OrderID);
     }
 }
