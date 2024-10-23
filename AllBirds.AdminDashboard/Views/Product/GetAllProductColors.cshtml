@@ -1,5 +1,4 @@
-﻿@using AllBirds.DTOs.ProductColorDTOs;
-@model List<GetALlProductColorDTO>;
+﻿@model List<GetALlProductColorDTO>;
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
@@ -18,30 +17,37 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                        @foreach (GetALlProductColorDTO item in Model)
+                        @if (Model is not null)
                         {
+                            @foreach (GetALlProductColorDTO item in Model)
+                            {
                             
-                        <tr>
-                            <td>
-                                <img class="img-xs rounded " src="@item.MainImagePath" alt="">
-                            </td>
-                            <td>@item.ProductNo</td>
+                            <tr>
+                                <td>
+                                    <img class="img-xs rounded " src="@item.MainImagePath" alt="">
+                                </td>
+                                <td>@item.ProductNo</td>
                            
-                            <td>@item.PNameEn</td>
-                            <td>@item.ColorNameEn</td>
-                            <td><label class="badge  rounded text-light" style="background-color: @item.ColorCode; width: 35px;height: 35px; border-radius: 50%;">   </label></td>
+                                <td>@item.PNameEn</td>
+                                <td>@item.ColorNameEn</td>
+                                <td><label class="badge  rounded text-light" style="background-color: @item.ColorCode; width: 35px;height: 35px; border-radius: 50%;">   </label></td>
 
 
-                          @*    <td>
-                                 <button class="btn btn-inverse-success for inverse buttons p-2  m-1">Edit</button>
-                                 <button class="btn btn-inverse-danger  for inverse buttons p-2  m-1">Delete</button>
+                              @*    <td>
+                                     <button class="btn btn-inverse-success for inverse buttons p-2  m-1">Edit</button>
+                                     <button class="btn btn-inverse-danger  for inverse buttons p-2  m-1">Delete</button>
 
-                             </td> *@
-                        </tr>
+                                 </td> *@
+                            </tr>
 
+                            }
                         }
-
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">There Are No Colors For This Product</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

@@ -15,30 +15,30 @@ namespace AllBirds.Application.Services.ProductColorServices
 {
     public class ProductColorService : IProductColorService
     {
-        public IMapper Mapper { get; set; }
-        public IProductColorRepository ProductColorRepository { get; set; }
+        private readonly IMapper mapper;
+        private readonly IProductColorRepository productColorRepository;
         public ProductColorService(IMapper _mapper,IProductColorRepository _productColorRepository)
         {
-            Mapper = _mapper;
-            ProductColorRepository = _productColorRepository;
+            mapper = _mapper;
+            productColorRepository = _productColorRepository;
         }
-        public async Task<ResultView<CreateProductColorDTO>> CreateAsync(CreateProductColorDTO ProductColorDTO)
+        public async Task<ResultView<CreateProductColorDTO>> CreateAsync(CreateProductColorDTO productColorDTO)
         {
             ResultView<CreateProductColorDTO> result = new();
             try
             {
-                var item =(await ProductColorRepository.GetAllAsync()).Any(b=>b.Id==ProductColorDTO.Id ||
-                b.ProductId == ProductColorDTO.ProductId && b.ColorId == ProductColorDTO.ColorId);
+                var item =(await productColorRepository.GetAllAsync()).Any(b=>b.Id==productColorDTO.Id ||
+                b.ProductId == productColorDTO.ProductId && b.ColorId == productColorDTO.ColorId);
                 if (!item)
                 {
 
 
-                    var PrCL = Mapper.Map<ProductColor>(ProductColorDTO);
-                    var Created = await ProductColorRepository.CreateAsync(PrCL);
-                    await ProductColorRepository.SaveChangesAsync();
+                    var prCL = mapper.Map<ProductColor>(productColorDTO);
+                    var created = await productColorRepository.CreateAsync(prCL);
+                    await productColorRepository.SaveChangesAsync();
 
                     result.IsSuccess=true;
-                    result.Data = Mapper.Map<CreateProductColorDTO>(Created);
+                    result.Data = mapper.Map<CreateProductColorDTO>(created);
                     result.Msg = "Product Color is Created successfully";
                 }
                 else
@@ -73,7 +73,7 @@ namespace AllBirds.Application.Services.ProductColorServices
             ResultView<List<GetOneProductColorDTO>> result = new();
             try
             {
-                var item = (await ProductColorRepository.GetAllAsync()).Where(b=>!b.IsDeleted)
+                var item = (await productColorRepository.GetAllAsync()).Where(b=>!b.IsDeleted)
                             .Include(b=>b.Product)
                             .Include(s=>s.Color)
                             .Include(r=>r.Images);
@@ -83,7 +83,7 @@ namespace AllBirds.Application.Services.ProductColorServices
 
 
                     result.IsSuccess = true;
-                    result.Data = Mapper.Map<List<GetOneProductColorDTO>>(item);
+                    result.Data = mapper.Map<List<GetOneProductColorDTO>>(item);
                     result.Msg = "Get All Product's Colors successfully";
                 }
                 else
@@ -114,7 +114,7 @@ namespace AllBirds.Application.Services.ProductColorServices
             ResultView<List<GetOneProductColorDTO>> result = new();
             try
             {
-                var item = (await ProductColorRepository.GetAllAsync())
+                var item = (await productColorRepository.GetAllAsync())
                     .Include(b => b.Product)
                     .Include(s => s.Color)
                     .Include(r => r.Images);
@@ -125,7 +125,7 @@ namespace AllBirds.Application.Services.ProductColorServices
 
 
                     result.IsSuccess = true;
-                    result.Data = Mapper.Map<List<GetOneProductColorDTO>>(item);
+                    result.Data = mapper.Map<List<GetOneProductColorDTO>>(item);
                     result.Msg = "Get All Product's Colors successfully";
                 }
                 else
@@ -149,15 +149,15 @@ namespace AllBirds.Application.Services.ProductColorServices
             return result;
         }
 
-        public async Task<ResultView<GetOneProductColorDTO>> GetByIdAsync(int Id)
+        public async Task<ResultView<GetOneProductColorDTO>> GetByIdAsync(int id)
         {
 
 
             ResultView<GetOneProductColorDTO> result = new();
             try
             {
-                var item = (await ProductColorRepository.GetAllAsync())
-                    .Where(b => !b.IsDeleted && b.Id == Id)
+                var item = (await productColorRepository.GetAllAsync())
+                    .Where(b => !b.IsDeleted && b.Id == id)
                      .Include(b => b.Product)
                     .Include(s => s.Color)
                     .Include(r => r.Images)
@@ -169,7 +169,7 @@ namespace AllBirds.Application.Services.ProductColorServices
 
 
                     result.IsSuccess = true;
-                    result.Data = Mapper.Map<GetOneProductColorDTO>(item);
+                    result.Data = mapper.Map<GetOneProductColorDTO>(item);
                     result.Msg = "Get  Product's Color successfully";
                 }
                 else
@@ -193,21 +193,21 @@ namespace AllBirds.Application.Services.ProductColorServices
             return result;
         }
 
-        public async Task<ResultView<GetOneProductColorDTO>> HardDeleteAsync(int Id)
+        public async Task<ResultView<GetOneProductColorDTO>> HardDeleteAsync(int id)
         {
 
             ResultView<GetOneProductColorDTO> result = new();
             try
             {
-                var item = (await ProductColorRepository.GetAllAsync()).FirstOrDefault( b=>b.Id == Id);
+                var item = (await productColorRepository.GetAllAsync()).FirstOrDefault( b=>b.Id == id);
                 if (item != null)
                 {
 
-                    var deleted = await ProductColorRepository.DeleteAsync(item);
-                    await ProductColorRepository.SaveChangesAsync();
+                    var deleted = await productColorRepository.DeleteAsync(item);
+                    await productColorRepository.SaveChangesAsync();
 
                     result.IsSuccess = true;
-                    result.Data = Mapper.Map<GetOneProductColorDTO>(deleted);
+                    result.Data = mapper.Map<GetOneProductColorDTO>(deleted);
                     result.Msg = "Deleting Product's Color successfully";
                 }
                 else
@@ -231,20 +231,20 @@ namespace AllBirds.Application.Services.ProductColorServices
             return result;
         }
 
-        public async Task<ResultView<GetOneProductColorDTO>> SoftDeleteAsync(int Id)
+        public async Task<ResultView<GetOneProductColorDTO>> SoftDeleteAsync(int id)
         {
             ResultView<GetOneProductColorDTO> result = new();
             try
             {
-                var item = (await ProductColorRepository.GetAllAsync()).FirstOrDefault(b => b.Id == Id);
+                var item = (await productColorRepository.GetAllAsync()).FirstOrDefault(b => b.Id == id);
                 if (item != null)
                 {
 
                     item.IsDeleted = true;
-                    await ProductColorRepository.SaveChangesAsync();
+                    await productColorRepository.SaveChangesAsync();
 
                     result.IsSuccess = true;
-                    result.Data = Mapper.Map<GetOneProductColorDTO>(item);
+                    result.Data = mapper.Map<GetOneProductColorDTO>(item);
                     result.Msg = "Soft Deleting Product's Color successfully";
                 }
                 else
@@ -268,22 +268,22 @@ namespace AllBirds.Application.Services.ProductColorServices
             return result;
         }
 
-        public async Task<ResultView<CreateProductColorDTO>> UpdateAsync(CreateProductColorDTO ProductColorDTO)
+        public async Task<ResultView<CreateProductColorDTO>> UpdateAsync(CreateProductColorDTO productColorDTO)
         {
             ResultView<CreateProductColorDTO> result = new();
             try
             {
-                var item = (await ProductColorRepository.GetAllAsync()).Any(b => b.Id == ProductColorDTO.Id);
+                var item = (await productColorRepository.GetAllAsync()).Any(b => b.Id == productColorDTO.Id);
                 if (item)
                 {
 
 
-                    var PrCL = Mapper.Map<ProductColor>(ProductColorDTO);
-                    var Created = await ProductColorRepository.UpdateAsync(PrCL);
-                    await ProductColorRepository.SaveChangesAsync();
+                    var prCL = mapper.Map<ProductColor>(productColorDTO);
+                    var updated = await productColorRepository.UpdateAsync(prCL);
+                    await productColorRepository.SaveChangesAsync();
 
                     result.IsSuccess = true;
-                    result.Data = Mapper.Map<CreateProductColorDTO>(Created);
+                    result.Data = mapper.Map<CreateProductColorDTO>(updated);
                     result.Msg = "Product Color is Updated successfully";
                 }
                 else

@@ -15,13 +15,13 @@ namespace AllBirds.AdminDashboard.Controllers
     {
         private readonly IProductService productservice;
         private readonly ICategoryService categoryservice;
-        private readonly IProductColorService ProductColorService;
+        private readonly IProductColorService productColorService;
 
-        public ProductController(IProductService _productService, ICategoryService _categoryService ,IProductColorService _ProductColorService)
+        public ProductController(IProductService _productService, ICategoryService _categoryService ,IProductColorService _productColorService)
         {
             productservice = _productService;
             categoryservice = _categoryService;
-            productservice= _productService;
+            productColorService = _productColorService;
         }
         public IActionResult Index()
         {
@@ -98,7 +98,7 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> GetAllProductColors()
         {
 
-            var PrColor = await ProductColorService.GetAllAsync();
+            var PrColor = await productColorService.GetAllAsync();
             if (PrColor.IsSuccess)
             {
                 return View(PrColor.Data);
@@ -107,7 +107,7 @@ namespace AllBirds.AdminDashboard.Controllers
             {
 
                 ViewBag.ErrMsg = PrColor.Msg;
-                return View( new GetALlProductColorDTO ());
+                return View();
             }
         }
 
