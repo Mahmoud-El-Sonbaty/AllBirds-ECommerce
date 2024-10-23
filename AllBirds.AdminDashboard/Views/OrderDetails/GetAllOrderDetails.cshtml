@@ -1,4 +1,4 @@
-﻿@model GetAllOrderDetailsDTO;
+﻿@model List<GetAllOrderDetailsDTO>;
 
 <div class="col-lg-6 grid-margin stretch-card">
     <div class="card">
@@ -16,18 +16,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                       
+                        @foreach(var item in Model)
+                        {
                             
+                            <tr>
                             <td>
-                                <img class="img-xs rounded" src="@Model.ProductColorSizeImage.MainImage" alt="image">
+                                <img class="img-xs rounded" src="@item.ProductColorSizeImage.MainImage" alt="image">
                             </td>
-                            <td> @Model.ProductColorSizeImage.ProductNameEN</td>
-                            <td>@Model.ProductColorSizeImage.ColorNameEN</td>
-                            <td>@Model.ProductColorSizeImage.Size</td>
-                            <td>@Model.Quantity</td>
-                            <td>@Model.DetailPrice</td>
-                    </tbody>
+                                <td> @item.ProductColorSizeImage.ProductNameEN</td>
+                                <td>@item.ProductColorSizeImage.ColorNameEN</td>
+                                <td>@item.ProductColorSizeImage.Size</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.DetailPrice</td>
+                            </tr>
+                    
+                        }
+                        </tbody>
                 </table>
             </div>
         </div>

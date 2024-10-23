@@ -1,7 +1,9 @@
 
 using AllBirds.Application.Services.CategoryServices;
+using AllBirds.Application.Services.ProductColorServices;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.DTOs.CategoryDTOs;
+using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,11 +15,13 @@ namespace AllBirds.AdminDashboard.Controllers
     {
         private readonly IProductService productservice;
         private readonly ICategoryService categoryservice;
+        private readonly IProductColorService ProductColorService;
 
-        public ProductController(IProductService _productService, ICategoryService _categoryService)
+        public ProductController(IProductService _productService, ICategoryService _categoryService ,IProductColorService _ProductColorService)
         {
             productservice = _productService;
             categoryservice = _categoryService;
+            productservice= _productService;
         }
         public IActionResult Index()
         {
@@ -89,5 +93,24 @@ namespace AllBirds.AdminDashboard.Controllers
             }
             return null;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProductColors()
+        {
+
+            var PrColor = await ProductColorService.GetAllAsync();
+            if (PrColor.IsSuccess)
+            {
+                return View(PrColor.Data);
+            }
+            else
+            {
+
+                ViewBag.ErrMsg = PrColor.Msg;
+                return View( new GetALlProductColorDTO ());
+            }
+        }
+
+
     }
 }

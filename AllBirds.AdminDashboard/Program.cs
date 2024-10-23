@@ -5,7 +5,10 @@ using AllBirds.Application.Services.CategoryProductServices;
 using AllBirds.Application.Services.CategoryServices;
 using AllBirds.Application.Services.ColorServices;
 using AllBirds.Application.Services.CouponServices;
+using AllBirds.Application.Services.OrderDetailsServices;
+using AllBirds.Application.Services.OrderServices;
 using AllBirds.Application.Services.OrderStateServices;
+using AllBirds.Application.Services.ProductColorServices;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.SizeServices;
 using AllBirds.Context;
@@ -36,16 +39,24 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddScoped<ISizeRepository, SizeRepository>();
             builder.Services.AddScoped<ICouponService, CouponService>();
             builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+
             builder.Services.AddScoped<IOrderStateService, OrderStateService>();
             builder.Services.AddScoped<IOrderStateRepository, OrderStateRepository>();
+
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
             builder.Services.AddScoped<ICategoryProductService, CategoryProductService>();
             builder.Services.AddScoped<ICategoryProductRepository, CategoryProductRepository>();
-            //builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
-            //builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
-            //builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
-            //builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+
+            builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
+            builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
+
+            builder.Services.AddScoped<IOrderDetailsService, OrderDetailsService>();
+            builder.Services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>(); 
+
+            builder.Services.AddScoped<IProductColorService, ProductColorService>();
+            builder.Services.AddScoped<IProductColorRepository, ProductColorRepository>();
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<CustomUser>(options =>
             {

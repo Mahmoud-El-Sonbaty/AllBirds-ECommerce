@@ -47,8 +47,8 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> GetAllOrderMasters()
         {
-            var OrderMaster = (await OrderService.GetAllAsync());
-            var orderState = OrderSateService.GetAllAsync();
+            var OrderMaster = await OrderService.GetAllAsync();
+            var orderState =  await OrderSateService.GetAllAsync();
             ViewBag.OrderSate = orderState;
 
             if (OrderMaster.IsSuccess)

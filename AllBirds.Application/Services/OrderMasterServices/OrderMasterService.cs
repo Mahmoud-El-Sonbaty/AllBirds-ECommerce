@@ -5,6 +5,7 @@ using AllBirds.DTOs.OrderMasterDTOs;
 using AllBirds.DTOs.Shared;
 using AllBirds.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,7 +136,7 @@ namespace AllBirds.Application.Services.OrderServices
             ResultView<List<GetAllOrderMastersDTO>> result= new();
             try
             {
-                var orderMasters = (await _OrderMasterRepository.GetAllAsync()).Where(b => !b.IsDeleted);
+                var orderMasters = (await _OrderMasterRepository.GetAllAsync()).Where(b => !b.IsDeleted).Include(src=>src.OrderState).ToList();
                 if (orderMasters.Count() != 0) { 
                  result.IsSuccess=true;
                  result.Data = _mapper.Map<List<GetAllOrderMastersDTO>>(orderMasters);
