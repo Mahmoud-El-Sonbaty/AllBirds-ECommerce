@@ -1,5 +1,4 @@
-﻿using AllBirds.DTOs.CategorySizeDTOS;
-using AllBirds.DTOs.OrderMasterDTOs;
+﻿using AllBirds.DTOs.OrderMasterDTOs;
 using AllBirds.DTOs.Shared;
 using System;
 using System.Collections.Generic;
