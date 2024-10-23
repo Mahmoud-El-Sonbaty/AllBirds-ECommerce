@@ -16,8 +16,6 @@ namespace AllBirds.DTOs.CategoryDTOs
         
         [StringLength(40, MinimumLength = 3)]
         public string NameEn { get; set; }
-        //public IFormFile? ImageData { get; set; }
-
-        //public string? ImagePath { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

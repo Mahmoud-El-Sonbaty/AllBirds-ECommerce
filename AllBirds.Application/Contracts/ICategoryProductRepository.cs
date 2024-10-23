@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 using AllBirds.Models;
 namespace AllBirds.Application.Contracts
 {
-    public interface ICategoryProductRepository :  IGenericRepository<CategoryProduct, int>
+    public interface ICategoryProductRepository : IGenericRepository<CategoryProduct, int>
     {
-        
-
     }
 }
