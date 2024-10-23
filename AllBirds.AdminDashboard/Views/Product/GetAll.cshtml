@@ -1,10 +1,11 @@
-﻿@model ResultView<List<GetAllProductDTO>>
+﻿@model List<GetAllProductDTO>
 
 
 @{
     ViewData["Title"] = "Products";
+    // TempData.TryGetValue("Msg");
 }
-@section Navbar{
+@section Navbar {
 
     <partial name="_NavbarPartial" />
 }
@@ -16,7 +17,21 @@
 
     <partial name="_FooterPartial" />
 }
-
+@if (TempData["IsSuccess"] is bool Success)
+{
+    @if (Success)
+    {
+        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+    else
+    {
+        <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+}
 <h1>AllProducts</h1>
 
 <div class="row ">
@@ -29,7 +44,7 @@
                 </p>
                 <div class="table-responsive">
                     <table class="table table-striped">
-                       @*  table-hover *@
+                        @*  table-hover *@
                         <thead>
                             <tr>
                                 <th>
@@ -52,7 +67,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (GetAllProductDTO prd in Model.Data)
+                            @foreach (GetAllProductDTO prd in Model)
                             {
                                 <tr>
                                     <td>
@@ -67,7 +82,7 @@
                                     <td> @prd.Price.ToString("C2") </td>
                                     <td> @prd.Discount % </td>
                                     @{
-                                        if(prd.FreeShipping)
+                                        if (prd.FreeShipping)
                                         {
                                             <td> <label class="badge badge-success">Eligible</label> </td>
                                         }
@@ -76,9 +91,9 @@
                                             <td> <lablel class="badge badge-danger">Not Eligible</lablel> </td>
                                         }
                                     }
-                                    
+
                                     @{
-                                        if(prd.IsDeleted)
+                                        if (prd.IsDeleted)
                                         {
                                             <td> <label class="badge badge-danger">Deleted</label> </td>
                                         }
@@ -88,31 +103,31 @@
                                         }
                                     }
                                     @*<td>
-                                        colors
-                                    </td>
-                                    <td>
-                                        sizes
-                                    </td>
-                                    <td>
-                                        units in stock
-                                    </td> *@
+                                colors
+                                </td>
+                                <td>
+                                sizes
+                                </td>
+                                <td>
+                                units in stock
+                                </td> *@
                                     <td>
                                         <a type="button" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                         <a type="button" asp-action="Update" asp-controller="Product" asp-route-id="@prd.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
                                         <a type="button" asp-action="Delete" asp-controller="Product" asp-route-id="@prd.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
                                         @* <div class="template-demo d-flex justify-content-between"> *@
                                         @* <div class="dropdown"> *@
-                                            <button type="button" class="btn btn-outline-info dropdown-toggle" id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="mdi mdi-dots-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                                <h6 class="dropdown-header">Options</h6>
-                                                <a class="dropdown-item" asp-controller="ProductDetail" asp-action="AllProductDetails" asp-route-id="@prd.Id">Product Details</a>
-                                                <a class="dropdown-item" asp-controller="Product" asp-action="GetAllSpecs" asp-route-id="@prd.Id">Product Specifications</a>
-                                                <a class="dropdown-item" href="#">Product Colors</a>
-                                                @* <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Separated link</a> *@
-                                            </div>
+                                        <button type="button" class="btn btn-outline-info dropdown-toggle" id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="mdi mdi-dots-vertical"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                            <h6 class="dropdown-header">Options</h6>
+                                            <a class="dropdown-item" asp-controller="ProductDetail" asp-action="AllProductDetails" asp-route-id="@prd.Id">Product Details</a>
+                                            <a class="dropdown-item" asp-controller="Product" asp-action="GetAllSpecs" asp-route-id="@prd.Id">Product Specifications</a>
+                                            <a class="dropdown-item" href="#">Product Colors</a>
+                                            @* <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Separated link</a> *@
+                                        </div>
                                         @* </div> *@
                                         @* </div> *@
                                     </td>

@@ -27,7 +27,7 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<CUProductDTO> resultView = new();
             try
             {
-                bool productExist = (await productrepoistory.GetAllAsync()).Any(p => p.Id == cUProductDTO.Id && p.ProductNo == cUProductDTO.ProductNo);
+                bool productExist = (await productrepoistory.GetAllAsync()).Any(p => p.Id == cUProductDTO.Id || p.ProductNo == cUProductDTO.ProductNo);
                 if (productExist)
                 {
                     resultView.IsSuccess = false;
@@ -194,6 +194,7 @@ namespace AllBirds.Application.Services.ProductServices
                 {
                     Product prdUpdat = mapper.Map<Product>(cUProductDTO);
                     Product prdUpdated = await productrepoistory.UpdateAsync(prdUpdat);
+                    //var prdCats = await categoryProductService.ge
                     /*foreach (int catId in cUProductDTO.CategoriesId)
                     {
                         var cat = new CategoryProduct() {  CategoryId = catId, ProductId = cUProductDTO.Id };

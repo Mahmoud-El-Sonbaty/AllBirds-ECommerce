@@ -29,15 +29,14 @@ namespace AllBirds.AdminDashboard.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("GetAll");
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             ResultView<List<GetAllProductDTO>> getAllProductDTOs = (await productService.GetAllAsync());
-            return View(getAllProductDTOs);
-
+            return View(getAllProductDTOs.Data);
         }
 
         [HttpGet]
@@ -56,10 +55,18 @@ namespace AllBirds.AdminDashboard.Controllers
             {
                 ResultView<CUProductDTO> createRes = await productService.CreateAsync(cUProductDTO);
                 if (createRes.IsSuccess)
+                {
+                    TempData["Msg"] = createRes.Msg;
+                    TempData["IsSuccess"] = createRes.IsSuccess;
                     return RedirectToAction("GetAll");
-                return View(createRes);
+                }
+                TempData["Msg"] = createRes.Msg;
+                TempData["IsSuccess"] = createRes.IsSuccess;
+                return View(createRes.Data);
             }
-            return View(new ResultView<CUProductDTO>() { IsSuccess = false, Msg = $"{ModelState.ErrorCount} errors", Data = null });
+            TempData["Msg"] = ModelState.ErrorCount > 1 ? $"There Are {ModelState.ErrorCount} Validation Errors" : $"There Is {ModelState.ErrorCount} Validation Error";
+            TempData["IsSuccess"] = false;
+            return View(cUProductDTO);
         }
 
         [HttpGet]
@@ -68,38 +75,46 @@ namespace AllBirds.AdminDashboard.Controllers
             List<GetAllCategoryDTO> allCategoryDTOs = await categoryService.GetAllAsync();
             ViewBag.Categories = allCategoryDTOs;
             var Prd = await productService.GetByIdAsync(id);
-            return View(Prd);
+            return View(Prd.Data);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Update(CUProductDTO cUProductDTO)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        CUProductDTO createdProduct = await productService.UpdateAsync(cUProductDTO);
-        //        if (createdProduct is not null)
-        //        {
-        //            return RedirectToAction("GetAll");
-        //        }
-        //        else
-        //            return View();
-        //    }
-        //    return View();
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Update(CUProductDTO cUProductDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                ResultView<CUProductDTO> updateRes = await productService.UpdateAsync(cUProductDTO);
+                if (updateRes.IsSuccess)
+                {
+                    TempData["Msg"] = updateRes.Msg;
+                    TempData["IsSuccess"] = updateRes.IsSuccess;
+                    return RedirectToAction("GetAll");
+                }
+                TempData["Msg"] = updateRes.Msg;
+                TempData["IsSuccess"] = updateRes.IsSuccess;
+                return View(updateRes.Data);
+            }
+            TempData["Msg"] = ModelState.ErrorCount > 1 ? $"There Are {ModelState.ErrorCount} Validation Errors" : $"There Is {ModelState.ErrorCount} Validation Error";
+            TempData["IsSuccess"] = false;
+            return View(cUProductDTO);
+        }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    if (id > 0)
-        //    {
-        //        CUProductDTO deletedProduct = await productService.SoftDeleteAsync(id);
-        //        if (deletedProduct is not null)
-        //        {
-        //            return RedirectToAction("GetAll");
-        //        }
-        //    }
-        //    return null;
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id > 0)
+            {
+                ResultView<CUProductDTO> deletedProduct = await productService.SoftDeleteAsync(id);
+                if (deletedProduct.IsSuccess)
+                {
+                    TempData.Add("Msg", $"Product {deletedProduct.Data.ProductNo} Soft Deleted Successfully");
+                    TempData.Add("IsSuccess", true);
+                }
+                TempData.Add("Msg", $"Product {deletedProduct?.Data?.ProductNo ?? $"{id}"} Soft Delete Wasn't Successful ({deletedProduct.Msg})");
+                TempData.Add("IsSuccess", false);
+            }
+            return RedirectToAction("GetAll");
+        }
 
         /////////////////////////////////////////////////// Product Specifications//////////////////////////////////////////////////////////////
 
