@@ -1,4 +1,4 @@
-﻿using AllBirds.Application.Services.OrderDetailsServices;
+﻿using AllBirds.Application.Services.OrderDetailServices;
 using AllBirds.DTOs.OrderDetailsDTOs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +8,9 @@ namespace AllBirds.AdminDashboard.Controllers
 {
     public class OrderDetailsController : Controller
     {
-        public IOrderDetailsService OrderService { get; set; }
+        public IOrderDetailService OrderService { get; set; }
 
-        public OrderDetailsController(IOrderDetailsService orderDetailsService)
+        public OrderDetailsController(IOrderDetailService orderDetailsService)
         {
             this.OrderService=orderDetailsService;
 

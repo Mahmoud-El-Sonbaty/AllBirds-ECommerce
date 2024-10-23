@@ -11,17 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AllBirds.Application.Services.OrderDetailsServices
+namespace AllBirds.Application.Services.OrderDetailServices
 {
-    public class OrderDetailsService : IOrderDetailsService
+    public class OrderDetailService : IOrderDetailService
     {
-        IOrderDetailsRepository orderDetailsRepository;
-        IMapper mapper;
+        private readonly IOrderDetailRepository orderDetailsRepository;
+        private readonly IMapper mapper;
 
-        public OrderDetailsService(IOrderDetailsRepository _orderDeatilsReposit,IMapper _Mapper)
+        public OrderDetailService(IOrderDetailRepository _orderDeatilsReposit, IMapper _Mapper)
         {
-            this.orderDetailsRepository = _orderDeatilsReposit;
-            this.mapper = _Mapper;
+            orderDetailsRepository = _orderDeatilsReposit;
+            mapper = _Mapper;
         }
         public async Task<ResultView<CreateOrderDetailsDTO>> CreateAsync(CreateOrderDetailsDTO createOrderMDTo)
         {
@@ -42,8 +42,8 @@ namespace AllBirds.Application.Services.OrderDetailsServices
                     OrderDetail mappedOrderDetails = mapper.Map<OrderDetail>(createOrderMDTo);
                     OrderDetail createdOrderDetails = await orderDetailsRepository.CreateAsync(mappedOrderDetails);
                     await orderDetailsRepository.SaveChangesAsync();
-                    
-                    
+
+
 
                     result.IsSuccess = true;
                     result.Data = mapper.Map<CreateOrderDetailsDTO>(createdOrderDetails);
@@ -179,7 +179,7 @@ namespace AllBirds.Application.Services.OrderDetailsServices
             ResultView<GetOneOrderDetailsDTO> result = new();
             try
             {
-                var ordermaster = (await orderDetailsRepository.GetOneAsync(OrderId));
+                var ordermaster = await orderDetailsRepository.GetOneAsync(OrderId);
                 if (ordermaster != null)
                 {
                     result.IsSuccess = true;
@@ -216,7 +216,7 @@ namespace AllBirds.Application.Services.OrderDetailsServices
             ResultView<GetOneOrderDetailsDTO> result = new();
             try
             {
-                var order = (await orderDetailsRepository.GetAllAsync()).FirstOrDefault(b=>b.Id == OrderID);
+                var order = (await orderDetailsRepository.GetAllAsync()).FirstOrDefault(b => b.Id == OrderID);
                 if (order != null)
                 {
                     OrderDetail deletedOrderMaster = await orderDetailsRepository.DeleteAsync(order);
@@ -267,7 +267,7 @@ namespace AllBirds.Application.Services.OrderDetailsServices
                 var orderItem = (await orderDetailsRepository.GetAllAsync()).FirstOrDefault(b => !b.IsDeleted && b.Id == OrderID);
                 if (orderItem != null)
                 {
-                    orderItem.IsDeleted = true; 
+                    orderItem.IsDeleted = true;
 
                     await orderDetailsRepository.SaveChangesAsync();
 
@@ -304,7 +304,7 @@ namespace AllBirds.Application.Services.OrderDetailsServices
             //return null;
         }
 
-        public async Task<ResultView<CreateOrderDetailsDTO>>  UpdateAsync(CreateOrderDetailsDTO createOrderMDTo)
+        public async Task<ResultView<CreateOrderDetailsDTO>> UpdateAsync(CreateOrderDetailsDTO createOrderMDTo)
         {
             ResultView<CreateOrderDetailsDTO> result = new();
             try

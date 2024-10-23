@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AllBirds.Application.Services.OrderDetailsServices
+namespace AllBirds.Application.Services.OrderDetailServices
 {
-    public interface IOrderDetailsService
+    public interface IOrderDetailService
     {
         public Task<ResultView<CreateOrderDetailsDTO>> CreateAsync(CreateOrderDetailsDTO createOrderMDTo);
         public Task<ResultView<CreateOrderDetailsDTO>> UpdateAsync(CreateOrderDetailsDTO createOrderMDTo);

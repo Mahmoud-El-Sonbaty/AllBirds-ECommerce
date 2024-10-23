@@ -120,7 +120,7 @@ namespace AllBirds.AdminDashboard.Controllers
             return RedirectToAction("GetAll");
         }
 
-        /////////////////////////////////////////////////// Product Specifications//////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////// Product Specifications //////////////////////////////////////////////////////////////
 
         [HttpGet]
         public async Task<IActionResult> GetAllSpecs(int id)
@@ -171,6 +171,8 @@ namespace AllBirds.AdminDashboard.Controllers
                 return Redirect($"/Product/GetAllSpecs/{res.Data.ProductId}");
             return Json(new { success = false, message = res.Msg });
         }
+
+        /////////////////////////////////////////////////// Product Color //////////////////////////////////////////////////////////////
 
         [HttpGet]
         public async Task<IActionResult> GetAllProductColors()

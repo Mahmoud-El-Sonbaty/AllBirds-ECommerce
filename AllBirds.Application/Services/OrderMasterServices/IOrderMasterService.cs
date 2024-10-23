@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AllBirds.Application.Services.OrderServices
+namespace AllBirds.Application.Services.OrderMasterServices
 {
     public interface IOrderMasterService
     {
@@ -18,6 +18,6 @@ namespace AllBirds.Application.Services.OrderServices
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllAsync();
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllWithDeletedAsync();
         public Task<ResultView<GetOneOdrerMasterDTO>> GetByIdAsync(int OrderId);
-        public Task<ResultView<bool>> ChangingStateAsync(int StateId,int OrderID);
+        public Task<ResultView<bool>> ChangingStateAsync(int StateId, int OrderID);
     }
 }

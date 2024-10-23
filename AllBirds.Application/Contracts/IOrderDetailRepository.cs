@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AllBirds.Application.Contracts
 {
-    public interface IOrderDetailsRepository: IGenericRepository<OrderDetail,int>
+    public interface IOrderDetailRepository: IGenericRepository<OrderDetail,int>
     {
         public Task<OrderDetail> GetOneAsync(int id);
 
