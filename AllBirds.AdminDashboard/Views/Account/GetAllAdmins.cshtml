@@ -1,0 +1,111 @@
+﻿@model List<GetAllAdminsDTO>
+@{
+    ViewData["Title"] = "GetAllAdmins";
+}
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+@if (TempData["IsSuccess"] is bool Success)
+{
+    @if (Success)
+    {
+        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+    else
+    {
+        <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+}
+<h1>GetAllAdmins</h1>
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Striped Table</h4>
+                <p class="card-description">
+                    <a class="btn btn-primary" asp-controller="Account" asp-action="Register"><i class="fas fa-plus"></i> New</a>
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> User </th>
+                                <th> First name </th>
+                                <th> Last name </th>
+                                <th> Username </th>
+                                <th> Email </th>
+                                <th> Email Confirmed </th>
+                                <th> PhoneNumber </th>
+                                <th> PhoneNumber Confirmed </th>
+                                <th> Actions </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model is not null && Model.Count > 0)
+                            {
+                                @foreach(GetAllAdminsDTO adminDTO in Model)
+                                {
+                                    <tr>
+                                        <td class="py-1">
+                                            <img src="@adminDTO.ImagePath" alt="image" />
+                                        </td>
+                                        <td> @adminDTO.FirstName??NA </td>
+                                        <td> @adminDTO.LastName??NA </td>
+                                        <td> @adminDTO.UserName </td>
+                                        <td> @adminDTO.Email </td>
+                                        @{
+                                            if (adminDTO.EmailConfirmed)
+                                            {
+                                                <td> <label class="badge badge-success">Confirmed</label> </td>
+                                            }
+                                            else
+                                            {
+                                                <td> <lablel class="badge badge-danger">Unconfirmed</lablel> </td>
+                                            }
+                                        }
+                                        <td> @adminDTO.PhoneNumber </td>
+                                        @{
+                                            if (adminDTO.PhoneNumberConfirmed)
+                                            {
+                                                <td> <label class="badge badge-success">Confirmed</label> </td>
+                                            }
+                                            else
+                                            {
+                                                <td> <lablel class="badge badge-danger">Unconfirmed</lablel> </td>
+                                            }
+                                        }
+                                        <td>
+                                            <a type="button" asp-action="Details" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                            <a type="button" asp-action="Update" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                            <a type="button" asp-action="Delete" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>                                    
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9"> No Admins Were Found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -42,8 +42,8 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            List<GetAllCategoryDTO> allCategoryDTOs = await categoryService.GetAllAsync();
-            ViewBag.Categories = allCategoryDTOs;
+            ResultView<List<GetAllCategoryDTO>> allCategoryDTOs = await categoryService.GetAllAsync();
+            ViewBag.Categories = allCategoryDTOs.Data;
             return View();
         }
 
@@ -72,8 +72,8 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            List<GetAllCategoryDTO> allCategoryDTOs = await categoryService.GetAllAsync();
-            ViewBag.Categories = allCategoryDTOs;
+            ResultView<List<GetAllCategoryDTO>> allCategoryDTOs = await categoryService.GetAllAsync();
+            ViewBag.Categories = allCategoryDTOs.Data;
             var Prd = await productService.GetByIdAsync(id);
             return View(Prd.Data);
         }

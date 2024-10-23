@@ -23,11 +23,16 @@ namespace AllBirds.Application.Mapper
             #region Account
             CreateMap<CUAccountDTO, CustomUser>().ReverseMap();
             CreateMap<AccountLoginDTO, CustomUser>().ReverseMap();
+            CreateMap<CustomUser, GetAllAdminsDTO>()
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName ?? "NA"))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName ?? "NA"))
+                .ReverseMap();
             #endregion
 
             #region Category
             CreateMap<CUCategoryDTO, Category>().ReverseMap();
             CreateMap<GetAllCategoryDTO, Category>().ReverseMap();
+            CreateMap<GetOneCategoryDTO, Category>().ReverseMap();
             //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             #endregion
@@ -39,14 +44,6 @@ namespace AllBirds.Application.Mapper
             //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
             //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
-            #endregion
-
-            #region CategorySize
-            //CreateMap<GetOneBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
-            CreateMap<CreateOrUpdateCategorySizeDTO, CategorySize>().ReverseMap();
-            CreateMap<GetAllCategorySizeDTO, CategorySize>().ReverseMap();
-            CreateMap<GetOneCategorySizeDTO, CategorySize>().ReverseMap();
             #endregion
 
             #region ClientFavorite

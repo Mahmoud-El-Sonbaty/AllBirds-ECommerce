@@ -31,6 +31,7 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             // Account
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IAccountRoleRepository, AccountRoleRepository>();
             // Category
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
