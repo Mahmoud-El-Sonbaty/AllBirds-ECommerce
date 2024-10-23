@@ -3,7 +3,6 @@ using AllBirds.Models;
 using AllBirds.DTOs.AccountDTOs;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.CategoryProductDTOs;
-using AllBirds.DTOs.CategorySizeDTOS;
 using AllBirds.DTOs.ColorDTOs;
 using AllBirds.DTOs.CouponDTOs;
 using AllBirds.DTOs.OrderDetailsDTOs;
