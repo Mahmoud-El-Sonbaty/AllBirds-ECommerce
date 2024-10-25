@@ -3,6 +3,7 @@ using AllBirds.DTOs.AccountDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
@@ -16,10 +17,12 @@ namespace AllBirds.AdminDashboard.Controllers
             this.accountService = _accountService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAdmins()
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
+        public async Task<IActionResult> GetAll(string role)
         {
-            ResultView<List<GetAllAdminsDTO>> adminsResult = await accountService.GetAllAdminsAsync();
+            var dd = ViewBag;
+            var fd = HttpContext;
+            ResultView<List<GetAllAdminsDTO>> adminsResult = await accountService.GetAllAsync(role);
             if (!adminsResult.IsSuccess)
             {
                 TempData.Add("IsSuccess", false);
@@ -55,7 +58,17 @@ namespace AllBirds.AdminDashboard.Controllers
             {
                 if (await accountService.LoginAsync(accountLoginDTO))
                 {
-                    return Redirect("");
+                    ResultView<GetAllAdminsDTO> getUserRes = await accountService.GetUserById(User.Claims.FirstOrDefault()?.Value);
+                    if (getUserRes.IsSuccess)
+                    {
+                        // all those disappear once you redirect so we have to store it in cookies i think
+                        ViewBag.UserId = getUserRes.Data.Id;
+                        ViewBag.Name = getUserRes.Data.FirstName + " " + getUserRes.Data.LastName;
+                        ViewBag.Img = getUserRes.Data.ImagePath;
+                        ViewBag.Role = "Super User";
+                        User.AddIdentity(new(new List<Claim>() { new("UserImg", getUserRes.Data.ImagePath), new("Name", $"{getUserRes.Data.FirstName} {getUserRes.Data.LastName}"), new("Role", "testrole") }));
+                    }
+                    return Redirect("/");
                 }
             }
             return View();

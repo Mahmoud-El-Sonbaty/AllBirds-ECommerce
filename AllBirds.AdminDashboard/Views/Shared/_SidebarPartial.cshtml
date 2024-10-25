@@ -1,20 +1,29 @@
 ﻿<!-- partial:partials/_sidebar.html -->
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-        <a class="sidebar-brand brand-logo text-light" href="index.html"><img src="~/assets/images/allbirdslogo.svg" alt="logo" /></a>
-        <a class="sidebar-brand brand-logo-mini text-light" href="index.html"><img src="~/assets/images/logo-mini.svg" alt="logo" /></a>
+        <a class="sidebar-brand brand-logo text-light" asp-controller="" asp-action=""><img src="~/assets/images/allbirdslogo.svg" alt="logo" /></a>
+        <a class="sidebar-brand brand-logo-mini text-light" href="index.html"><img src="~/assets/images/allbirdslogo-mini.svg" alt="logo" /></a>
     </div>
     <ul class="nav">
         <li class="nav-item profile">
             <div class="profile-desc">
                 <div class="profile-pic">
                     <div class="count-indicator">
-                        <img class="img-xs rounded-circle " src="~/assets/images/faces/face15.jpg" alt="">
+                        @{
+                            if (User.Identity.IsAuthenticated && User.Claims.FirstOrDefault(uc => uc.Type == "UserImg") is not null)
+                            {
+                                <img class="img-xs rounded-circle " src="@User.Claims.FirstOrDefault(uc => uc.Type == "UserImg")" alt="">
+                            }
+                            else
+                            {
+                                <img class="img-xs rounded-circle " src="~/assets/images/user-icon.png" alt="">
+                            }
+                        }
                         <span class="count bg-success"></span>
                     </div>
                     <div class="profile-name">
-                        <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
-                        <span>Gold Member</span>
+                        <h5 class="mb-0 font-weight-normal">@User.Claims.FirstOrDefault(uc => uc.Type == "Name")</h5>
+                        <span>@User.Claims.FirstOrDefault(uc => uc.Type == "Role")</span>
                     </div>
                 </div>
                 <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
@@ -30,7 +39,7 @@
                         </div>
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item preview-item">
+                    <a asp-controller="Account" asp-action="ChangePassword" class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
                             <div class="preview-icon bg-dark rounded-circle">
                                 <i class="mdi mdi-onepassword  text-info"></i>
@@ -41,14 +50,14 @@
                         </div>
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item preview-item">
+                    <a asp-controller="Account" asp-action="Logout" class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
                             <div class="preview-icon bg-dark rounded-circle">
-                                <i class="mdi mdi-calendar-today text-success"></i>
+                                <i class="mdi mdi-logout text-danger"></i>
                             </div>
                         </div>
                         <div class="preview-item-content">
-                            <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>
+                            <p class="preview-subject ellipsis mb-1 text-small">Logout</p>
                         </div>
                     </a>
                 </div>
@@ -58,7 +67,8 @@
             <span class="nav-link">Navigation</span>
         </li>
         <li class="nav-item menu-items">
-            <a class="nav-link" href="index.html">
+            <a class="nav-link" href="/">
+            @* <a class="nav-link" asp-controller="" asp-action=""> *@
                 <span class="menu-icon">
                     <i class="mdi mdi-speedometer"></i>
                 </span>
@@ -82,15 +92,39 @@
             </div>
         </li> *@
         <li class="nav-item menu-items">
-            <a class="nav-link" asp-controller="Account" asp-action="GetAllAdmins">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
                 <span class="menu-icon">
-                    <i class="mdi mdi-table-large"></i>
+                    <i class="mdi mdi-security"></i>
                 </span>
                 <span class="menu-title">Users</span>
+                <i class="menu-arrow"></i>
             </a>
+            <div class="collapse" id="auth">
+                <ul class="nav flex-column sub-menu">
+                    @if (User.IsInRole("SuperUser"))
+                    {
+                        <li class="nav-item"> <a class="nav-link" href="/Account/GetAll/superuser"> Super Users </a></li>
+                        <li class="nav-item"> <a class="nav-link" href="/Account/GetAll/manager"> Managers </a></li>
+                        @* <li class="nav-item"> <a class="nav-link" asp-controller="Account" asp-action="GetAll" asp-route-role="superuser"> Super Users </a></li>
+                        <li class="nav-item"> <a class="nav-link" asp-controller="Account" asp-action="GetAll" asp-route-role="manager"> Managers </a></li> *@
+                    }
+                    else if (User.IsInRole("Manager"))
+                    {
+                        <li class="nav-item"> <a class="nav-link" href="/Account/GetAll/admin"> Admins </a></li>
+                        <li class="nav-item"> <a class="nav-link" href="/Account/GetAll/manager"> Managers </a></li>
+                        @* <li class="nav-item"> <a class="nav-link" asp-controller="Account" asp-action="GetAll" asp-route-role="admin"> Admins </a></li>
+                        <li class="nav-item"> <a class="nav-link" asp-controller="Account" asp-action="GetAll" asp-route-role="manager"> Managers </a></li> *@
+                    }
+                    <li class="nav-item"> <a class="nav-link" href="/Account/GetAll/admin"> Admins </a></li>  
+                    <li class="nav-item"> <a class="nav-link" href="/Account/GetAll/client"> Clients </a></li>
+                    @* <li class="nav-item"> <a class="nav-link" asp-controller="Account" asp-action="GetAll" asp-route-role="admin"> Admins </a></li>
+                    <li class="nav-item"> <a class="nav-link" asp-controller="Account" asp-action="GetAll" asp-route-role="client"> Clients </a></li> *@
+                </ul>
+            </div>
         </li>
         <li class="nav-item menu-items">
-            <a class="nav-link" asp-controller="Category" asp-action="GetAll">
+            <a class="nav-link" href="/Category/GetAll">
+            @* <a class="nav-link" asp-controller="Category" asp-action="GetAll"> *@
                 <span class="menu-icon">
                     <i class="mdi mdi-table-large"></i>
                 </span>
@@ -98,7 +132,8 @@
             </a>
         </li>
         <li class="nav-item menu-items">
-            <a class="nav-link" asp-controller="Product" asp-action="GetAll">
+            <a class="nav-link" href="/Product/GetAll">
+            @* <a class="nav-link" asp-controller="Product" asp-action="GetAll"> *@
                 <span class="menu-icon">
                     <i class="mdi mdi-playlist-play"></i>
                 </span>
@@ -106,7 +141,8 @@
             </a>
         </li>
         <li class="nav-item menu-items">
-            <a class="nav-link" asp-controller="OrderMaster" asp-action="GetAllOrderMasters">
+            <a class="nav-link" href="/OrderMaster/GetAllOrderMasters">
+            @* <a class="nav-link" asp-controller="OrderMaster" asp-action="GetAllOrderMasters"> *@
                 <span class="menu-icon">
                     <i class="mdi mdi-chart-bar"></i>
                 </span>
@@ -114,6 +150,15 @@
             </a>
         </li>
         <li class="nav-item menu-items">
+            <a class="nav-link" href="/Color/GetAllForC_CO_S_OS">
+            @* <a class="nav-link" asp-controller="Color" asp-action="GetALLForC_CO_S_OS"> *@
+                <span class="menu-icon">
+                    <i class="mdi mdi-chart-bar"></i>
+                </span>
+                <span class="menu-title">Col-Cop-OS-S</span>
+            </a>
+        </li>
+        @* <li class="nav-item menu-items">
             <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
                 <span class="menu-icon">
                     <i class="mdi mdi-security"></i>
@@ -130,7 +175,7 @@
                     <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
                 </ul>
             </div>
-        </li>
+        </li> *@
     </ul>
 </nav>
 <!-- partial -->

@@ -149,11 +149,11 @@
                     <p class="p-3 mb-0 text-center">See all notifications</p>
                 </div>
             </li>
-            <li class="nav-item dropdown">
+            @* <li class="nav-item dropdown">
                 <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                     <div class="navbar-profile">
-                        <img class="img-xs rounded-circle" src="assets/images/faces/face15.jpg" alt="">
-                        <p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+                        <img class="img-xs rounded-circle" src="@ViewBag.Img" alt="logo user">
+                        <p class="mb-0 d-none d-sm-block navbar-profile-name">@ViewBag.Name</p>
                         <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                     </div>
                 </a>
@@ -167,7 +167,7 @@
                             </div>
                         </div>
                         <div class="preview-item-content">
-                            <p class="preview-subject mb-1">Settings</p>
+                            <p onclick="window.location.replace('/Account/Profile')" class="preview-subject mb-1">Settings</p>
                         </div>
                     </a>
                     <div class="dropdown-divider"></div>
@@ -178,13 +178,13 @@
                             </div>
                         </div>
                         <div class="preview-item-content">
-                            <p class="preview-subject mb-1">Log out</p>
+                            <p onclick="window.location.replace('/Account/Logout')" class="preview-subject mb-1">Log out</p>
                         </div>
                     </a>
                     <div class="dropdown-divider"></div>
                     <p class="p-3 mb-0 text-center">Advanced settings</p>
                 </div>
-            </li>
+            </li> *@
         </ul>
         <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
             <span class="mdi mdi-format-line-spacing"></span>

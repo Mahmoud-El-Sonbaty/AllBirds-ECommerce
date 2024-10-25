@@ -1,4 +1,5 @@
 using AllBirds.AdminDashboard.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -13,6 +14,7 @@ namespace AllBirds.AdminDashboard.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "SuperUser,Manager,Admin")]
         public IActionResult Index()
         {
             return View();

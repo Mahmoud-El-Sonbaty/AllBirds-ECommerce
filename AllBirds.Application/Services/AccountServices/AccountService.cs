@@ -30,10 +30,29 @@ namespace AllBirds.Application.Services.AccountServices
             this.mapper = _mapper;
         }
 
-        public async Task<ResultView<List<GetAllAdminsDTO>>> GetAllAdminsAsync()
+        public Task<ResultView<GetAllAdminsDTO>> GetUserById(string id)
+        {
+            ResultView<GetAllAdminsDTO> result = new();
+            CustomUser? userExist = userManager.Users.FirstOrDefault(u => u.Id == Convert.ToInt32(id));
+            if (userExist is not null)
+            {
+                result.IsSuccess = true;
+                result.Data = mapper.Map<GetAllAdminsDTO>(userExist);
+                result.Msg = "User Fetched Successfully";
+            }
+            else
+            {
+                result.IsSuccess = false;
+                result.Data = null;
+                result.Msg = "User Not Found";
+            }
+            return Task.FromResult(result);
+        }
+
+        public async Task<ResultView<List<GetAllAdminsDTO>>> GetAllAsync(string role)
         {
             ResultView<List<GetAllAdminsDTO>> result = new();
-            IdentityRole<int>? adminRole = roleManager.Roles.FirstOrDefault(r => r.NormalizedName == "ADMIN");
+            IdentityRole<int>? adminRole = roleManager.Roles.FirstOrDefault(r => r.NormalizedName == role.ToUpper());
             if (adminRole is not null)
             {
                 List<int> adminIdsList = [..(await accountRoleRepository.GetAllAccountRolesAsync()).Where(ar => ar.RoleId == adminRole.Id).Select(ur => ur.UserId)];
