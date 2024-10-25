@@ -103,7 +103,11 @@ namespace AllBirds.Application.Mapper
             #endregion
 
             #region Product
-            CreateMap<GetAllProductDTO, Product>().ReverseMap();
+            CreateMap<Product, GetAllProductDTO>()
+                .ForMember(dest => dest.MainImagePath, opt => opt.MapFrom(src =>
+                src.AvailableColors.FirstOrDefault(pc => pc.Id == src.MainColorId).Images.FirstOrDefault(pci => pci.Id == src.AvailableColors.FirstOrDefault(pc => pc.Id == src.MainColorId).MainImageId).ImagePath))
+                .ForMember(dest => dest.MainColorCode, opt => opt.MapFrom(src =>
+                src.AvailableColors.FirstOrDefault(pc => pc.Id == src.MainColorId).Color.Code));
             CreateMap<CUProductDTO, Product>()
                 .ForMember(dest => dest.HighlightsAr, opt => opt.MapFrom(src => JoinStringList(src.HighlightsAr)))
                 .ForMember(dest => dest.HighlightsEn, opt => opt.MapFrom(src => JoinStringList(src.HighlightsEn)))

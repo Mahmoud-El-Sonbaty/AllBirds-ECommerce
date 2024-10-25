@@ -64,8 +64,25 @@ namespace AllBirds.Application.Services.ProductServices
         public async Task<ResultView<List<GetAllProductDTO>>> GetAllAsync()
         {
             ResultView<List<GetAllProductDTO>> result = new();
-            List<Product> productsList = [.. (await productrepoistory.GetAllAsync())];
-            List<GetAllProductDTO> getAllPrds = mapper.Map<List<GetAllProductDTO>>(productsList);
+            //List<Product> productsList = [.. (await productrepoistory.GetAllAsync())
+            //    .Include(p => p.AvailableColors)
+            //        .ThenInclude(pc => pc.Color)
+            //    .Include(p => p.AvailableColors)
+            //        .ThenInclude(pc => pc.Images)];
+            List<GetAllProductDTO> getAllPrds = [.. (await productrepoistory.GetAllAsync()).Select(p => new GetAllProductDTO()
+            {
+                Id = p.Id,
+                ProductNo = p.ProductNo,
+                NameAr = p.NameAr,
+                NameEn = p.NameEn,
+                Price = p.Price,
+                Discount = p.Discount,
+                FreeShipping = p.FreeShipping,
+                IsDeleted = p.IsDeleted,
+                MainColorCode = p.AvailableColors.FirstOrDefault(pc => pc.Id == p.MainColorId).Color.Code,
+                MainImagePath = p.AvailableColors.FirstOrDefault(pc => pc.Id == p.MainColorId).Images.FirstOrDefault(pci => pci.Id == p.AvailableColors.FirstOrDefault(pc => pc.Id == p.MainColorId).MainImageId).ImagePath,
+            })];
+            //List<GetAllProductDTO> getAllPrds = mapper.Map<List<GetAllProductDTO>>(productsList);
             result.IsSuccess = true;
             result.Data = getAllPrds;
             result.Msg = "All Products Fetched Successfully";

@@ -3,7 +3,6 @@
     ViewData["Title"] = "GetAll";
 }
 
-<h1>GetAll</h1>
 @section Navbar {
 
     <partial name="_NavbarPartial" />
@@ -17,13 +16,13 @@
     <partial name="_FooterPartial" />
 }
 
-<h1>AllCategory</h1>
+@* <h1>AllCategory</h1> *@
 
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">AllCategory</h4>
+                <h3 class="card-title">All Categories</h3>
                 <p class="card-description">
                     <a class="btn btn-primary" asp-controller="Category" asp-action="Create"><i class="fas fa-plus"></i> New</a>
                 </p>
@@ -68,6 +67,16 @@
                     </table>
                 </div>
             </div>
+            <nav>
+                <ul class="pagination d-flex justify-content-center rounded-separated pagination-primary">
+                    <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

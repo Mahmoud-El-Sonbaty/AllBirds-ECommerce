@@ -1,7 +1,6 @@
 ﻿@model List<GetAllProductDTO>
 @{
     ViewData["Title"] = "Products";
-    // TempData.TryGetValue("Msg");
 }
 @section Navbar {
 
@@ -30,13 +29,13 @@
         </div>
     }
 }
-<h1>AllProducts</h1>
+@* <h1>AllProducts</h1> *@
 
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">AllProducts</h4>
+                <h3 class="card-title">All Products</h3>
                 <p class="card-description">
                     <a class="btn btn-primary" asp-controller="Product" asp-action="Create"><i class="fas fa-plus"></i> New</a>
                 </p>
@@ -53,14 +52,14 @@
                                     </div>
                                 </th>
                                 <th> Product No. </th>
-                                <th> Name </th>
+                                <th> NameEn </th>
+                                <th> NameAr </th>
                                 <th> Price </th>
+                                <th> Main Image </th>
+                                <th> Main Color </th>
                                 <th> Discount </th>
                                 <th> Free Shipping </th>
                                 <th> Deleted </th>
-                                @* <th> Available Colors </th>
-                                <th> Units In Stock </th>
-                                <th> Available Sizes </th> *@
                                 <th> Actions </th>
                             </tr>
                         </thead>
@@ -77,7 +76,12 @@
                                     </td>
                                     <td> @prd.ProductNo </td>
                                     <td> @prd.NameEn </td>
+                                    <td> @prd.NameAr </td>
                                     <td> @prd.Price.ToString("C2") </td>
+                                    <td class="py-1">
+                                        <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
+                                    </td>
+                                    <td><label class="rounded text-light" style="background-color: @prd.MainColorCode; width: 35px;height: 35px; border-radius: 50%;"></label></td>
                                     <td> @prd.Discount % </td>
                                     @{
                                         if (prd.FreeShipping)
@@ -135,6 +139,180 @@
                     </table>
                 </div>
             </div>
+            <nav>
+                <ul class="pagination d-flex justify-content-center rounded-separated pagination-primary">
+                    <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
+@* <div class="row">
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Basic Paginations</h4>
+                <p class="card-description">Default bordered pagination</p>
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Flat Pagination</h4>
+                <p class="card-description">Add calss <code>.flat</code></p>
+                <nav>
+                    <ul class="pagination flat pagination-success">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Separated Pagination</h4>
+                <p class="card-description">Add calss <code>.separated</code></p>
+                <nav>
+                    <ul class="pagination separated pagination-danger">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Bordered Rounded</h4>
+                <p class="card-description">Add calss <code>.rounded</code></p>
+                <nav>
+                    <ul class="pagination rounded">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Flat Rounded Pagination</h4>
+                <p class="card-description">Add calss <code>.rounded-flat</code></p>
+                <nav>
+                    <ul class="pagination rounded-flat pagination-success">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Separated Rounded</h4>
+                <p class="card-description">Add calss <code>.rounded-separated</code></p>
+                <nav>
+                    <ul class="pagination rounded-separated pagination-danger">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Left Position</h4>
+                <p class="card-description">Left Pagination</p>
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Center Position</h4>
+                <p class="card-description">Centered Pagination</p>
+                <nav>
+                    <ul class="pagination d-flex justify-content-center pagination-success">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Right Position</h4>
+                <p class="card-description">Right Pagination</p>
+                <nav>
+                    <ul class="pagination d-flex justify-content-end pagination-danger">
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div> *@

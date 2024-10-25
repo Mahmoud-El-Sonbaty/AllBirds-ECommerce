@@ -10,8 +10,6 @@ using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
 
 namespace AllBirds.AdminDashboard.Controllers
 {

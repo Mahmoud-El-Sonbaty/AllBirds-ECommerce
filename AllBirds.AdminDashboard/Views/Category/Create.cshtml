@@ -11,10 +11,6 @@
     //   SelectList categoriesList = new(ViewBag.Categories, "Id", "NameEn", Model?.CategoriesId);
     SelectList items = new SelectList(ViewBag.getAllCategoryDTOs, "Id", "NameEn", Model?.ParentCategoryId);
 }
-<!-- Plugin css for this page -->
-<link rel="stylesheet" href="~/assets/vendors/select2/select2.min.css">
-<link rel="stylesheet" href="~/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
-<!-- End plugin css for this page -->
 @section Navbar {
 
     <partial name="_NavbarPartial" />
@@ -61,11 +57,10 @@
                     *@
 
                     <div class="form-group">
-                        <label asp-for="ParentCategoryId">parent category</label>
-
-                        <select asp-for="ParentCategoryId" asp-items="items">
+                        <label asp-for="ParentCategoryId">Parent Category</label>
+                        <select class ="form-control" asp-for="ParentCategoryId" asp-items="items">
                             <option value="0">No Parent</option>
-                            @*                         <span asp-validation-for="AuthorID" style="color:red"></span>
+                            @*                         
                             *@
                             @*   @foreach (var item in ViewBag.Authors)
                             {
@@ -73,9 +68,8 @@
 
                             } *@
                         </select>
-
                     </div>
-
+                    <span class="text-danger" asp-validation-for="ParentCategoryId"></span>
 
                     <!-- <div class="form-group">
                       <label>File upload</label>
@@ -102,10 +96,8 @@
 
 
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <a class="btn btn-primary mr-2" asp-controller="Category" asp-action="GetAll">Cancel</a>
                 </form>
-                <br>
-
-                <a class="btn btn-primary mr-2" asp-controller="Category" asp-action="GetAll">Cancel</a>
 
                 @*             <button asp-controller="Category" asp-action="GetAll" class="btn btn-dark">Cancel</button>
                 *@@*             <a class="btn btn-primary" asp-controller="Category" asp-action="GetAll"><i class="fas fa-plus"></i> GetAll</a>
