@@ -87,8 +87,17 @@ namespace AllBirds.Context
             );
             // Seed Colors
             modelBuilder.Entity<Color>().HasData(
-                new Color { Id = 1, NameAr = "color1", NameEn = "color1", Code = "31243", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Color { Id = 2, NameAr = "color2", NameEn = "color2", Code = "31243", CreatedBy = 1, Created = new DateTime(2024, 10, 19) }
+                new Color { Id = 1, NameEn = "Black", NameAr = "أسود", Code = "#3b3b3b", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 2, NameEn = "Grey", NameAr = "رمادي", Code = "#8c8c8c", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 3, NameEn = "Biege", NameAr = "بيج", Code = "#b9afa1", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 4, NameEn = "Blue", NameAr = "أزرق", Code = "#49607c", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 5, NameEn = "Red", NameAr = "أحمر", Code = "#b14754", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 6, NameEn = "Green", NameAr = "أخضر", Code = "#69715e", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 7, NameEn = "White", NameAr = "أبيض", Code = "#f5f4f0", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 8, NameEn = "Purple", NameAr = "بنفسجي", Code = "#bbb9d5", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 9, NameEn = "Yellow", NameAr = "أصفر", Code = "#ead99a", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 10, NameEn = "Brown", NameAr = "بني", Code = "#bd9474", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Color { Id = 11, NameEn = "Pink", NameAr = "وردي", Code = "#dfabb5", CreatedBy = 1, Created = new DateTime(2024, 10, 19) }
             );
             // Seed Categories
             modelBuilder.Entity<Category>().HasData(
