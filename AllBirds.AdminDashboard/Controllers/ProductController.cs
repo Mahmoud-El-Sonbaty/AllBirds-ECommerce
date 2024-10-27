@@ -9,10 +9,12 @@ using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
+    [Authorize(Roles = "SuperUser,Manager,Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService productService;
