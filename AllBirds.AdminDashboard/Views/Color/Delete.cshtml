@@ -9,7 +9,7 @@
         <form asp-action="Delete" method="post" class="forms-sample">
             <input type="hidden" name="id" value="@Model.Id" />
 
-            <p>Color Name: @Model.Name</p>
+            <p>Color Name: @Model.NameEn</p>
 
             <button type="submit" class="btn btn-warning mr-2">Soft Delete</button>
             <button formaction="@Url.Action("HardDelete", "Color", new { id = Model.Id })" class="btn btn-danger mr-2">Hard Delete</button>

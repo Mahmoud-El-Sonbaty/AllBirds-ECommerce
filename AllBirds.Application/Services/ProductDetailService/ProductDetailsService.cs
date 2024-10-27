@@ -19,12 +19,12 @@ namespace AllBirds.Application.Services.ProductDetailService
             productRepository = _productRepository;
             mapper = _mapper;
         }
-        public async Task<ResultView<CUProductDetails>> CreateProductDetails(CUProductDetails cUProductDetails)
+        public async Task<ResultView<CRProductDetails>> CreateProductDetails(CRProductDetails cUProductDetails)
         {
-            bool existPrdDetails = (await productDetailsRepository.GetAllAsync()).Any(P => P.TitleEn == cUProductDetails.Title || P.DescriptionEn == cUProductDetails.Description);
+            bool existPrdDetails = (await productDetailsRepository.GetAllAsync()).Any(P => P.TitleEn == cUProductDetails.TitleEn || P.DescriptionEn == cUProductDetails.DescriptionEn);
             if (existPrdDetails)
             {
-                return new ResultView<CUProductDetails>() { Data = null, IsSuccess = false, Msg = $"Product Detail Title : ({cUProductDetails.Title}) Already Exist" };
+                return new ResultView<CRProductDetails>() { Data = null, IsSuccess = false, Msg = $"Product Detail Title : ({cUProductDetails.TitleEn}) Already Exist" };
             }
             else
             {
@@ -42,32 +42,31 @@ namespace AllBirds.Application.Services.ProductDetailService
                 {
                     await cUProductDetails.ImageData.CopyToAsync(fileStream);
                 }
-                cUProductDetails.ImagePath = "/Images/" + uniqueFileName;
+                cUProductDetails.ImagePath = "/Images/" + "/ProductDetails/" + uniqueFileName;
                 ProductDetail productDetail = mapper.Map<ProductDetail>(cUProductDetails);
                 ProductDetail productDetailCreated = await productDetailsRepository.CreateAsync(productDetail);
 
                 if (productDetailCreated is not null)
                 {
 
-                    CUProductDetails cUProductDetails1 = mapper.Map<CUProductDetails>(productDetailCreated);
+                    CRProductDetails cUProductDetails1 = mapper.Map<CRProductDetails>(productDetailCreated);
                     await productDetailsRepository.SaveChangesAsync();
-                    return new ResultView<CUProductDetails>() { Data = cUProductDetails1, IsSuccess = true, Msg = $"Product Detail Title : ({cUProductDetails1.Title}) Created Successfully" };
+                    return new ResultView<CRProductDetails>() { Data = cUProductDetails1, IsSuccess = true, Msg = $"Product Detail Title : ({cUProductDetails1.TitleEn}) Created Successfully" };
                 }
                 else
                 {
-                    return null;
+                    return new ResultView<CRProductDetails>() { Data = null, IsSuccess = false, Msg = $"Cannot Create This Product Details Title : ({productDetailCreated.TitleEn}) " };
                 }
 
             }
         }
 
-        public async Task<List<GetAllProductDetailsDTOS>> GetAllProductDetails()
+        public async Task<List<GetAllProductDetailsDTOS>> GetAllProductDetails(int id)
         {
-            List<ProductDetail> getAllProduct = [.. (await productDetailsRepository.GetAllAsync())];
+            List<ProductDetail> getAllProduct = [.. (await productDetailsRepository.GetAllAsync()).Where(P => P.ProductId == id && !P.IsDeleted).Include(p => p.Product)];
 
             if (getAllProduct is not null)
             {
-
 
                 List<GetAllProductDetailsDTOS> getAllProductDTOs = mapper.Map<List<GetAllProductDetailsDTOS>>(getAllProduct);
                 return getAllProductDTOs;
@@ -76,10 +75,10 @@ namespace AllBirds.Application.Services.ProductDetailService
             return null;
 
         }
-        public async Task<ResultView<GetAllProductDetailsDTOS>> GetOnePrdDetails(int id)
+        public async Task<ResultView<UpdateProductDetail>> GetOnePrdDetails(int id)
         {
 
-            ResultView<GetAllProductDetailsDTOS> resultView = new();
+            ResultView<UpdateProductDetail> resultView = new();
 
             ProductDetail productDetail = (await productDetailsRepository.GetAllAsync()).FirstOrDefault(p => p.Id == id);
             if (productDetail == null)
@@ -90,67 +89,105 @@ namespace AllBirds.Application.Services.ProductDetailService
                 return resultView;
             }
 
-            GetAllProductDetailsDTOS getAllProductDetailsDTOS = mapper.Map<GetAllProductDetailsDTOS>(productDetail);
+            UpdateProductDetail getAllProductDetailsDTOS = mapper.Map<UpdateProductDetail>(productDetail);
             resultView.Data = getAllProductDetailsDTOS;
             resultView.IsSuccess = true;
             resultView.Msg = "Product Details Fetched Successfully";
             return resultView;
         }
 
-        public async Task<ResultView<CUProductDetails>> HardDeletePrdDetails(CUProductDetails cUProductDetails)
+        public async Task<ResultView<UpdateProductDetail>> HardDeletePrdDetails(UpdateProductDetail cUProductDetails)
         {
             ProductDetail productDetail = (await productDetailsRepository.GetAllAsync()).FirstOrDefault(P => P.Id == cUProductDetails.Id);
             if (productDetail is not null)
             {
+                string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+
+                string oldFilePath = Path.Combine(rootPath, productDetail.ImagePath.TrimStart('/'));
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+
+
                 ProductDetail productDetail1 = await productDetailsRepository.DeleteAsync(productDetail);
-                CUProductDetails cUProductDeleted = mapper.Map<CUProductDetails>(productDetail1);
-                ResultView<CUProductDetails> resultView = new ResultView<CUProductDetails>()
+                UpdateProductDetail cUProductDeleted = mapper.Map<UpdateProductDetail>(productDetail1);
+                ResultView<UpdateProductDetail> resultView = new ResultView<UpdateProductDetail>()
                 {
                     Data = cUProductDeleted,
                     IsSuccess = true,
-                    Msg = $"Product Detail : ({cUProductDeleted.Title}) Deleted Successfully"
+                    Msg = $"Product Detail : ({cUProductDeleted.TitleEn}) Deleted Successfully"
                 };
                 await productDetailsRepository.SaveChangesAsync();
                 return resultView;
             }
             else
             {
-                ResultView<CUProductDetails> resultView1 = new ResultView<CUProductDetails>()
+                ResultView<UpdateProductDetail> resultView1 = new ResultView<UpdateProductDetail>()
                 {
                     Data = cUProductDetails,
                     IsSuccess = false,
-                    Msg = $"Product Detail : ({cUProductDetails.Title}) Not Exist"
+                    Msg = $"Product Detail : ({cUProductDetails.TitleEn}) Not Exist"
                 };
                 return resultView1;
             }
 
         }
 
-        public async Task<ResultView<CUProductDetails>> UpdateProductDetails(CUProductDetails cUProductDetails)
+        public async Task<ResultView<UpdateProductDetail>> UpdateProductDetails(UpdateProductDetail cUProductDetails)
         {
             bool Exist = await (await productDetailsRepository.GetAllAsync()).AnyAsync(P => P.Id == cUProductDetails.Id && P.ProductId == cUProductDetails.ProductId);
             if (!Exist)
             {
-                ResultView<CUProductDetails> resultView = new()
+                ResultView<UpdateProductDetail> resultView = new()
                 {
                     Data = null,
                     IsSuccess = false,
                     Msg = "This Product Detail Is Not Exist"
                 };
-
+                return resultView;
             }
+
+
+
+            string[] path = cUProductDetails.ImagePath.Split("~@#$%&", 2, StringSplitOptions.RemoveEmptyEntries);
+
+            //string uploadFolder = path[0].Trim();
+
+            
+            string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+            string oldFilePath = Path.Combine(rootPath, path[0].TrimStart('/'));
+            var Check = Directory.GetCurrentDirectory();
+
+            if (System.IO.File.Exists(oldFilePath))
+            {
+                System.IO.File.Delete(oldFilePath);
+            }
+
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + cUProductDetails.ImageData.FileName;
+            string filePath = Path.Combine(path[1], uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await cUProductDetails.ImageData.CopyToAsync(fileStream);
+            }
+
+            cUProductDetails.ImagePath = "/Images/" + "/ProductDetails/" + uniqueFileName;
+
             ProductDetail productDetail = mapper.Map<ProductDetail>(cUProductDetails);
             ProductDetail productDetailUpdated = await productDetailsRepository.UpdateAsync(productDetail);
             await productDetailsRepository.SaveChangesAsync();
-            CUProductDetails productDetailsDTO = mapper.Map<CUProductDetails>(productDetailUpdated);
-            ResultView<CUProductDetails> resultView1 = new()
+            UpdateProductDetail productDetailsDTO = mapper.Map<UpdateProductDetail>(productDetailUpdated);
+            ResultView<UpdateProductDetail> resultView1 = new()
             {
                 Data = productDetailsDTO,
                 IsSuccess = true,
-                Msg = $"Product Detail : ({productDetailsDTO.Title}) Updated successfully"
-
+                Msg = $"Product Detail : ({productDetailsDTO.TitleEn}) Updated successfully"
             };
             return resultView1;
+
         }
     }
 }

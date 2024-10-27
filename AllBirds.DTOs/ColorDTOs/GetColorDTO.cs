@@ -9,7 +9,9 @@ namespace AllBirds.DTOs.ColorDTOs
 {
     public class GetColorDTO
     {
-        public string Name { get; set; }
+        public string NameAr { get; set; }
+
+        public string NameEn { get; set; }
         public string Code { get; set; }
     }
 }

@@ -14,6 +14,7 @@ using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.SizeDTOs;
 using AllBirds.DTOs.SpecificationDTOs;
+using AllBirds.DTOs.ProductColorImageDTOs;
 namespace AllBirds.Application.Mapper
 {
     public class AutoMapperProfile : Profile
@@ -126,7 +127,8 @@ namespace AllBirds.Application.Mapper
             #endregion
 
             #region ProductDetails
-            CreateMap<ProductDetail, CUProductDetails>().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
+            CreateMap<ProductDetail, CRProductDetails>().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
+            CreateMap<ProductDetail, UpdateProductDetail>().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
             CreateMap<ProductDetail, GetAllProductDetailsDTOS>().ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
                 .ForMember(dest => dest.NameEn, opt => opt.MapFrom(src => src.Product.NameEn))
                 .ForMember(dest => dest.NameAr, opt => opt.MapFrom(src => src.Product.NameAr));
@@ -135,7 +137,12 @@ namespace AllBirds.Application.Mapper
 
             #region ProductColor
 
-            CreateMap<CreateProductColorDTO,ProductColor>().ReverseMap();
+            CreateMap<ProductColor, CreateProductColorDTO>()
+                        .ForMember(dest => dest.Images, opt => opt.Ignore()); 
+
+            CreateMap<CreateProductColorDTO, ProductColor>()
+                .ForMember(dest => dest.Images, opt => opt.Ignore()); 
+            CreateMap<UpdateProductColorDTO, ProductColor>().ReverseMap();
             CreateMap<GetALlProductColorDTO, ProductColor>().ReverseMap()
                 .ForMember(dest => dest.ColorNameAr, opt => opt.MapFrom(src => src.Color.NameAr))
                 .ForMember(dest => dest.ColorNameEn, opt => opt.MapFrom(src => src.Color.NameEn))
@@ -143,8 +150,7 @@ namespace AllBirds.Application.Mapper
                 .ForMember(dest => dest.PNameAr, opt => opt.MapFrom(src => src.Product.NameAr))
                 .ForMember(dest => dest.PNameEn, opt => opt.MapFrom(src => src.Product.NameEn))
                 .ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
-                .ForMember(dest=>dest.MainImagePath,opt=>opt.MapFrom(src=>src.Images.FirstOrDefault(p=>p.Id==src.MainImageId).ImagePath))
-                ;
+                .ForMember(dest=>dest.MainImagePath,opt=>opt.MapFrom(src=>src.Images.FirstOrDefault(p=>p.Id==src.MainImageId).ImagePath));
             CreateMap<GetOneProductColorDTO, ProductColor>().ReverseMap()
                 .ForMember(dest => dest.ColorNameAr, opt => opt.MapFrom(src => src.Color.NameAr))
                 .ForMember(dest => dest.ColorNameEn, opt => opt.MapFrom(src => src.Color.NameEn))
@@ -161,8 +167,8 @@ namespace AllBirds.Application.Mapper
             #endregion
 
             #region ProductColorImage
-            //CreateMap<GetAllBookAuthorDTO, BookAuthor>().ReverseMap()
-            //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            CreateMap<ProductColorImage, CUProductColorImageDTO> ().ForMember(dest => dest.ImageData, opt => opt.Ignore()).ReverseMap();
+            CreateMap<ProductColorImage, GetAllCategoryProductDTO>().ReverseMap();
             #endregion
 
             #region ProductColorSize

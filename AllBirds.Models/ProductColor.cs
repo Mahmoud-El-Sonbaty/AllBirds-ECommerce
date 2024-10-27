@@ -18,7 +18,7 @@ namespace AllBirds.Models
         public int MainImageId { get; set; }
         //public virtual ProductColorImage MainImage { get; set; }
         [InverseProperty("ProductColor")]
-        public virtual ICollection<ProductColorImage>? Images { get; set; }
+        public virtual ICollection<ProductColorImage>? Images { get; set; } 
         public virtual ICollection<ProductColorSize>? AvailableSizes { get; set; }
     }
 }
