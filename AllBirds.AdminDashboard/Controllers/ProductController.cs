@@ -16,7 +16,6 @@ using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace AllBirds.AdminDashboard.Controllers
 {
     [Authorize(Roles = "SuperUser,Manager,Admin")]
