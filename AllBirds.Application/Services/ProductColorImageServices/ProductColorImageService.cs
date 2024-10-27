@@ -23,17 +23,9 @@ namespace AllBirds.Application.Services.ProductColorImageServices
             mapper = _mapper;
         }
 
-        public async Task<ResultView<CUProductColorImageDTO>> CreateProductColorImage(CUProductColorImageDTO cUProductColorImageDTO)
+        public async Task<CUProductColorImageDTO> CreateProductColorImage(CUProductColorImageDTO cUProductColorImageDTO)
         {
 
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + cUProductColorImageDTO.ImageData.FileName;
-            string filePath = Path.Combine(cUProductColorImageDTO.ImagePath, uniqueFileName);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await cUProductColorImageDTO.ImageData.CopyToAsync(fileStream);
-            }
-            cUProductColorImageDTO.ImagePath = "/Images/" + "/ProductDetails/" + uniqueFileName;
 
             ProductColorImage productColorImage = mapper.Map<ProductColorImage>(cUProductColorImageDTO);
 
@@ -44,13 +36,12 @@ namespace AllBirds.Application.Services.ProductColorImageServices
 
                 CUProductColorImageDTO cUProductDetails1 = mapper.Map<CUProductColorImageDTO>(productColorImage1);
                 await productColorImageRepository.SaveChangesAsync();
-                return new ResultView<CUProductColorImageDTO>() { Data = cUProductDetails1, IsSuccess = true, Msg = $"Product Color Image Created Successfully" };
+                return cUProductDetails1;
             }
             else
             {
-                return new ResultView<CUProductColorImageDTO>() { Data = null, IsSuccess = false, Msg = $"Cannot Create This Product Color Image " };
+                return null;
             }
-
 
         }
 

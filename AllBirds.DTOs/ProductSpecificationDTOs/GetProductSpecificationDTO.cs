@@ -16,6 +16,7 @@ namespace AllBirds.DTOs.ProductSpecificationDTOs
         public string? ProductNameEn { get; set; }
         public string? SpecificationNameAr { get; set; }
         public string? SpecificationNameEn { get; set; }
-        public string? Content { get; set; }
+        public string? ContentAr { get; set; }
+        public string? ContentEn { get; set; }
     }
 }

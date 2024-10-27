@@ -54,7 +54,7 @@ namespace AllBirds.AdminDashboard.Controllers
             if (ModelState.IsValid)
             {
                 await _colorService.CreateAsync(colorDto);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(GetALLForC_CO_S_OS));
             }
             return View(colorDto);
         }
@@ -79,6 +79,7 @@ namespace AllBirds.AdminDashboard.Controllers
             }
             return View(colorDto);
         }
+        //---------------------------
 
         public async Task<IActionResult> Delete(int id)
         {
@@ -90,12 +91,57 @@ namespace AllBirds.AdminDashboard.Controllers
             return View(color);
         }
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, bool hardDelete)
         {
-            await _colorService.SoftDeleteAsync(id);
+            if (hardDelete)
+            {
+                await _colorService.HardDeleteAsync(id);
+            }
+            else
+            {
+                await _colorService.SoftDeleteAsync(id);
+            }
             return RedirectToAction(nameof(Index));
         }
+
+
+
+
+
+
+
+
+
+
+
+
+        //-----------------
+
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var color = await _colorService.GetByIdAsync(id);
+        //    if (color == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(color);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    await _colorService.SoftDeleteAsync(id);
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> HardDelete(int id)
+        //{
+        //    await _colorService.HardDeleteAsync(id);
+        //    return RedirectToAction(nameof(Index));
+        //}
+
     }
 
 }

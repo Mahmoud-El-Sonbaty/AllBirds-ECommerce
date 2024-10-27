@@ -28,19 +28,20 @@
                 @* <h4 class="card-title">CreateProduct</h4> *@
                 <form class="form-sample" enctype="multipart/form-data" method="post" asp-action="Update">
                     <p class="card-description"> Main Info </p>
-                    <div class="col-md-6">
-                        <div class="form-group row">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
                             <label class="col-sm-3 col-form-label" asp-for="Data.TitleEn"></label>
-                            <div class="col-sm-9">
+                                <div class="col-sm-9">
                                 <input class="form-control" asp-for="Data.TitleEn" />
                                 <span class="text-danger" asp-validation-for="Data.TitleEn"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
                             <label class="col-sm-3 col-form-label" asp-for="Data.TitleAr"></label>
-                            <div class="col-sm-9">
+                                <div class="col-sm-9">
                                 <input class="form-control" asp-for="Data.TitleAr" />
                                 <span class="text-danger" asp-validation-for="Data.TitleAr"></span>
                             </div>
@@ -50,12 +51,12 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label" asp-for="Data.DescriptionEn"></label>
                             <div class="col-sm-9">
-                                <div class="input-group">
+                                    <div class="input-group">
                                     <input class="form-control" asp-for="Data.DescriptionEn" />
-                                </div>
+                                        </div>
                                 <span class="text-danger" asp-validation-for="Data.DescriptionEn"></span>
-                            </div>
-                        </div>
+                                        </div>
+                                    </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -77,9 +78,9 @@
                                     <input class="form-control" asp-for="Data.ImageData" />
                                     <span class="text-danger" asp-validation-for="Data.ImageData"></span>
                                 </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
                     <input type="hidden" asp-for="Data.ProductId" />
                     <input type="hidden" asp-for="Data.ImagePath" />

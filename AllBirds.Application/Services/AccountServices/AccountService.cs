@@ -1,5 +1,7 @@
-﻿using AllBirds.Application.Mapper;
+﻿using AllBirds.Application.Contracts;
+using AllBirds.Application.Mapper;
 using AllBirds.DTOs.AccountDTOs;
+using AllBirds.DTOs.Shared;
 using AllBirds.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -13,18 +15,41 @@ namespace AllBirds.Application.Services.AccountServices
 {
     public class AccountService : IAccountService
     {
+        private readonly IAccountRoleRepository accountRoleRepository;
         private readonly UserManager<CustomUser> userManager;
         private readonly SignInManager<CustomUser> signInManager;
         private readonly RoleManager<IdentityRole<int>> roleManager;
         private readonly IMapper mapper;
-        public AccountService(
-            UserManager<CustomUser> _userManager, SignInManager<CustomUser> _signInManager,
+        public AccountService(IAccountRoleRepository _accountRoleRepository, UserManager<CustomUser> _userManager, SignInManager<CustomUser> _signInManager,
             RoleManager<IdentityRole<int>> _roleManager, IMapper _mapper)
         {
+            this.accountRoleRepository = _accountRoleRepository;
             this.signInManager = _signInManager;
             this.userManager = _userManager;
             this.roleManager = _roleManager;
             this.mapper = _mapper;
+        }
+
+        public async Task<ResultView<List<GetAllAdminsDTO>>> GetAllAdminsAsync()
+        {
+            ResultView<List<GetAllAdminsDTO>> result = new();
+            IdentityRole<int>? adminRole = roleManager.Roles.FirstOrDefault(r => r.NormalizedName == "ADMIN");
+            if (adminRole is not null)
+            {
+                List<int> adminIdsList = [..(await accountRoleRepository.GetAllAccountRolesAsync()).Where(ar => ar.RoleId == adminRole.Id).Select(ur => ur.UserId)];
+                List<CustomUser> adminsList = [..userManager.Users.Where(u => adminIdsList.Contains(u.Id))];
+                List<GetAllAdminsDTO> getAllAdminsDTOs = mapper.Map<List<GetAllAdminsDTO>>(adminsList);
+                result.IsSuccess = true;
+                result.Data = getAllAdminsDTOs;
+                result.Msg = "All Admins Fetched Successfully";
+            }
+            else
+            {
+                result.IsSuccess = false;
+                result.Data = null;
+                result.Msg = "No Role Named Admin Was Found";
+            }
+            return result;
         }
 
         public List<IdentityRole<int>> GetRoles() => [.. roleManager.Roles];
@@ -100,6 +125,7 @@ namespace AllBirds.Application.Services.AccountServices
             return false;
         }
 
+        //public async Task<ResultView<CUAccountDTO>>
         public async Task LogoutAsync()
         {
             await signInManager.SignOutAsync();

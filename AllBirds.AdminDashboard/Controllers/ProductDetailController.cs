@@ -31,6 +31,7 @@ namespace AllBirds.AdminDashboard.Controllers
             ResultView <CRProductDetails> resultView = new();
             return View(resultView);
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(ResultView<CRProductDetails> cUProductDetails)
         {
@@ -41,7 +42,7 @@ namespace AllBirds.AdminDashboard.Controllers
                 cUProductDetails.Data.ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "ProductDetails" });
 
                 resultView = await productDetailsService.CreateProductDetails(cUProductDetails.Data);
-                
+
                 if (resultView.IsSuccess)
                 {
                     return Redirect($"/ProductDetail/AllProductDetails/{resultView.Data.ProductId}"); 
@@ -99,7 +100,7 @@ namespace AllBirds.AdminDashboard.Controllers
 
         }
         public async Task<IActionResult> DeleteProductDetails(UpdateProductDetail cUProductDTO)
-        {
+            {
             ResultView<UpdateProductDetail> DeletedProductDetails = await productDetailsService.HardDeletePrdDetails(cUProductDTO);
 
             return Redirect($"/ProductDetail/AllProductDetails/{cUProductDTO.ProductId}");

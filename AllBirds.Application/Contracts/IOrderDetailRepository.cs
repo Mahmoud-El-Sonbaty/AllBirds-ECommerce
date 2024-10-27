@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace AllBirds.Application.Contracts
 {
-    public interface ICategorySizeRepository : IGenericRepository<CategorySize,int>
+    public interface IOrderDetailRepository: IGenericRepository<OrderDetail,int>
     {
+        public Task<OrderDetail> GetOneAsync(int id);
+
     }
 }
-
-
-

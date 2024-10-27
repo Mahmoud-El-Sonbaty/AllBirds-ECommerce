@@ -1,13 +1,16 @@
-﻿using AllBirds.Application.Services.OrderDetailsServices;
+﻿using AllBirds.Application.Services.OrderDetailServices;
+using AllBirds.DTOs.OrderDetailsDTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
     public class OrderDetailsController : Controller
     {
-        public IOrderDetailsService OrderService { get; set; }
+        public IOrderDetailService OrderService { get; set; }
 
-        public OrderDetailsController(IOrderDetailsService orderDetailsService)
+        public OrderDetailsController(IOrderDetailService orderDetailsService)
         {
             this.OrderService=orderDetailsService;
 
@@ -22,55 +25,78 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> GetAllOrderDetails()
         {
-            var OrderMaster = (await OrderService.GetAllAsync()).ToList();
+            var OrderDetail = (await OrderService.GetAllAsync());
+            if (!OrderDetail.IsSuccess)
+            {
+                ViewBag.ErrMsg= OrderDetail.Msg;
+            }
 
 
-            return View(OrderMaster);
+            return View(OrderDetail);
 
         }
 
 
-        //public async Task<IActionResult> GetOneOrderDetails(int id )
+        //public async Task<IActionResult> GetOneOrderDetails(int id)
         //{
         //    var OrderDetail = (await OrderService.GetByIdAsync(id));
+        //    if (!OrderDetail.IsSuccess)
+        //    {
+        //        ViewBag.ErrMsg = OrderDetail.Msg;
+        //    }
 
         //    return View(OrderDetail);
 
         //}
 
 
-        //public async Task<IActionResult> CreateOrderDetails(createOrderDetailsDTO createOrderDetailsDTO)
+        //public async Task<IActionResult> CreateOrderDetails(CreateOrderDetailsDTO createOrderDetailsDTO)
         //{
-        //    if(!ModelState.IsValid)
+        //    if (!ModelState.IsValid)
         //    {
         //        return View(createOrderDetailsDTO);
 
         //    }
         //    var operationResult = await OrderService.GetByIdAsync(createOrderDetailsDTO.Id);
-        //    if (operationResult == null)
-        //    { 
-
-        //        await OrderService.CreateAsync(createOrderDetailsDTO);
-        //    }
-        //    else
+        //    if (!operationResult.IsSuccess)
         //    {
-        //        await OrderService.UpdateAsync(createOrderDetailsDTO);
+
+        //      var create=  await OrderService.CreateAsync(createOrderDetailsDTO);
+
+        //        if (!create.IsSuccess)
+        //        {
+        //            ViewBag.ErrMsg = create.Msg;
+        //        }
+
+        //    }
+        //     else
+        //    {
+        //       var update = await OrderService.UpdateAsync(createOrderDetailsDTO);
+        //        if (!update.IsSuccess)
+        //        {
+        //            ViewBag.ErrMsg = update.Msg;
+        //        }
         //    }
 
-        //   return RedirectToAction("GetAllOrderDetails");
+        //    return RedirectToAction("GetAllOrderDetails");
         //}
 
-        //public async Task< IActionResult> DeletOrderMaster(int num,int Id)
+        //public async Task<IActionResult> DeletOrderMaster(int num, int Id)
         //{
-        //    GetOneOdrerMasterDTO item;
+
+        //    dynamic item;
         //    if (num == 0)
         //    {
         //        item = await OrderService.HardDeleteAsync(Id);
+        //        ViewBag.Msg = item.Msg;
+
 
         //    }
         //    else
         //    {
         //        item = await OrderService.SoftDeleteAsync(Id);
+        //        ViewBag.Msg = item.Msg;
+
 
         //    }
         //    return View(item);

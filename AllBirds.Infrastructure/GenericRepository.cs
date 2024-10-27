@@ -19,6 +19,7 @@ namespace AllBirds.Infrastructure
         {
             context = _context;
             dbset = _context.Set<TEntity>();
+            
         }
 
         public async Task<TEntity> CreateAsync(TEntity Entity) => (await dbset.AddAsync(Entity)).Entity;

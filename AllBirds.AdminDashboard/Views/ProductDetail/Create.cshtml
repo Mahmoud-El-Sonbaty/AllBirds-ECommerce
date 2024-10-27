@@ -27,6 +27,8 @@
             <div class="card-body">
                 @* <h4 class="card-title">CreateProduct</h4> *@
                 <form class="form-sample" enctype="multipart/form-data" method="post" asp-action="Create">
+                    <input hidden asp-for="Data.ProductId" value="@ViewBag.ProductId" />
+
                     <p class="card-description"> Main Info </p>
                     <div class="row">
                         <div class="col-md-6">
@@ -73,16 +75,17 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label" asp-for="Data.ImageData"></label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" asp-for="Data.ImageData" />
+                                    <input class="form-control"  asp-for="Data.ImageData" />
                                     <span class="text-danger" asp-validation-for="Data.ImageData"></span>
                                 </div>
                             </div>
-                            <input hidden asp-for="Data.ProductId" value="@ViewBag.ProductId" />
+                            
 
                         </div>
                         
@@ -92,18 +95,6 @@
                     <a asp-controller="ProductDetail" asp-action="AllProductDetails" class="btn btn-dark">Cancel</a>
 
                 </form>
-                @if (Model.IsSuccess)
-                {
-                    <h4 class="text-success mg-5" style="text-align:center">
-                        @Model.Msg
-                    </h4>
-                }
-                else
-                {
-                    <h4 class="text-danger mg-5" style="text-align:center">
-                        @Model.Msg
-                    </h4>
-                }
 
 
             </div>

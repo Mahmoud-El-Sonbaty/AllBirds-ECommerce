@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AllBirds.Infrastructure
 {
-    public class CategorySizeRepository(AllBirdsContext context) : GenericRepository<CategorySize, int>(context), ICategorySizeRepository
+    public class ProductColorRepository(AllBirdsContext context):GenericRepository<ProductColor, int>(context), IProductColorRepository
     {
     }
 }

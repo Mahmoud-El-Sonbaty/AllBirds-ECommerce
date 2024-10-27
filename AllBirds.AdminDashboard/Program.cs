@@ -5,8 +5,11 @@ using AllBirds.Application.Services.CategoryProductServices;
 using AllBirds.Application.Services.CategoryServices;
 using AllBirds.Application.Services.ColorServices;
 using AllBirds.Application.Services.CouponServices;
+using AllBirds.Application.Services.OrderDetailServices;
+using AllBirds.Application.Services.OrderMasterServices;
 using AllBirds.Application.Services.OrderStateServices;
 using AllBirds.Application.Services.ProductColorImageServices;
+using AllBirds.Application.Services.ProductColorServices;
 using AllBirds.Application.Services.ProductDetailService;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
@@ -32,6 +35,7 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             // Account
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IAccountRoleRepository, AccountRoleRepository>();
             // Category
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -47,11 +51,11 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddScoped<ICouponService, CouponService>();
             builder.Services.AddScoped<ICouponRepository, CouponRepository>();
             // OrderDetail
-            //builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
-            //builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+            builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
+            builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             // OrderMaster
-            //builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
-            //builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
+            builder.Services.AddScoped<IOrderMasterService, OrderMasterService>();
+            builder.Services.AddScoped<IOrderMasterRepository, OrderMasterRepository>();
             // OrderState
             builder.Services.AddScoped<IOrderStateService, OrderStateService>();
             builder.Services.AddScoped<IOrderStateRepository, OrderStateRepository>();
@@ -59,7 +63,8 @@ namespace AllBirds.AdminDashboard
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             // ProductColor
-
+            builder.Services.AddScoped<IProductColorService, ProductColorService>();
+            builder.Services.AddScoped<IProductColorRepository, ProductColorRepository>();
             // ProductColorImage
             builder.Services.AddScoped<IProductColorImageRepository, ProductColorImageRepository>();
             builder.Services.AddScoped<IProductColotImageService, ProductColorImageService>();

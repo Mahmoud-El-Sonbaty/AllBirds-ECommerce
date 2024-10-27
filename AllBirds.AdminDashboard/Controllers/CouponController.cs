@@ -13,28 +13,32 @@ namespace AllBirds.AdminDashboard.Controllers
             _couponService = couponService;
         }
 
+        // Display all coupons
         public async Task<IActionResult> Index()
         {
             var coupons = await _couponService.GetAllAsync();
             return View(coupons);
         }
 
+        // GET: Create new coupon
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: Create new coupon
         [HttpPost]
         public async Task<IActionResult> Create(CUCouponDTO couponDto)
         {
             if (ModelState.IsValid)
             {
                 await _couponService.CreateAsync(couponDto);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("GetALLForC_CO_S_OS", "Color");
             }
             return View(couponDto);
         }
 
+        // GET: Edit coupon
         public async Task<IActionResult> Edit(int id)
         {
             var coupon = await _couponService.GetByIdAsync(id);
@@ -45,13 +49,14 @@ namespace AllBirds.AdminDashboard.Controllers
             return View(coupon);
         }
 
+        // POST: Edit coupon
         [HttpPost]
         public async Task<IActionResult> Edit(CUCouponDTO couponDto)
         {
             if (ModelState.IsValid)
             {
                 await _couponService.UpdateAsync(couponDto);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("GetALLForC_CO_S_OS","Color");
             }
             return View(couponDto);
         }
@@ -66,12 +71,18 @@ namespace AllBirds.AdminDashboard.Controllers
             return View(coupon);
         }
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> SoftDelete(int id)
         {
             await _couponService.SoftDeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-    }
 
+        [HttpPost]
+        public async Task<IActionResult> HardDelete(int id)
+        {
+            await _couponService.HardDeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+    }
 }

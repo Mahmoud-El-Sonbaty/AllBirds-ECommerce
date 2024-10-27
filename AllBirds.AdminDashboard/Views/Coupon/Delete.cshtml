@@ -1,0 +1,22 @@
+﻿@using AllBirds.DTOs.CouponDTOs
+@model CUCouponDTO
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Delete Coupon</h4>
+        <p class="card-description">Are you sure you want to delete this coupon?</p>
+
+        <form method="post" asp-action="SoftDelete" class="forms-sample">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <p>Coupon Name: @Model.</p>
+            <button type="submit" class="btn btn-warning mr-2">Soft Delete</button>
+        </form>
+
+        <form method="post" asp-action="HardDelete" class="forms-sample">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-danger mr-2">Hard Delete</button>
+        </form>
+
+        <a href="@Url.Action("Index", "Coupon")" class="btn btn-dark">Cancel</a>
+    </div>
+</div>

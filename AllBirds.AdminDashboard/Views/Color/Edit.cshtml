@@ -1,0 +1,19 @@
+﻿@using AllBirds.DTOs.ColorDTOs
+@model CUColorDTO
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Edit Color</h4>
+        <p class="card-description">Use this form to edit the color</p>
+
+        <form asp-action="Edit" method="post" class="forms-sample">
+            <div class="form-group">
+                <label for="ColorName">Color Name</label>
+                <input type="text" class="form-control" id="ColorName" name="Name" value="@Model.NameEn" placeholder="Enter color name" />
+            </div>
+
+            <button type="submit" class="btn btn-primary mr-2">Update</button>
+            <a href="@Url.Action("Index", "Color")" class="btn btn-dark">Cancel</a>
+        </form>
+    </div>
+</div>

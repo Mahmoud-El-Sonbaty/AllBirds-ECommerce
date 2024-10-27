@@ -13,7 +13,10 @@ namespace AllBirds.DTOs.ProductSpecificationDTOs
         public int SpecificationId { get; set; }
         public int ProductId { get; set; }
 
-        [StringLength(1500, MinimumLength = 50)]
-        public string Content { get; set; }
+        [StringLength(1500, MinimumLength = 20)]
+        public string? ContentAr { get; set; }
+
+        [StringLength(1500, MinimumLength = 20)]
+        public string? ContentEn { get; set; }
     }
 }

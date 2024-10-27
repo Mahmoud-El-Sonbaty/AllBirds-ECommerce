@@ -10,12 +10,11 @@ namespace AllBirds.Application.Services.CategoryServices
 {
     public interface ICategoryService
     {
-        public Task<ResultView< CUCategoryDTO>> CreateAsync(CUCategoryDTO entity);
-        public Task<ResultView <CUCategoryDTO>> UpdateAsync(CUCategoryDTO entity);
-        public Task<ResultView<GetOneCategoryDTO>> HardDeleteAsync(GetOneCategoryDTO entity);
-        public Task<ResultView<GetOneCategoryDTO>> SoftDeleteAsync(GetOneCategoryDTO entity);
-        public Task<List<GetAllCategoryDTO>> GetAllAsync();
-        public Task<ResultView<GetOneCategoryDTO>> GetOneAsync(int id);
-        //public Task<int> SaveChangesAsync();
+        public Task<ResultView<CUCategoryDTO>> CreateAsync(CUCategoryDTO entity);
+        public Task<ResultView<CUCategoryDTO>> UpdateAsync(CUCategoryDTO entity);
+        //public Task<ResultView<GetOneCategoryDTO>> HardDeleteAsync(int id);
+        public Task<ResultView<GetOneCategoryDTO>> DeleteAsync(int id);
+        public Task<ResultView<List<GetAllCategoryDTO>>> GetAllAsync();
+        public Task<ResultView<CUCategoryDTO>> GetOneAsync(int id);
     }
 }

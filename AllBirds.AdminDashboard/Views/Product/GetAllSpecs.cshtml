@@ -19,6 +19,8 @@
 <link rel="stylesheet" href="~/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
 <!-- End plugin css for this page -->
 
+<div id="msgDiv" class="alert alert-success text-dark" role="alert"> <span>@Model.Msg</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button></div>
+
 <h1>GetAllSpecs</h1>
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
@@ -41,7 +43,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.IsSuccess)
+                            @if (Model.IsSuccess && Model.Data.Count > 0)
                             {
                                 @foreach (GetProductSpecificationDTO prdSpec in Model.Data)
                                 {
@@ -49,7 +51,7 @@
                                         <td>@prdSpec.ProductNo</td>
                                         <td>@prdSpec.ProductNameEn</td>
                                         <td>@prdSpec.SpecificationNameEn</td>
-                                        <td>@prdSpec.Content</td>
+                                        <td>@prdSpec.ContentEn | @prdSpec.ContentAr</td>
                                         <td>
                                             <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
                                             <a asp-action="DeletePrdSpec" asp-controller="Product" asp-route-id="@prdSpec.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
@@ -83,7 +85,6 @@
         function addNewRow() {
             newBtn.setAttribute("disabled", true);
             newBtn.setAttribute("class", "btn btn-secondary");
-
             let specsOptions = "";
             if (specs && specs.length > 0) {
                 for (const spec of specs) {
@@ -101,7 +102,10 @@
                             ${specsOptions}
                         </select>
                     </td>
-                    <td><input class="form-control" type="text" placeholder="Content" /></td>
+                    <td>
+                        <input class="form-control" type="text" placeholder="Content In English" />
+                        <input class="form-control" type="text" placeholder="Content In Arabic" />
+                    </td>
                     <td>
                         <button type="button" onclick="savePrdSpec(event)" class="btn btn-outline-success"><i class="fas fa-check"></i></button>
                         <button type="button" onclick="removeRow(event)" class="btn btn-outline-danger"><i class="fas fa-cancel"></i></button>
@@ -126,13 +130,35 @@
             let specSelectTd = lastTd.previousElementSibling.previousElementSibling;
             let choosenSpecId = specSelectTd.children[0].value;
             let contentTd = lastTd.previousElementSibling;
-            contentTd.innerHTML = contentTd.children[0].value;
+            console.log(prdId, choosenSpecId, contentTd.children[0].value, contentTd.children[1].value);
             // send request and take the prd spec id created in the database to put it in the href
-            lastTd.innerHTML = `
-                        <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
-                        <a href="/Product/DeletePrdSpec/5345" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
-                `;
-            specSelectTd.textContent = specSelectTd.children[0].selectedOptions[0].textContent;
+            $.ajax({
+                url: `/Product/AddProductSpec`,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "ProductId": prdId,
+                    "SpecificationId": choosenSpecId,
+                    "ContentEn": contentTd.children[0].value,
+                    "ContentAr": contentTd.children[1].value
+                }),
+                success: function (res) {
+                    console.log(res);
+                    // $("#Data").html(res);
+                    if (res.success) {
+                        contentTd.innerHTML = `${contentTd.children[0].value} | ${contentTd.children[1].value}`;
+                        specSelectTd.textContent = specSelectTd.children[0].selectedOptions[0].textContent;
+                        lastTd.innerHTML = `<button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
+                            <a href="/Product/DeletePrdSpec/${res.id}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
+                        msgDiv.style = "display: block;";
+                        msgDiv.children[0].textContent = res.message;
+                    }
+                    else {
+                        alert(res.message);
+                    }
+                }
+            });
         }
         let oldContent = "";
         let oldSpecName = "";
@@ -147,7 +173,8 @@
             let specTd = lastTd.previousElementSibling.previousElementSibling;
             oldContent = contentTd.textContent;
             oldSpecName = specTd.textContent;
-            contentTd.innerHTML = `<input class="form-control" type="text" value="${lastTd.previousElementSibling.textContent}" />`;
+            contentTd.innerHTML = `<input class="form-control" type="text" value="${contentTd.textContent.split(" | ")[0]}" />
+                <input class="form-control" type="text" value="${contentTd.textContent.split(" | ")[1]}" />`;
             let specsOptions = "";
             if (specs && specs.length > 0) {
                 for (const spec of specs) {
@@ -171,15 +198,40 @@
         }
         function saveEdit(evt) {
             let lastTd = evt.target.children.length ? evt.target.parentElement : evt.target.parentElement.parentElement;
-            lastTd.innerHTML = `
-                <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
-                <a href="/Product/DeletePrdSpec/${latestPrdSpecIdClicked}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
+            
             let contentTd = lastTd.previousElementSibling;
             let specTd = lastTd.previousElementSibling.previousElementSibling;
             let choosenSpecId = specTd.children[0].value;
-            contentTd.innerHTML = contentTd.children[0].value;
-            specTd.textContent = specTd.children[0].selectedOptions[0].textContent;
+            // contentTd.innerHTML = contentTd.children[0].value;
+            // specTd.textContent = specTd.children[0].selectedOptions[0].textContent;
             // send request and take the prd spec id created in the database to put it in the route
+            $.ajax({
+                url: `/Product/UpdateProductSpec`,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "Id": latestPrdSpecIdClicked,
+                    "ProductId": prdId,
+                    "SpecificationId": choosenSpecId,
+                    "ContentEn": contentTd.children[0].value,
+                    "ContentAr": contentTd.children[1].value
+                }),
+                success: function (res) {
+                    console.log(res);
+                    if (res.success) {
+                        contentTd.innerHTML = `${contentTd.children[0].value} | ${contentTd.children[1].value}`;
+                        specTd.textContent = specTd.children[0].selectedOptions[0].textContent;
+                        lastTd.innerHTML = `<button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
+                            <a href="/Product/DeletePrdSpec/${latestPrdSpecIdClicked}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
+                        msgDiv.style = "display: block;";
+                        msgDiv.children[0].textContent = res.message;
+                    }
+                    else {
+                        alert(res.message);
+                    }
+                }
+            });
         }
     </script>
 }

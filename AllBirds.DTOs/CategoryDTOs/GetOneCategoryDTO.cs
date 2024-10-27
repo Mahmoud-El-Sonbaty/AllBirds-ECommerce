@@ -9,17 +9,14 @@ namespace AllBirds.DTOs.CategoryDTOs
 {
     public class GetOneCategoryDTO
     {
-        //public int Id { get; set; }
-
         [StringLength(40, MinimumLength = 4)]
         public string NameAr { get; set; }
 
         [StringLength(40, MinimumLength = 4)]
         public string NameEn { get; set; }
-        //public IFormFile? ImageData { get; set; }
-
-        //public string? ImagePath { get; set; }
-    
-    
+        public int ParentCategoryId { get; set; } = 0;
+        public int Level { get; set; } = 0;
+        public string? ImagePath { get; set; }
+        public bool IsParentCategory { get; set; } = false;
     }
 }

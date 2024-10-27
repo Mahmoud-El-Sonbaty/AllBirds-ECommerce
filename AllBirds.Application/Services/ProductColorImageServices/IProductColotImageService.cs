@@ -10,7 +10,7 @@ namespace AllBirds.Application.Services.ProductColorImageServices
 {
     public interface IProductColotImageService
     {
-        public Task<ResultView< CUProductColorImageDTO>> CreateProductColorImage(CUProductColorImageDTO cUProductColorImageDTO);
+        public Task<CUProductColorImageDTO> CreateProductColorImage(CUProductColorImageDTO cUProductColorImageDTO);
 
         public Task<ResultView<CUProductColorImageDTO>> UpdateProductColorImageDTO(CUProductColorImageDTO cUProductColorImageDTO);
 

@@ -1,0 +1,71 @@
+﻿@model CUCategoryDTO
+@{
+    ViewData["Title"] = "Update";
+    SelectList items = new SelectList(ViewBag.getAllCategoryDTOs, "Id", "NameEn", Model?.ParentCategoryId);
+}
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+
+<h1>Update</h1>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Update Category</h4>
+                <p class="card-description">Update Category </p>
+                <form method="post" class="forms-sample" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="NameEn">NameEn</label>
+                        <input asp-for="NameEn" class="form-control" placeholder="NameEn">
+                        <span asp-validation-for="NameEn" style="color:red"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NameAr">NameAr</label>
+                        <input asp-for="NameAr" class="form-control" placeholder="NameAr">
+                        <span asp-validation-for="NameAr" style="color:red"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ParentCategoryId">Parent Category</label>
+                        <select asp-for="ParentCategoryId" asp-items="items">
+                            <option value="0">No Parent</option>
+                        </select>
+                    </div>
+                    <!-- <div class="form-group">
+                      <label>File upload</label>
+                      <input type="file" name="img[]" class="file-upload-default">
+                      <div class="input-group col-xs-12">
+                        <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                        <span class="input-group-append">
+                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                        </span>
+                      </div>
+                    </div> -->
+                    <div class="form-check form-check-flat form-check-primary">
+                        <input asp-for="IsParentCategory" type="checkbox" class="form-check-input" />
+                        <label asp-for="IsParentCategory" class="form-check-label">Is Parent Category</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <a class="btn btn-primary mr-2" asp-controller="Category" asp-action="GetAll"> Cancel   </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

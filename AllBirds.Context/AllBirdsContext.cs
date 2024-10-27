@@ -24,6 +24,7 @@ namespace AllBirds.Context
 
         //public DbSet<CategorySize> CategorySizes { get; set; }///Hossam add this
 
+        public DbSet<IdentityUserRole<int>> AccountRoles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryProduct> CategoryProducts { get; set; }
         public DbSet<ClientFavorite> ClientFavorites { get; set; }

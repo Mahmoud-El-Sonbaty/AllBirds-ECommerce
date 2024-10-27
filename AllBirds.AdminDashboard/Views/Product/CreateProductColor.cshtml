@@ -1,0 +1,94 @@
+﻿@model CreateProductColorDTO;
+@{
+    ViewData["Title"] = "Create Product Color";
+    SelectList colorList = new(ViewBag.Colors, "Id", "NameEn", Model?.ColorId);
+
+}
+
+
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+
+<div class="row">
+
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Create Product Color</h4>
+                <form asp-action="CreateProductColor" asp-controller="Product" enctype="multipart/form-data">
+                    <input hidden asp-for="@Model.ProductId" value="@ViewBag.ProductId" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @*<div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Color</label>
+                            <div class="col-sm-9">
+                            <select class="js-example-basic-multiple" multiple style="width: 100%" asp-for="ColorId" asp-items="colorList">  </select>
+                            </div>
+                            </div>*@
+                            <div class="form-group row">
+                                <select class="form-control" asp-for="ColorId" asp-items="colorList">
+                                </select>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ColorId"></span>
+                        </div>
+                    </div>
+                    <div class="row addInput">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+
+                                <label class="col-sm-3 col-form-label" style="font-weight:bold; font-size:large;" asp-for="@Model.Images"></label>
+
+                                    <button onclick="AddInput()" class="btn btn-outline-primary">
+                                        <i class="mdi mdi-plus"></i>
+                                    </button>
+                     
+                                <div class="col-sm-12" style="display: flex; ">
+                                    <input class="form-control" type="file" name="Images" />
+                                    <span class="text-danger" asp-validation-for="@Model.Images"></span>
+
+                                </div>
+
+                                @*<label asp-for="@Model.Images"></label>
+                                <input type="image" asp-for="@Model.Images" class="file-upload-default">
+                                <div class="input-group col-xs-12">
+                                <input type="image" asp-for="@Model.Images" class=" form-control file-upload-info" disabled placeholder="Upload Image">
+                                <span class="input-group-append">
+                                <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                </span>
+                                </div>*@
+                            </div>
+                        </div>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <a class="btn btn-primary mr-2" asp-controller="Product" asp-action="GetAllProductColors" asp-route-id="@ViewBag.ProductId">Cancel</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/assets/js/file-upload.js"></script>
+
+    <script>
+        function AddInput() {
+            let AddInput = document.getElementsByClassName("addInput")
+            AddInput.innerHTML += <div class="col-sm-12" style="display: flex; ">
+                <input class="form-control" name="Images" type="file" />
+            </div>
+        }
+
+    </script>
+
+}

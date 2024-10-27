@@ -1,0 +1,121 @@
+﻿
+@model CUCategoryDTO
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Category</h1>
+
+@{
+    // ViewData["Title"] = "CreateProduct";
+    //   SelectList categoriesList = new(ViewBag.Categories, "Id", "NameEn", Model?.CategoriesId);
+    SelectList items = new SelectList(ViewBag.getAllCategoryDTOs, "Id", "NameEn", Model?.ParentCategoryId);
+}
+<!-- Plugin css for this page -->
+<link rel="stylesheet" href="~/assets/vendors/select2/select2.min.css">
+<link rel="stylesheet" href="~/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+<!-- End plugin css for this page -->
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+
+<h1>Create</h1>
+
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Create Category</h4>
+                <p class="card-description">Create Category </p>
+                <form class="forms-sample" method="post" enctype="multipart/form-data" asp-action="Create">
+                    <div class="form-group">
+                        <label asp-for="NameEn">NameEn</label>
+                        <input asp-for="NameEn" class="form-control" placeholder="NameEn">
+                        <span asp-validation-for="NameEn" style="color:red"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NameAr">NameAr</label>
+                        <input asp-for="NameAr" class="form-control" placeholder="NameAr">
+                        <span asp-validation-for="NameAr" style="color:red"></span>
+
+                    </div>
+                    @*
+                    <div class="form-group">
+                    <label for="exampleSelectGender">parent category</label>
+                    <select class="form-control" id="exampleSelectGender">
+                    <option>Male</option>
+                    <option>Female</option>
+                    </select>
+                    </div>
+                    *@
+
+                    <div class="form-group">
+                        <label asp-for="ParentCategoryId">parent category</label>
+
+                        <select asp-for="ParentCategoryId" asp-items="items">
+                            <option value="0">No Parent</option>
+                            @*                         <span asp-validation-for="AuthorID" style="color:red"></span>
+                            *@
+                            @*   @foreach (var item in ViewBag.Authors)
+                            {
+                            <option value="@item.Id"> @item.FirstName</option>
+
+                            } *@
+                        </select>
+
+                    </div>
+
+
+                    <!-- <div class="form-group">
+                      <label>File upload</label>
+                      <input type="file" name="img[]" class="file-upload-default">
+                      <div class="input-group col-xs-12">
+                        <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                        <span class="input-group-append">
+                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                        </span>
+                      </div>
+                    </div> -->
+                    <div class="form-check form-check-flat form-check-primary">
+                        <input asp-for="IsParentCategory" type="checkbox" class="form-check-input" />
+                        <label asp-for="IsParentCategory" class="form-check-label">Is Parent Category</label>
+                    </div>
+
+
+                    @*   <div class="form-check form-check-flat form-check-primary">
+                    <input asp-for="IsParentCategory" type="checkbox" class="form-check-input" />
+                    <label asp-for="IsParentCategory" class="form-check-label">
+                    Is parent category
+                    </label>
+                    </div> *@
+
+
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                </form>
+                <br>
+
+                <a class="btn btn-primary mr-2" asp-controller="Category" asp-action="GetAll">Cancel</a>
+
+                @*             <button asp-controller="Category" asp-action="GetAll" class="btn btn-dark">Cancel</button>
+                *@@*             <a class="btn btn-primary" asp-controller="Category" asp-action="GetAll"><i class="fas fa-plus"></i> GetAll</a>
+                *@
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

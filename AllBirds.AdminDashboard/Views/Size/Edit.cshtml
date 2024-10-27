@@ -1,0 +1,16 @@
+﻿@using AllBirds.DTOs.SizeDTOs
+@model CUSizeDTO
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Edit Size</h4>
+        <form method="post">
+            <div class="form-group">
+                <label for="SizeNumber">Size Number</label>
+                <input type="text" class="form-control" id="SizeNumber" name="SizeNumber" required>
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Save</button>
+            <a href="@Url.Action("Index")" class="btn btn-dark">Cancel</a>
+        </form>
+    </div>
+</div>

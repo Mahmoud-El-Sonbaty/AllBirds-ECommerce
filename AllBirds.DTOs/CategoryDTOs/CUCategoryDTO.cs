@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,14 +19,10 @@ namespace AllBirds.DTOs.CategoryDTOs
         
         [StringLength(40, MinimumLength = 4)]
         public string NameEn { get; set; }
-        //public IFormFile? ImageData { get; set; }
-
-      
+        public int ParentCategoryId { get; set; } = 0;
+        public int Level { get; set; } = 0;
+        public bool IsParentCategory { get; set; } = false;
+        public IFormFile? ImageData { get; set; }
         public string? ImagePath { get; set; }
-        
-       
-      
-
-
     }
 }

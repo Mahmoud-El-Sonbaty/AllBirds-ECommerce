@@ -1,5 +1,6 @@
 ﻿using AllBirds.Application.Services.AccountServices;
 using AllBirds.DTOs.AccountDTOs;
+using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,18 @@ namespace AllBirds.AdminDashboard.Controllers
         {
             this.webHostEnvironment = _webHostEnvironment;
             this.accountService = _accountService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAdmins()
+        {
+            ResultView<List<GetAllAdminsDTO>> adminsResult = await accountService.GetAllAdminsAsync();
+            if (!adminsResult.IsSuccess)
+            {
+                TempData.Add("IsSuccess", false);
+                TempData.Add("Msg", adminsResult.Msg);
+            }
+            return View(adminsResult.Data);
         }
 
         [HttpGet]
@@ -42,7 +55,7 @@ namespace AllBirds.AdminDashboard.Controllers
             {
                 if (await accountService.LoginAsync(accountLoginDTO))
                 {
-                    return RedirectToAction("DashBoard");
+                    return Redirect("");
                 }
             }
             return View();
