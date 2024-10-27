@@ -35,7 +35,9 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        @if(Model is not null)
+                        {
+                            
                         @foreach(var item in Model)
                         {
 
@@ -107,6 +109,15 @@
                             </td>
                         </tr>
                             
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7">
+                                    No Orders Found
+                                </td>
+                            </tr>
                         }
 
                     </tbody>

@@ -18,15 +18,16 @@
     <partial name="_FooterPartial" />
 }
 
-<h1>AllProducts</h1>
+<h1>AllProduct Details</h1>
 
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">AllProducts</h4>
+                <h4 class="card-title">AllProduct Details</h4>
                 <p class="card-description">
-                    <a class="btn btn-primary" asp-controller="ProductDetail" asp-action="Create"><i class="fas fa-plus"></i> New</a>
+                
+                    <a class="btn btn-primary" asp-controller="ProductDetail" asp-route-id="@ViewBag.ProductId" asp-action="Create"><i class="fas fa-plus"></i> New</a>
                 </p>
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -42,8 +43,10 @@
                                 </th>
                                 <th> ProductNumber </th>
                                 <th> NameEn </th>
-                                <th> Title </th>
-                                <th> Description </th>
+                                <th> TitleEn </th>
+                                <th> TitleAr </th>
+                                <th> DescriptionEn </th>
+                                <th> DescriptionAr </th>
                                 <th> Image </th>
                                 <th> Actions </th>
                             </tr>
@@ -61,12 +64,16 @@
                                     </td>
                                     <td> @prd.ProductNo </td>
                                     <td> @prd.NameEn </td>
-                                    <td> @prd.Title </td>
-                                    <td> @prd.Description </td>
-                                    <td> @prd.ImagePath </td>
+                                    <td> @prd.TitleEn </td>
+                                    <td> @prd.TitleAr </td>
+                                    <td> @prd.DescriptionEn </td>
+                                    <td> @prd.DescriptionAr </td>
                                     <td>
-                                        <a type="button" asp-action="Update" asp-controller="ProductDetails" asp-route-id="@prd.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
-                                        <a type="button" asp-action="DeleteProductDetails" asp-controller="ProductDetails" asp-route-id="@prd.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                        <img src="@prd.ImagePath" alt="Product Image" style="width: 90px; height: 90px; border-radius: 20px;" />
+                                    </td>
+                                    <td>
+                                        <a type="submit" asp-action="Update" asp-controller="ProductDetail" asp-route-id="@prd.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                        <a type="button" asp-action="DeleteProductDetails" asp-controller="ProductDetail" asp-route-id="@prd.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             }

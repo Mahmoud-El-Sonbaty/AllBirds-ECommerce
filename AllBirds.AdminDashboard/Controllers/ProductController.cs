@@ -1,16 +1,21 @@
 
 using AllBirds.Application.Services.CategoryServices;
+using AllBirds.Application.Services.ColorServices;
+using AllBirds.Application.Services.ProductColorImageServices;
 using AllBirds.Application.Services.ProductColorServices;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
 using AllBirds.Application.Services.SpecificationServices;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.ProductColorDTOs;
+using AllBirds.DTOs.ProductColorImageDTOs;
+using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace AllBirds.AdminDashboard.Controllers
 {
@@ -22,14 +27,19 @@ namespace AllBirds.AdminDashboard.Controllers
         private readonly ICategoryService categoryService;
         private readonly ISpecificationService specificationService;
         private readonly IProductColorService productColorService;
+        private readonly IColorService colorService;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService, IProductColorService _productColorService)
+
+        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService, IProductColorService _productColorService, IColorService _colorService, IWebHostEnvironment _webHostEnvironment)
         {
             productService = _productService;
             categoryService = _categoryService;
             productSpecService = _productSpecservice;
             specificationService = _specificationService;
             productColorService = _productColorService;
+            colorService = _colorService;
+            webHostEnvironment = _webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -175,22 +185,65 @@ namespace AllBirds.AdminDashboard.Controllers
         /////////////////////////////////////////////////// Product Color //////////////////////////////////////////////////////////////
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProductColors()
+        public async Task<IActionResult> GetAllProductColors(int Id)
         {
 
-            var PrColor = await productColorService.GetAllAsync();
+            ResultView<List<GetALlProductColorDTO>> PrColor = await productColorService.GetAllAsync(Id);
+            ViewBag.PrdId = Id;
             if (PrColor.IsSuccess)
             {
+
                 return View(PrColor.Data);
             }
             else
             {
-
                 ViewBag.ErrMsg = PrColor.Msg;
                 return View();
             }
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> CreateProductColor(int Id)
+        {
+            ViewBag.ProductId = Id;
+            ViewBag.Colors = await colorService.GetAllAsync();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductColor(CreateProductColorDTO createProductColorDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                CUProductColorImageDTO cUProductColorImageDTO = new();
+
+                var ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "ProductColorImages" });
+
+                ResultView<CreateProductColorDTO> CrProductColorDTO = await productColorService.CreateAsync(createProductColorDTO, ImagePath);
+                if (CrProductColorDTO.IsSuccess)
+                {
+                    return Redirect($"/Product/GetAllProductColors/{CrProductColorDTO.Data.ProductId}");
+                }
+                else
+                {
+                    TempData["Msg"] = CrProductColorDTO.Msg;
+                    TempData["IsSuccess"] = CrProductColorDTO.IsSuccess;
+
+                }
+            }
+            else
+            {
+                TempData["Msg"] = ModelState.ErrorCount > 1 ? $"There Are {ModelState.ErrorCount} Validation Errors" : $"There Is {ModelState.ErrorCount} Validation Error";
+                TempData["IsSuccess"] = false;
+
+            }
+            ViewBag.Colors = await colorService.GetAllAsync();
+
+            return View();
+
+
+        }
 
     }
 }

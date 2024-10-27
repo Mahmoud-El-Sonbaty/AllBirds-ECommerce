@@ -10,11 +10,11 @@ namespace AllBirds.Application.Services.ProductDetailService
 {
     public interface IProductDetailsService
     {
-        public Task<ResultView<CUProductDetails>> CreateProductDetails(CUProductDetails cUProductDetails);
-        public Task<ResultView<CUProductDetails>> UpdateProductDetails(CUProductDetails cUProductDetails);
-        public Task<ResultView<CUProductDetails>> HardDeletePrdDetails(CUProductDetails cUProductDetails);
-        public Task<List<GetAllProductDetailsDTOS>> GetAllProductDetails();
-        public Task<ResultView<GetAllProductDetailsDTOS>> GetOnePrdDetails(int id);
+        public Task<ResultView<CRProductDetails>> CreateProductDetails(CRProductDetails cUProductDetails);
+        public Task<ResultView<UpdateProductDetail>> UpdateProductDetails(UpdateProductDetail cUProductDetails);
+        public Task<ResultView<UpdateProductDetail>> HardDeletePrdDetails(UpdateProductDetail cUProductDetails);
+        public Task<List<GetAllProductDetailsDTOS>> GetAllProductDetails(int id);
+        public Task<ResultView<UpdateProductDetail>> GetOnePrdDetails(int id);
 
 
 

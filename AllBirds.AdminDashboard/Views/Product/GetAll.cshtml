@@ -104,17 +104,9 @@
                                             <td> <lablel class="badge badge-success">Present</lablel> </td>
                                         }
                                     }
-                                    @*<td>
-                                colors
-                                </td>
-                                <td>
-                                sizes
-                                </td>
-                                <td>
-                                units in stock
-                                </td> *@
+        
                                     <td>
-                                        <a type="button" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                        <a type="button" asp-controller="Product" asp-action="Index"><i class="fas fa-eye"></i></a>
                                         <a type="button" asp-action="Update" asp-controller="Product" asp-route-id="@prd.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
                                         <a type="button" asp-action="Delete" asp-controller="Product" asp-route-id="@prd.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
                                         @* <div class="template-demo d-flex justify-content-between"> *@
@@ -126,7 +118,7 @@
                                             <h6 class="dropdown-header">Options</h6>
                                             <a class="dropdown-item" asp-controller="ProductDetail" asp-action="AllProductDetails" asp-route-id="@prd.Id">Product Details</a>
                                             <a class="dropdown-item" asp-controller="Product" asp-action="GetAllSpecs" asp-route-id="@prd.Id">Product Specifications</a>
-                                            <a class="dropdown-item" href="#">Product Colors</a>
+                                            <a class="dropdown-item" asp-route="@prd.Id" asp-controller="Product" asp-action="GetAllProductColors">Product Colors</a>
                                             @* <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="#">Separated link</a> *@
                                         </div>
