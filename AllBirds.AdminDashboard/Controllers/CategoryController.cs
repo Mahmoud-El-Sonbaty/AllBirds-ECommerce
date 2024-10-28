@@ -14,6 +14,7 @@ namespace AllBirds.AdminDashboard.Controllers
         }
         public IActionResult Index()
         {
+            var test = categoryService.GetAllAsync();
             return View();
         }
 

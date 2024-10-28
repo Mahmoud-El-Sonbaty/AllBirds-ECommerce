@@ -4,6 +4,9 @@
 *.pdb
 *.cache
 *.json
+!launchSettings.json
+!serviceDependencies.json
+!serviceDependencies.local.json
 bin/
 obj/
 Images/

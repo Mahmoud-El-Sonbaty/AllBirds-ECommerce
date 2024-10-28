@@ -16,5 +16,9 @@ namespace AllBirds.Application.Services.CategoryServices
         public Task<ResultView<GetOneCategoryDTO>> DeleteAsync(int id);
         public Task<ResultView<List<GetAllCategoryDTO>>> GetAllAsync();
         public Task<ResultView<CUCategoryDTO>> GetOneAsync(int id);
+
+        // services for api project
+        //================================================================================================
+        public Task<ResultView<List<GetAllCategoryNestedDTO>>> GetAllAPI();
     }
 }
