@@ -112,10 +112,10 @@ builder.Services.AddIdentity<CustomUser, IdentityRole<int>>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(sa =>
 {
-    sa.SwaggerDoc("V1", new OpenApiInfo
+    sa.SwaggerDoc("v1", new OpenApiInfo//here the name (v1) must be either small or the same as the version below
     {
         Title = "Client API",
-        Version = "v1"
+        Version = "tt1"
     });
     sa.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -158,7 +158,7 @@ builder.Services.AddAuthentication(op =>
 });
 builder.Services.AddCors(op =>
 {
-    op.AddPolicy("Derfault", policy =>
+    op.AddPolicy("Default", policy =>
     {
         //policy.WithOrigins("http://localhost:4200", "http://anydomain:domainport", "null")
         //.WithHeaders("Key")
@@ -175,6 +175,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    //app.UseSwagger();
+
+    //// Ensure Swagger UI is configured with the correct endpoint
+    //app.UseSwaggerUI(c =>
+    //{
+    //    c.SwaggerEndpoint("/swagger/V1/swagger.json", "Client API V1");
+    //    //c.RoutePrefix = ""; // Ensures Swagger loads at root (http://localhost:5120)
+    //});
 }
 
 app.UseHttpsRedirection();
