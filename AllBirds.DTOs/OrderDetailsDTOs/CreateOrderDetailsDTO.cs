@@ -10,10 +10,15 @@ namespace AllBirds.DTOs.OrderDetailsDTOs
     public class CreateOrderDetailsDTO
     {
         public int Id { get; set; }
+
         public int OrderMasterId { get; set; }
+
         public int ProductId { get; set; }
-        public int SizeId { get; set; }
+
+        public decimal DetailPrice { get; set; }
+
         public int Quantity { get; set; }
+
         [MaxLength(128)]
         public string? Notes { get; set; }
 

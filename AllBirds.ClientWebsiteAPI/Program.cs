@@ -112,10 +112,10 @@ builder.Services.AddIdentity<CustomUser, IdentityRole<int>>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(sa =>
 {
-    sa.SwaggerDoc("v1", new OpenApiInfo//here the name (v1) must be either small or the same as the version below
+    sa.SwaggerDoc("v1", new OpenApiInfo //here the name (v1) must be (v1) small ant there is no relation with the version below
     {
         Title = "Client API",
-        Version = "tt1"
+        Version = "v1"
     });
     sa.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
