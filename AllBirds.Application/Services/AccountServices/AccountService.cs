@@ -1,5 +1,4 @@
 ﻿using AllBirds.Application.Contracts;
-using AllBirds.Application.Mapper;
 using AllBirds.DTOs.AccountDTOs;
 using AllBirds.DTOs.Shared;
 using AllBirds.Models;
@@ -73,78 +72,225 @@ namespace AllBirds.Application.Services.AccountServices
 
         public List<IdentityRole<int>> GetRoles() => [.. roleManager.Roles];
 
-        public async Task<bool> LoginAsync(AccountLoginDTO accountLoginDTO)
+        // For MVC & API
+        public async Task<ResultView<CUAccountDTO>> LoginAsync(AccountLoginDTO accountLoginDTO, bool mustMod = false)
         {
-            CustomUser? findUserEmail = await userManager.FindByEmailAsync(accountLoginDTO.Email);
-            if (findUserEmail is not null)
+            ResultView<CUAccountDTO> resultView = new();
+            try
             {
-                bool checkPassword = await userManager.CheckPasswordAsync(findUserEmail, accountLoginDTO.Password);
-                if (checkPassword)
+                CustomUser? findUserEmail = await userManager.FindByEmailAsync(accountLoginDTO.Email);
+                if (findUserEmail is not null)
                 {
-                    await signInManager.SignInAsync(findUserEmail, accountLoginDTO.RememberMe);
-                    return true;
-                }
-                // add to the msg password is incorrect for this email
-            }
-            // add to the msg this email doesn't exist
-            return false;
-        }
-
-        public async Task<bool> RegisterAsync(CUAccountDTO cUAccountDTO)
-        {
-            CustomUser? findUserEmail = await userManager.FindByEmailAsync(cUAccountDTO.Email);
-            if (findUserEmail == null)
-            {
-                if (cUAccountDTO.ImageData is not null)
-                {
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(cUAccountDTO.ImageData.FileName);
-                    if (!Directory.Exists(cUAccountDTO.ImagePath))
+                    bool checkPassword = await userManager.CheckPasswordAsync(findUserEmail, accountLoginDTO.Password);
+                    if (checkPassword)
                     {
-                        Directory.CreateDirectory(cUAccountDTO.ImagePath);
-                    }
-                    string filePath = Path.Combine(cUAccountDTO.ImagePath, uniqueFileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await cUAccountDTO.ImageData.CopyToAsync(fileStream);
-                    }
-                    cUAccountDTO.ImagePath = Path.Combine("/Images/Accounts/", uniqueFileName);
-                }
-                CustomUser mappedUser = mapper.Map<CustomUser>(cUAccountDTO);
-                mappedUser.NormalizedEmail = cUAccountDTO.Email.ToUpper();
-                mappedUser.UserName = cUAccountDTO.Email.Split("@")[0];
-                mappedUser.NormalizedUserName = mappedUser.UserName.ToUpper();
-                IdentityResult? userToCreate = await userManager.CreateAsync(user: mappedUser, password: cUAccountDTO.Password);
-                if (userToCreate.Succeeded)
-                {
-                    if (cUAccountDTO.AccountRoles is not null && cUAccountDTO.AccountRoles.Count > 0)
-                    {
-                        foreach (int roleId in cUAccountDTO.AccountRoles)
+                        List<IdentityRole<int>> allRoles = GetRoles();
+                        List<int> modRolesIds = [.. allRoles.Where(r => new List<string> { "SuperUser", "Manager", "Admin" }.Contains(r.Name)).Select(r => r.Id)];
+                        int clientRoleId = allRoles.FirstOrDefault(r => r.Name == "Client").Id;
+                        if (mustMod) // MVC Login
                         {
-                            IdentityRole<int>? role = await roleManager.FindByIdAsync(roleId.ToString());
-                            if (role is not null)
+                            bool isMod = (await accountRoleRepository.GetAllAccountRolesAsync()).Any(ar => ar.UserId == findUserEmail.Id && modRolesIds.Contains(ar.RoleId));
+                            if (isMod)
                             {
-                                IdentityResult roleToBind = await userManager.AddToRoleAsync(mapper.Map<CustomUser>(cUAccountDTO), role.Name);
-                                if (!roleToBind.Succeeded)
-                                {
-                                    // add to the msg what happend and the roleToBind.Errors
-                                }
+                                await signInManager.SignInAsync(findUserEmail, accountLoginDTO.RememberMe);
+                                resultView.IsSuccess = true;
+                                resultView.Data = mapper.Map<CUAccountDTO>(findUserEmail);
+                                resultView.Msg = $"Welcome Back {findUserEmail.FirstName} {findUserEmail.LastName}";
                             }
                             else
                             {
-                                // add to the msg that role doesn't exist in the db
+                                resultView.IsSuccess = false;
+                                resultView.Data = null;
+                                resultView.Msg = $"Account {findUserEmail.Email} Is Not A Moderator, Please Contact Moderators Customer Support";
+                            }
+                        }
+                        else // API Login
+                        {
+                            bool isClient = await userManager.IsInRoleAsync(findUserEmail, "Client");
+                            bool isModNotClient = (await accountRoleRepository.GetAllAccountRolesAsync()).Any(ar => ar.UserId == findUserEmail.Id && modRolesIds.Contains(ar.RoleId) && ar.RoleId != clientRoleId);
+                            if (isClient || isModNotClient)
+                            {
+                                if (isModNotClient)
+                                    await userManager.AddToRoleAsync(findUserEmail, "Client");
+                                resultView.IsSuccess = true;
+                                resultView.Data = mapper.Map<CUAccountDTO>(findUserEmail);
+                                resultView.Msg = isClient 
+                                    ? $"Welcome Back {findUserEmail.FirstName} {findUserEmail.LastName}"
+                                    : $"Client Role Added To ({findUserEmail.Email}) Successfully And You Are Logged In";
+                            }
+                            else
+                            {
+                                resultView.IsSuccess = false;
+                                resultView.Data = null;
+                                resultView.Msg = $"Account {findUserEmail.Email} Exists But It's Not A Client, Please Contact Customer Support";
                             }
                         }
                     }
-                    return true;
+                    else
+                    {
+                        resultView.IsSuccess = false;
+                        resultView.Data = null;
+                        resultView.Msg = $"Incorrect Password For ({findUserEmail.Email})";
+                    }
                 }
-                // add to the msg that the user failed to create and send the userToCreate.Errors
-                return false;
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = $"This Email ({accountLoginDTO.Email}) Doesn't Exist";
+                }
             }
-            // add to the msg that this email already exist
-            return false;
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Loggingin ({accountLoginDTO.Email}), {ex.Message}";
+            }
+            return resultView;
         }
 
-        //public async Task<ResultView<CUAccountDTO>>
+        // For MVC
+        public async Task<ResultView<CUAccountDTO>> AddModerator(CUAccountDTO cUAccountDTO)
+        {
+            ResultView<CUAccountDTO> resultView = new();
+            try
+            {
+                CustomUser? findUserEmail = await userManager.FindByEmailAsync(cUAccountDTO.Email);
+                if (findUserEmail is null)
+                {
+                    CustomUser mappedUser = mapper.Map<CustomUser>(cUAccountDTO);
+                    mappedUser.NormalizedEmail = cUAccountDTO.Email.ToUpper();
+                    mappedUser.UserName = cUAccountDTO.Email.Split("@")[0];
+                    mappedUser.NormalizedUserName = mappedUser.UserName.ToUpper();
+                    IdentityResult? userToCreate = await userManager.CreateAsync(user: mappedUser, password: cUAccountDTO.Password);
+                    if (userToCreate.Succeeded)
+                    {
+                        CustomUser createdUser = userManager.Users.FirstOrDefault(u => u.Email == mappedUser.Email);
+                        IdentityResult roleToAdd = await userManager.AddToRoleAsync(mappedUser, "Admin"); // if didn't work replace mappedUser with createdUser
+                        if (roleToAdd.Succeeded)
+                        {
+                            resultView.IsSuccess = true;
+                            resultView.Data = cUAccountDTO;
+                            resultView.Msg = $"Account ({cUAccountDTO.Email}) Created Successfully";
+                        }
+                        else
+                        {
+                            resultView.IsSuccess = false;
+                            resultView.Data = null;
+                            resultView.Msg = $"Account ({findUserEmail.Email}) Not Created Because ({roleToAdd.Errors})";
+                        }
+                    }
+                    else
+                    {
+                        resultView.IsSuccess = false;
+                        resultView.Data = null;
+                        resultView.Msg = $"Account ({findUserEmail.Email}) Not Created Because ({userToCreate.Errors})";
+                    }
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = $"This Email ({findUserEmail.Email}) Already Exists, Please Login";
+                }
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Registering ({cUAccountDTO.Email}), {ex.Message}";
+            }
+            return resultView;
+        }
+
+        // For API
+        public async Task<ResultView<CUAccountDTO>> RegisterAsync(CUAccountDTO cUAccountDTO)
+        {
+            ResultView<CUAccountDTO> resultView = new();
+            try
+            {
+                CustomUser? findUserEmail = await userManager.FindByEmailAsync(cUAccountDTO.Email);
+                if (findUserEmail is null)
+                {
+                    //if (cUAccountDTO.ImageData is not null)
+                    //{
+                    //    string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(cUAccountDTO.ImageData.FileName);
+                    //    if (!Directory.Exists(cUAccountDTO.ImagePath))
+                    //    {
+                    //        //Directory.CreateDirectory(cUAccountDTO.ImagePath);
+                    //    }
+                    //    string filePath = Path.Combine(cUAccountDTO.ImagePath, uniqueFileName);
+                    //    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    //    {
+                    //        await cUAccountDTO.ImageData.CopyToAsync(fileStream);
+                    //    }
+                    //    cUAccountDTO.ImagePath = Path.Combine("/Images/Accounts/", uniqueFileName);
+                    //}
+                    CustomUser mappedUser = mapper.Map<CustomUser>(cUAccountDTO);
+                    mappedUser.NormalizedEmail = cUAccountDTO.Email.ToUpper();
+                    mappedUser.UserName = cUAccountDTO.Email.Split("@")[0];
+                    mappedUser.NormalizedUserName = mappedUser.UserName.ToUpper();
+                    IdentityResult? userToCreate = await userManager.CreateAsync(user: mappedUser, password: cUAccountDTO.Password);
+                    if (userToCreate.Succeeded)
+                    {
+                        CustomUser createdUser = userManager.Users.FirstOrDefault(u => u.Email == mappedUser.Email);
+                        IdentityResult roleToAdd = await userManager.AddToRoleAsync(createdUser, "Client");
+                        if (roleToAdd.Succeeded)
+                        {
+                            resultView.IsSuccess = true;
+                            resultView.Data = cUAccountDTO;
+                            resultView.Msg = $"Account ({cUAccountDTO.Email}) Created Successfully";
+                        }
+                        else
+                        {
+                            resultView.IsSuccess = false;
+                            resultView.Data = null;
+                            resultView.Msg = $"Account ({findUserEmail.Email}) Not Created Because ({roleToAdd.Errors})";
+                        }
+                        //if (cUAccountDTO.AccountRoles is not null && cUAccountDTO.AccountRoles.Count > 0)
+                        //{
+                        //    foreach (int roleId in cUAccountDTO.AccountRoles)
+                        //    {
+                        //        IdentityRole<int>? role = await roleManager.FindByIdAsync(roleId.ToString());
+                        //        if (role is not null)
+                        //        {
+                        //            IdentityResult roleToBind = await userManager.AddToRoleAsync(mapper.Map<CustomUser>(cUAccountDTO), role.Name);
+                        //            if (!roleToBind.Succeeded)
+                        //            {
+                        //                // add to the msg what happend and the roleToBind.Errors
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            // add to the msg that role doesn't exist in the db
+                        //        }
+                        //    }
+                        //}
+                        //return true;
+                    }
+                    else
+                    {
+                        resultView.IsSuccess = false;
+                        resultView.Data = null;
+                        resultView.Msg = $"Account ({findUserEmail.Email}) Not Created Because ({userToCreate.Errors})";
+                    }
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = $"This Email ({findUserEmail.Email}) Already Exists, Please Login";
+                }
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Registering ({cUAccountDTO.Email}), {ex.Message}";
+            }
+            return resultView;
+        }
+
         public async Task LogoutAsync()
         {
             await signInManager.SignOutAsync();
