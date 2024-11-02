@@ -10,8 +10,8 @@ namespace AllBirds.Application.Services.OrderMasterServices
 {
     public interface IOrderMasterService
     {
-        public Task<ResultView<createOrderMasterDTO>> CreateAsync(createOrderMasterDTO createOrderMDTo);
-        public Task<ResultView<createOrderMasterDTO>> UpdateAsync(createOrderMasterDTO createOrderMDTo);
+        public Task<ResultView<CreateOrderMasterDTO>> CreateAsync(CreateOrderMasterDTO createOrderMDTo);
+        public Task<ResultView<CreateOrderMasterDTO>> UpdateAsync(CreateOrderMasterDTO createOrderMDTo);
         public Task<ResultView<GetOneOdrerMasterDTO>> SoftDeleteAsync(int OrderID);
         public Task<ResultView<GetOneOdrerMasterDTO>> HardDeleteAsync(int OrderID);
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllAsync();

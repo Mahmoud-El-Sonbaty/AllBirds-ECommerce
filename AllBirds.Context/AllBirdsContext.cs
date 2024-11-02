@@ -841,9 +841,6 @@ namespace AllBirds.Context
             );
         }
 
-
-
-        
         //public int SaveChanges(bool acceptAllChangesOnSuccess, int userId)
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
