@@ -72,7 +72,10 @@ namespace AllBirds.Application.Services.ProductColorServices
 
                 }
                 ProductColor created = await productColorRepository.CreateAsync(prCL);
+
                 await productColorRepository.SaveChangesAsync();
+                
+
 
                 result.IsSuccess = true;
                 result.Data = mapper.Map<CreateProductColorDTO>(created);
@@ -216,12 +219,12 @@ namespace AllBirds.Application.Services.ProductColorServices
             ResultView<GetOneProductColorDTO> result = new();
             try
             {
-                var item = (await productColorRepository.GetAllAsync())
+                ProductColor item = (await productColorRepository.GetAllAsync())
                     .Where(b => !b.IsDeleted && b.Id == id)
                     .Include(b => b.Product)
                     .Include(s => s.Color)
                     .Include(r => r.Images)
-                    .Include(s => s.AvailableSizes).ThenInclude(a => a.Size);
+                    .Include(s => s.AvailableSizes).ThenInclude(a => a.Size).FirstOrDefault();
 
                 if (item != null)
                 {
