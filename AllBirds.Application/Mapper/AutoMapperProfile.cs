@@ -68,10 +68,10 @@ namespace AllBirds.Application.Mapper
 
             CreateMap<GetOneOrderDetailsDTO, OrderDetail>().ReverseMap();
 
-            CreateMap<CreateOrderDetailsDTO, OrderDetail>()
+            CreateMap<CreateOrderDetailDTO, OrderDetail>()
                 .ForMember(dest => dest.ProductColorSizeId, opt => opt.MapFrom(src => src.ProductId));
 
-            CreateMap<OrderDetail, CreateOrderDetailsDTO>()
+            CreateMap<OrderDetail, CreateOrderDetailDTO>()
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductColorSizeId));
 
             CreateMap<OrderDetail,ProductColorSizeImageDTO>()
@@ -81,6 +81,15 @@ namespace AllBirds.Application.Mapper
                 .ForMember(dest=>dest.ProductNameEN,opt=>opt.MapFrom(src=>src.ProductColorSize.ProductColor.Product.NameEn))
                 .ForMember(dest=>dest.Size,opt=>opt.MapFrom(src=>src.ProductColorSize.Size.SizeNumber))
                 .ForMember(dest=>dest.MainImage,opt=>opt.MapFrom(src=>src.ProductColorSize.ProductColor.Images.FirstOrDefault().ImagePath));
+
+            CreateMap<OrderDetail, GetAllCartCheckoutDetailsDTO>()
+                .ForMember(dest => dest.ProductNameEn, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Product.NameEn))
+                .ForMember(dest => dest.ProductNameAr, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Product.NameAr))
+                .ForMember(dest => dest.ColorNameEn, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Color.NameEn))
+                .ForMember(dest => dest.ColorNameAr, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Color.NameAr))
+                .ForMember(dest => dest.SizeNumber, opt => opt.MapFrom(src => src.ProductColorSize.Size.SizeNumber))
+                .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Images
+                .FirstOrDefault(i => i.Id == src.ProductColorSize.ProductColor.MainImageId).ImagePath));
             #endregion
 
             #region OrderMaster
@@ -91,17 +100,22 @@ namespace AllBirds.Application.Mapper
                 .ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.Coupon.Discount * src.Total));
 
             CreateMap<CreateOrderMasterDTO, OrderMaster>()
-                .ForMember(dest => dest.OrderNo, opt => opt.MapFrom(src => $"OM-{src.ClientId}{(int)src.Total}{string.Join("", src.ProductColorSizeId.Select(p => $"{p.ProductId}{p.Quantity}"))}"));
+                .ForMember(dest => dest.OrderNo, opt => opt.MapFrom(src => $"OM-{src.ClientId}{(int)src.Total}{string.Join("", src.ProductColorSizeId.Select(p => $"{p.ProductId}{p.Quantity}"))}{DateTime.Now.ToShortDateString()}"));
             //.ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.ProductColorSizeId));
 
             CreateMap<OrderMaster, CreateOrderMasterDTO>()
                 .ForMember(dest => dest.ProductColorSizeId, opt => opt.MapFrom(src => src.OrderDetails));
 
-            CreateMap<GetOneOdrerMasterDTO, OrderMaster>().ReverseMap()
+            CreateMap<GetOneOrderMasterDTO, OrderMaster>().ReverseMap()
                 .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => $"{src.Client.FirstName} {src.Client.LastName}"))
                 .ForMember(dest => dest.OrderStateName, opt => opt.MapFrom(src => src.OrderState.StateEn))
                 .ForMember(dest => dest.DiscountPerctnage, opt => opt.MapFrom(src => $"{src.Coupon.Discount} %"))
                 .ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.Coupon.Discount * src.Total));
+
+            CreateMap<OrderMaster, GetUserCartCheckoutDTO>()
+                .ForMember(dest => dest.CouponCode, opt => opt.MapFrom(src => src.Coupon.Code));
+                //.ForMember(dest => dest.OrderStateNameEn, opt => opt.MapFrom(src => src.OrderState.StateEn))
+                //.ForMember(dest => dest.OrderStateNameAr, opt => opt.MapFrom(src => src.OrderState.StateAr));
             #endregion
 
             #region OrderState

@@ -15,21 +15,24 @@ namespace AllBirds.Application.Services.OrderDetailServices
 {
     public class OrderDetailService : IOrderDetailService
     {
-        private readonly IOrderDetailRepository orderDetailsRepository;
+        private readonly IOrderDetailRepository orderDetailRepository;
+        private readonly IOrderMasterRepository orderMasterRepository;
         private readonly IMapper mapper;
 
-        public OrderDetailService(IOrderDetailRepository _orderDeatilsReposit, IMapper _Mapper)
+        public OrderDetailService(IOrderDetailRepository _orderDeatilsRepository, IOrderMasterRepository _orderMasterRepository, IMapper _Mapper)
         {
-            orderDetailsRepository = _orderDeatilsReposit;
+            orderDetailRepository = _orderDeatilsRepository;
+            orderMasterRepository = _orderMasterRepository;
             mapper = _Mapper;
         }
-        public async Task<ResultView<CreateOrderDetailsDTO>> CreateAsync(CreateOrderDetailsDTO createOrderMDTo)
+
+        public async Task<ResultView<CreateOrderDetailDTO>> CreateAsync(CreateOrderDetailDTO createOrderMDTo)
         {
 
-            ResultView<CreateOrderDetailsDTO> result = new();
+            ResultView<CreateOrderDetailDTO> result = new();
             try
             {
-                var item = (await orderDetailsRepository.GetAllAsync()).Any(b => b.Id == createOrderMDTo.Id);
+                var item = (await orderDetailRepository.GetAllAsync()).Any(b => b.Id == createOrderMDTo.Id);
                 if (item)
                 {
                     result.IsSuccess = false;
@@ -40,13 +43,13 @@ namespace AllBirds.Application.Services.OrderDetailServices
                 else
                 {
                     OrderDetail mappedOrderDetails = mapper.Map<OrderDetail>(createOrderMDTo);
-                    OrderDetail createdOrderDetails = await orderDetailsRepository.CreateAsync(mappedOrderDetails);
-                    await orderDetailsRepository.SaveChangesAsync();
+                    OrderDetail createdOrderDetails = await orderDetailRepository.CreateAsync(mappedOrderDetails);
+                    await orderDetailRepository.SaveChangesAsync();
 
 
 
                     result.IsSuccess = true;
-                    result.Data = mapper.Map<CreateOrderDetailsDTO>(createdOrderDetails);
+                    result.Data = mapper.Map<CreateOrderDetailDTO>(createdOrderDetails);
                     result.Msg = $"Order item with id {createdOrderDetails.Id} Is created Successfully ";
 
                 }
@@ -75,7 +78,7 @@ namespace AllBirds.Application.Services.OrderDetailServices
             ResultView<List<GetAllOrderDetailsDTO>> result = new();
             try
             {
-                var order = (await orderDetailsRepository.GetAllAsync()).Where(b => !b.IsDeleted)
+                var order = (await orderDetailRepository.GetAllAsync()).Where(b => !b.IsDeleted)
                     .Include(c => c.ProductColorSize.Size.SizeNumber)
                     .Include(r => r.ProductColorSize.ProductColor.Product)
                     .Include(a => a.ProductColorSize.ProductColor.Color)
@@ -132,7 +135,7 @@ namespace AllBirds.Application.Services.OrderDetailServices
             ResultView<List<GetAllOrderDetailsDTO>> result = new();
             try
             {
-                var order = (await orderDetailsRepository.GetAllAsync())
+                var order = (await orderDetailRepository.GetAllAsync())
                     .Include(c => c.ProductColorSize.Size.SizeNumber)
                     .Include(r => r.ProductColorSize.ProductColor.Product)
                     .Include(a => a.ProductColorSize.ProductColor.Color)
@@ -171,15 +174,10 @@ namespace AllBirds.Application.Services.OrderDetailServices
 
         public async Task<ResultView<GetOneOrderDetailsDTO>> GetByIdAsync(int OrderId)
         {
-
-
-
-
-
             ResultView<GetOneOrderDetailsDTO> result = new();
             try
             {
-                var ordermaster = await orderDetailsRepository.GetOneAsync(OrderId);
+                var ordermaster = await orderDetailRepository.GetOneAsync(OrderId);
                 if (ordermaster != null)
                 {
                     result.IsSuccess = true;
@@ -211,22 +209,18 @@ namespace AllBirds.Application.Services.OrderDetailServices
 
         public async Task<ResultView<GetOneOrderDetailsDTO>> HardDeleteAsync(int OrderID)
         {
-
-
             ResultView<GetOneOrderDetailsDTO> result = new();
             try
             {
-                var order = (await orderDetailsRepository.GetAllAsync()).FirstOrDefault(b => b.Id == OrderID);
-                if (order != null)
+                OrderDetail order = (await orderDetailRepository.GetAllAsync()).Include(od => od.OrderMaster).FirstOrDefault(b => b.Id == OrderID);
+                if (order is not null)
                 {
-                    OrderDetail deletedOrderMaster = await orderDetailsRepository.DeleteAsync(order);
-                    await orderDetailsRepository.SaveChangesAsync();
-
+                    order.OrderMaster.Total -= order.DetailPrice;
+                    OrderDetail deletedOrderDetail = await orderDetailRepository.DeleteAsync(order);
+                    await orderDetailRepository.SaveChangesAsync();
                     result.IsSuccess = true;
                     result.Data = mapper.Map<GetOneOrderDetailsDTO>(order);
                     result.Msg = $"Delete Order's Item with Id: {OrderID}  Is done  ";
-
-
                 }
                 else
                 {
@@ -234,28 +228,14 @@ namespace AllBirds.Application.Services.OrderDetailServices
                     result.Data = null;
                     result.Msg = "Order's Item is not found  ";
                 }
-
             }
             catch (Exception ex)
             {
                 result.IsSuccess = false;
                 result.Data = null;
                 result.Msg = $"Error Happen While Delete the Order With Id {OrderID} " + ex.Message;
-
             }
             return result;
-
-
-
-
-            //var item =( await orderDetailsRepository.GetAllAsync()).FirstOrDefault(b=>!b.IsDeleted&& b.Id==OrderID);
-            //if (item!=null)
-            //{
-            //     var order= await orderDetailsRepository.DeleteAsync(item);
-            //     await  orderDetailsRepository.SaveChangesAsync();
-            //     return mapper.Map<GetOneOrderDetailsDTO>(order);
-            //}
-            // return null;
         }
 
         public async Task<ResultView<GetOneOrderDetailsDTO>> SoftDeleteAsync(int OrderID)
@@ -264,12 +244,12 @@ namespace AllBirds.Application.Services.OrderDetailServices
             ResultView<GetOneOrderDetailsDTO> result = new();
             try
             {
-                var orderItem = (await orderDetailsRepository.GetAllAsync()).FirstOrDefault(b => !b.IsDeleted && b.Id == OrderID);
+                var orderItem = (await orderDetailRepository.GetAllAsync()).FirstOrDefault(b => !b.IsDeleted && b.Id == OrderID);
                 if (orderItem != null)
                 {
                     orderItem.IsDeleted = true;
 
-                    await orderDetailsRepository.SaveChangesAsync();
+                    await orderDetailRepository.SaveChangesAsync();
 
                     result.IsSuccess = true;
                     result.Data = mapper.Map<GetOneOrderDetailsDTO>(orderItem);
@@ -304,12 +284,12 @@ namespace AllBirds.Application.Services.OrderDetailServices
             //return null;
         }
 
-        public async Task<ResultView<CreateOrderDetailsDTO>> UpdateAsync(CreateOrderDetailsDTO createOrderMDTo)
+        public async Task<ResultView<CreateOrderDetailDTO>> UpdateAsync(CreateOrderDetailDTO createOrderMDTo)
         {
-            ResultView<CreateOrderDetailsDTO> result = new();
+            ResultView<CreateOrderDetailDTO> result = new();
             try
             {
-                bool orderDetails = (await orderDetailsRepository.GetAllAsync()).Any(b => b.Id == createOrderMDTo.Id && !b.IsDeleted);
+                bool orderDetails = (await orderDetailRepository.GetAllAsync()).Any(b => b.Id == createOrderMDTo.Id && !b.IsDeleted);
                 if (!orderDetails)
                 {
                     result.IsSuccess = false;
@@ -323,13 +303,13 @@ namespace AllBirds.Application.Services.OrderDetailServices
                     var order = mapper.Map<OrderDetail>(createOrderMDTo);
 
 
-                    OrderDetail updatedOredermaster = await orderDetailsRepository.UpdateAsync(order);
+                    OrderDetail updatedOredermaster = await orderDetailRepository.UpdateAsync(order);
 
-                    await orderDetailsRepository.SaveChangesAsync();
+                    await orderDetailRepository.SaveChangesAsync();
 
 
                     result.IsSuccess = true;
-                    result.Data = mapper.Map<CreateOrderDetailsDTO>(updatedOredermaster);
+                    result.Data = mapper.Map<CreateOrderDetailDTO>(updatedOredermaster);
                     result.Msg = $"Order'Item  With Id: {updatedOredermaster.Id} Is Updated Successfully ";
 
                 }
@@ -358,6 +338,40 @@ namespace AllBirds.Application.Services.OrderDetailServices
             //    return mapper.Map<CreateOrderDetailsDTO>(updatedOrederDetails);
             //}
             //return null;
+        }
+        
+        public async Task<ResultView<CreateOrderDetailDTO>> UpdataQuantityAsync(int detailId, int newQuantity)
+        {
+            ResultView<CreateOrderDetailDTO> result = new();
+            try
+            {
+                OrderDetail? orderDetail = (await orderDetailRepository.GetAllAsync()).Include(od => od.OrderMaster).FirstOrDefault(b => b.Id == detailId && !b.IsDeleted);
+                //OrderMaster? orderMaster = (await orderMasterRepository.GetAllAsync()).FirstOrDefault(b => b.Id == detailId && !b.IsDeleted);
+                if (orderDetail is null)
+                {
+                    result.IsSuccess = false;
+                    result.Data = null;
+                    result.Msg = $"This Order Detail ({detailId}) Does Not Exist";
+                }
+                else
+                {
+                    orderDetail.OrderMaster.Total -= orderDetail.DetailPrice;
+                    orderDetail.DetailPrice = orderDetail.DetailPrice / orderDetail.Quantity * newQuantity;
+                    orderDetail.OrderMaster.Total += orderDetail.DetailPrice;
+                    orderDetail.Quantity = newQuantity;
+                    await orderDetailRepository.SaveChangesAsync();
+                    result.IsSuccess = true;
+                    result.Data = mapper.Map<CreateOrderDetailDTO>(orderDetail);
+                    result.Msg = $"Order Detail  With Id: {orderDetail.Id} Is Updated Successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Data = null;
+                result.Msg = $"Error Happen While Changing Quantity Order's Item {ex.Message}";
+            }
+            return result;
         }
     }
 }

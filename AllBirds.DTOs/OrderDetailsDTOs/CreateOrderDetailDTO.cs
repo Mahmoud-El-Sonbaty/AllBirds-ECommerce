@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AllBirds.DTOs.OrderDetailsDTOs
 {
-    public class CreateOrderDetailsDTO
+    public class CreateOrderDetailDTO
     {
         public int Id { get; set; }
 
