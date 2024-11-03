@@ -27,6 +27,6 @@ namespace AllBirds.DTOs.OrderMasterDTOs
         [Range(10,15000)]
         public decimal Total { get; set; }
 
-        public List<CreateOrderDetailsDTO> ProductColorSizeId { get; set; }
+        public List<CreateOrderDetailDTO> ProductColorSizeId { get; set; }
     }
 }
