@@ -285,25 +285,25 @@ namespace AllBirds.Application.Services.OrderMasterServices
             ResultView<GetUserCartCheckoutDTO> resultView = new();
             try
             {
-                OrderMaster? orderMaster = (await orderMasterRepository.GetAllAsync())
-                    .Include(om => om.OrderState)
-                    .Include(om => om.Coupon)
-                    .Include(om => om.OrderDetails)
-                    .ThenInclude(od => od.ProductColorSize)
-                    .ThenInclude(od => od.Size)
-                    .Include(om => om.OrderDetails)
-                    .ThenInclude(od => od.ProductColorSize)
-                    .ThenInclude(od => od.ProductColor)
-                    .ThenInclude(od => od.Color)
-                    .Include(om => om.OrderDetails)
-                    .ThenInclude(od => od.ProductColorSize)
-                    .ThenInclude(od => od.ProductColor)
-                    .ThenInclude(od => od.Images)
-                    .Include(om => om.OrderDetails)
-                    .ThenInclude(od => od.ProductColorSize)
-                    .ThenInclude(od => od.ProductColor)
-                    .ThenInclude(od => od.Product)
-                    .FirstOrDefault(om => om.ClientId == userId);
+                //OrderMaster? orderMaster = (await orderMasterRepository.GetAllAsync())
+                //    .Include(om => om.OrderState)
+                //    .Include(om => om.Coupon)
+                //    .Include(om => om.OrderDetails)
+                //    .ThenInclude(od => od.ProductColorSize)
+                //    .ThenInclude(od => od.Size)
+                //    .Include(om => om.OrderDetails)
+                //    .ThenInclude(od => od.ProductColorSize)
+                //    .ThenInclude(od => od.ProductColor)
+                //    .ThenInclude(od => od.Color)
+                //    .Include(om => om.OrderDetails)
+                //    .ThenInclude(od => od.ProductColorSize)
+                //    .ThenInclude(od => od.ProductColor)
+                //    .ThenInclude(od => od.Images)
+                //    .Include(om => om.OrderDetails)
+                //    .ThenInclude(od => od.ProductColorSize)
+                //    .ThenInclude(od => od.ProductColor)
+                //    .ThenInclude(od => od.Product)
+                //    .FirstOrDefault(om => om.ClientId == userId);
 
                 GetUserCartCheckoutDTO? orderMaster2 = (await orderMasterRepository.GetAllAsync()).Select(om => new GetUserCartCheckoutDTO
                 {
@@ -314,7 +314,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     OrderStateId = om.OrderStateId,
                     Notes = om.Notes,
                     CouponId = om.CouponId,
-                    CouponCode = om.Coupon.Code ?? "NA",
+                    CouponCode = om.Coupon.Code,
                     DiscountAmount = $"{om.Coupon.Discount * om.Total / 100}",
                     DiscountPerctnage = $"{om.Coupon.Discount} %",
                     OrderDetails = om.OrderDetails.Select(od => new GetAllCartCheckoutDetailsDTO()
@@ -329,11 +329,10 @@ namespace AllBirds.Application.Services.OrderMasterServices
                         ImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath
                     }).ToList()
                 }).FirstOrDefault(om => om.ClientId == userId);
-                if (orderMaster is not null)
+                if (orderMaster2 is not null)
                 {
-                    GetUserCartCheckoutDTO orderMasterDTO = mapper.Map<GetUserCartCheckoutDTO>(orderMaster);
                     resultView.IsSuccess = true;
-                    resultView.Data = orderMasterDTO;
+                    resultView.Data = orderMaster2;
                     resultView.Msg = $"Cart For User {userId} Was Found";
                 }
             }
