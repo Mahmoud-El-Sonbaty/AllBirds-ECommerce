@@ -1,4 +1,5 @@
 ﻿using AllBirds.DTOs.ProductDTOs;
+using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,7 @@ namespace AllBirds.Application.Services.ProductServices
         public Task<ResultView<CUProductDTO>> HardDeleteAsync(int productId);
         public Task<ResultView<List<GetAllProductDTO>>> GetAllAsync();
         public Task<ResultView<CUProductDTO>> GetByIdAsync(int productId);
+        public Task<ResultView<List<GetTopProductsDTO>>> GetNOfProductByCatId(int catId, int numberofProduct);
+
     }
 }

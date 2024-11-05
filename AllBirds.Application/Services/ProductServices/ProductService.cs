@@ -1,11 +1,15 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.CategoryProductServices;
+using AllBirds.Application.Services.ProductSpecificationServices;
 using AllBirds.DTOs.ProductDTOs;
+using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
 using AllBirds.DTOs.SpecificationDTOs;
 using AllBirds.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AllBirds.Application.Services.ProductServices
 {
@@ -14,12 +18,14 @@ namespace AllBirds.Application.Services.ProductServices
         private readonly IProductRepository productrepoistory;
         private readonly ICategoryProductService categoryProductService;
         public IMapper mapper;
+        private readonly IProductSpecificationService productSpecificationRepo;
 
-        public ProductService(IProductRepository _productRepository, IMapper _mapper, ICategoryProductService _categoryProductService)
+        public ProductService(IProductRepository _productRepository, IMapper _mapper, ICategoryProductService _categoryProductService, IProductSpecificationService _productSpecificationRepo)
         {
             productrepoistory = _productRepository;
             mapper = _mapper;
             categoryProductService = _categoryProductService;
+
         }
 
         public async Task<ResultView<CUProductDTO>> CreateAsync(CUProductDTO cUProductDTO)
@@ -110,6 +116,57 @@ namespace AllBirds.Application.Services.ProductServices
 
         }
 
+
+
+        public async Task<ResultView<List<GetTopProductsDTO>>> GetNOfProductByCatId(int catId, int numberofProduct)
+        {
+
+            ResultView<List<GetTopProductsDTO>> resultView = new();
+            try
+            {
+                List<GetTopProductsDTO> products = (await productrepoistory.GetAllAsync()).Select(sec => new GetTopProductsDTO()
+                {
+                    NameEn = sec.NameEn,
+                    NameAr = sec.NameAr,
+                    Id = sec.Id,
+                    Price = sec.Price,
+                    ColorNameAr = sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                                      .Select(s => s.Color.NameAr).FirstOrDefault(),
+                    ColorNameEn = sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                                      .Select(s => s.Color.NameEn).FirstOrDefault(),
+                 
+                    MainImagePath = sec.AvailableColors
+                                      .Where(ac => ac.Id == sec.MainColorId)
+                                      .Select(ac => ac.Images.FirstOrDefault(img => img.Id == ac.MainImageId).ImagePath)
+                                      .FirstOrDefault()
+                }).Take(numberofProduct).ToList();
+
+
+                if (products.Count() != 0)
+                {
+                    resultView.IsSuccess = true;
+                    resultView.Data = products;
+                    resultView.Msg = $"Get The Top {numberofProduct} Done";
+
+
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = " Product List Is Empty ";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Get The Top Products " + ex.Message;
+
+            }
+            return resultView;
+        }
         public async Task<ResultView<CUProductDTO>> HardDeleteAsync(int productId)
         {
             ResultView<CUProductDTO> resultView = new();
