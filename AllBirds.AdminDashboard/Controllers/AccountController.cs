@@ -38,6 +38,7 @@ namespace AllBirds.AdminDashboard.Controllers
             return View();
         }
 
+        // should be converted to add admin
         [HttpPost]
         public async Task<IActionResult> Register(CUAccountDTO cUAccountDTO)
         {
@@ -45,7 +46,7 @@ namespace AllBirds.AdminDashboard.Controllers
             {
                 cUAccountDTO.ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "Accounts" });
             }
-            return await accountService.RegisterAsync(cUAccountDTO) ? RedirectToAction("Login") : View();
+            return await accountService.RegisterAsync(cUAccountDTO) is not null ? RedirectToAction("Login") : View();
         }
 
         [HttpGet]
@@ -56,7 +57,7 @@ namespace AllBirds.AdminDashboard.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await accountService.LoginAsync(accountLoginDTO))
+                if ((await accountService.LoginAsync(accountLoginDTO, true)).IsSuccess)
                 {
                     ResultView<GetAllAdminsDTO> getUserRes = await accountService.GetUserById(User.Claims.FirstOrDefault()?.Value);
                     if (getUserRes.IsSuccess)

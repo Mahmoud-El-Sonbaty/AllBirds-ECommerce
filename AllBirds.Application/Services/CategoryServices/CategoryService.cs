@@ -3,6 +3,7 @@ using AllBirds.DTOs.Shared;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.Models;
 using AutoMapper;
+using System.Text.Json;
 
 namespace AllBirds.Application.Services.CategoryServices
 {
@@ -120,6 +121,32 @@ namespace AllBirds.Application.Services.CategoryServices
             ResultView<List<GetAllCategoryDTO>> resultView = new();
             try
             {
+                List<Category> allCats = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
+                List<GetAllCategoryNestedDTO> result = new();
+                List<Category> grandParents = allCats.Where(c => c.ParentCategoryId == 0).ToList();
+                foreach (Category parent in grandParents)
+                {
+                    GetAllCategoryNestedDTO mappedObj = new();
+                    mappedObj.Id = parent.Id;
+                    mappedObj.NameAr = parent.NameAr;
+                    mappedObj.NameEn = parent.NameEn;
+                    mappedObj.Level = parent.Level;
+                    mappedObj.IsParentCategory = parent.IsParentCategory;
+                    mappedObj.ParentCategoryId = parent.ParentCategoryId;
+                    //mappedObj.Children = parent.IsParentCategory ? test(allCats.Where(ch => ch.ParentCategoryId == parent.Id).ToList(), parent) : [];
+                    mappedObj.Children = [];
+                    if (parent.IsParentCategory)
+                    {
+                        mappedObj.Children = test(allCats, parent.Id);
+                    }
+                    result.Add(mappedObj);
+                }
+                var jsonResult = JsonSerializer.Serialize(result);
+
+                Console.WriteLine(jsonResult);
+
+
+                //================================================================================================
                 List<Category> successCategorys = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
                 List<GetAllCategoryDTO> successCategorySDTO = mapper.Map<List<GetAllCategoryDTO>>(successCategorys);
                 resultView.IsSuccess=true;
@@ -254,6 +281,72 @@ namespace AllBirds.Application.Services.CategoryServices
         public Task<int> SaveChangesAsync()
         {
             return categoryRepository.SaveChangesAsync();
+        }
+
+        // services for api project
+        //================================================================================================
+
+        public List<GetAllCategoryNestedDTO> test(List<Category> allCats, int parentId)
+        {
+            List<GetAllCategoryNestedDTO> result = new();
+            //List<Category> subChildren = children.Where(c => c.ParentCategoryId == parentId).ToList();
+            foreach (Category child in allCats.Where(c => c.ParentCategoryId == parentId))
+            {
+                GetAllCategoryNestedDTO obj = new();
+                obj.Id = child.Id;
+                obj.NameAr = child.NameAr;
+                obj.NameEn = child.NameEn;
+                obj.Level = child.Level;
+                obj.IsParentCategory = child.IsParentCategory;
+                obj.ParentCategoryId = child.ParentCategoryId;
+                obj.Children = [];
+                if (child.IsParentCategory)
+                {
+                    obj.Children = test(allCats, child.Id);
+                }
+                result.Add(obj);
+            }
+            return result;
+        }
+
+        public async Task<ResultView<List<GetAllCategoryNestedDTO>>> GetAllAPI()
+        {
+            ResultView<List<GetAllCategoryNestedDTO>> resultView = new();
+            try
+            {
+                List<Category> allCats = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
+                List<GetAllCategoryNestedDTO> result = new();
+                List<Category> grandParents = allCats.Where(c => c.ParentCategoryId == 0).ToList();
+                foreach (Category parent in grandParents)
+                {
+                    GetAllCategoryNestedDTO mappedObj = new();
+                    mappedObj.Id = parent.Id;
+                    mappedObj.NameAr = parent.NameAr;
+                    mappedObj.NameEn = parent.NameEn;
+                    mappedObj.Level = parent.Level;
+                    mappedObj.IsParentCategory = parent.IsParentCategory;
+                    mappedObj.ParentCategoryId = parent.ParentCategoryId;
+                    //mappedObj.Children = parent.IsParentCategory ? test(allCats.Where(ch => ch.ParentCategoryId == parent.Id).ToList(), parent) : [];
+                    mappedObj.Children = [];
+                    if (parent.IsParentCategory)
+                    {
+                        mappedObj.Children = test(allCats, parent.Id);
+                    }
+                    result.Add(mappedObj);
+                }
+                resultView.IsSuccess = true;
+                resultView.Data = result;
+                resultView.Msg = "All Categories Fetched Successfully";
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Fetching Categories {ex.Message}";
+            }
+            return resultView;
+            //string jsonResult = JsonSerializer.Serialize(result);
+            //Console.WriteLine(jsonResult);
         }
     }
 }

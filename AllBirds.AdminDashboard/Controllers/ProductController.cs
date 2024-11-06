@@ -200,6 +200,19 @@ namespace AllBirds.AdminDashboard.Controllers
                 return View();
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GetProductColorImages(int id)
+        {
+            ResultView<GetOneProductColorDTO> resultView = await productColorService.GetByIdAsync(id);
+            if(resultView.IsSuccess)
+            {
+                return View(resultView);
+            }
+            else
+            {
+                return View(resultView.Msg);
+            }
+        }
 
 
         [HttpGet]

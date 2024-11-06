@@ -229,7 +229,7 @@ namespace AllBirds.Context
                     Id = 4,
                     ProductNo = "P004",
                     NameAr = "منتج 4",
-                    NameEn = "Product 4",
+                    NameEn = "Men's Couriers",
                     Price = 100.00m,
                     HighlightsAr = "جزء علوي متين مصنوع من القطن العضوي وألياف شجرة الكينا~@#$%&بطانة ناعمة ومبطنة لراحة فائقة (سواء مع أو بدون جوارب)~@#$%&وسادة منتصف القدم من SweetFoam® تساعد في دعم القدم طوال اليوم",
                     HighlightsEn = @"Durable upper made with organic cotton and eucalyptus fiber~@#$%&Soft, padded lining for ultimate comfort (with or without socks)~@#$%&Cushioned SweetFoam® midsole helps give wear-all-day support",
@@ -841,9 +841,6 @@ namespace AllBirds.Context
             );
         }
 
-
-
-        
         //public int SaveChanges(bool acceptAllChangesOnSuccess, int userId)
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
