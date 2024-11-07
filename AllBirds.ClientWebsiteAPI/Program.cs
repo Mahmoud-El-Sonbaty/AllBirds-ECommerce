@@ -139,6 +139,7 @@ builder.Services.AddSwaggerGen(sa =>
         }
     });
 });
+
 builder.Services.AddAuthentication(op =>
 {
     op.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -168,6 +169,13 @@ builder.Services.AddCors(op =>
         .AllowAnyMethod();
     });
 });
+
+
+builder.Services.AddRouting(options =>
+{
+    options.ConstraintMap.Add("twoLetterLang", typeof(TwoLetterLangConstraint));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

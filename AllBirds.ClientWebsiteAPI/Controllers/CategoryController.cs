@@ -40,8 +40,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
 
         [HttpGet]
-        [Route("lang/{Lang}")]
-
+        [Route("{Lang:twoLetterLang}")]
         public async Task<IActionResult> GetAllCategoriesWithLang(string Lang)
         {
             ResultView<List<GetAllCategoryWithLangDTO>> allCats = await categoryService.GetAllAPIWithlang(Lang);
@@ -49,8 +48,8 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         }
 
         [HttpGet]
-        [Route("category/{CatId:int}/lang/{Lang}")]
-        public async Task<IActionResult> GetCategoryByIdWithLang(int CatId,string Lang)
+        [Route("category/{CatId:int}/{Lang:twoLetterLang}")]
+        public async Task<IActionResult> GetCategoryByIdWithLang(int CatId, string Lang)
         {
             ResultView<GetAllCategoryWithLangDTO> productCardDTOs = await categoryService.GetCategoryByIdAPIWithLang(CatId, Lang);
             return Ok(productCardDTOs);
