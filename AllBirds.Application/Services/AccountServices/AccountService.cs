@@ -205,9 +205,9 @@ namespace AllBirds.Application.Services.AccountServices
         }
 
         // For API
-        public async Task<ResultView<CUAccountDTO>> RegisterAsync(CUAccountDTO cUAccountDTO)
+        public async Task<ResultView<ClientRegisterDTO>> RegisterAsync(ClientRegisterDTO cUAccountDTO)
         {
-            ResultView<CUAccountDTO> resultView = new();
+            ResultView<ClientRegisterDTO> resultView = new();
             try
             {
                 CustomUser? findUserEmail = await userManager.FindByEmailAsync(cUAccountDTO.Email);
@@ -239,7 +239,7 @@ namespace AllBirds.Application.Services.AccountServices
                         if (roleToAdd.Succeeded)
                         {
                             resultView.IsSuccess = true;
-                            resultView.Data = cUAccountDTO;
+                            resultView.Data = mapper.Map<ClientRegisterDTO>(createdUser);
                             resultView.Msg = $"Account ({cUAccountDTO.Email}) Created Successfully";
                         }
                         else

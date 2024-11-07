@@ -23,6 +23,7 @@ namespace AllBirds.Application.Mapper
         {
             #region Account
             CreateMap<CUAccountDTO, CustomUser>().ReverseMap();
+            CreateMap<ClientRegisterDTO, CustomUser>().ReverseMap();
             CreateMap<AccountLoginDTO, CustomUser>().ReverseMap();
             CreateMap<CustomUser, GetAllAdminsDTO>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName ?? "NA"))

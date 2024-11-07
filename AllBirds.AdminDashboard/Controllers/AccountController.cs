@@ -39,15 +39,15 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         // should be converted to add admin
-        [HttpPost]
-        public async Task<IActionResult> Register(CUAccountDTO cUAccountDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                cUAccountDTO.ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "Accounts" });
-            }
-            return await accountService.RegisterAsync(cUAccountDTO) is not null ? RedirectToAction("Login") : View();
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> Register(CUAccountDTO cUAccountDTO)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        cUAccountDTO.ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "Accounts" });
+        //    }
+        //    return await accountService.RegisterAsync(cUAccountDTO) is not null ? RedirectToAction("Login") : View();
+        //}
 
         [HttpGet]
         public async Task<IActionResult> Login() => View();
