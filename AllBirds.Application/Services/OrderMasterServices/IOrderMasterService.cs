@@ -15,10 +15,11 @@ namespace AllBirds.Application.Services.OrderMasterServices
         public Task<ResultView<GetOneOrderMasterDTO>> SoftDeleteAsync(int OrderID);
         public Task<ResultView<GetOneOrderMasterDTO>> HardDeleteAsync(int OrderID);
         public Task<ResultView<GetUserCartCheckoutDTO>> GetUserCartAsync(int userId);
-        public Task<ResultView<List<GetAllOrderMastersDTO>>> GetByUserAsync(int userId);
+        public Task<ResultView<List<GetAllClientOrderMasterDTO>>> GetByUserAsync(int userId);
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllAsync();
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllWithDeletedAsync();
         public Task<ResultView<GetOneOrderMasterDTO>> GetByIdAsync(int OrderId);
         public Task<ResultView<bool>> ChangingStateAsync(int StateId, int OrderID);
+        public Task<ResultView<CreateOrderMasterDTO>> PlaceOrderAsync(int userId);
     }
 }

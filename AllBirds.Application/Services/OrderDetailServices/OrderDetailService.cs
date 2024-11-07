@@ -215,6 +215,7 @@ namespace AllBirds.Application.Services.OrderDetailServices
                 OrderDetail order = (await orderDetailRepository.GetAllAsync()).Include(od => od.OrderMaster).FirstOrDefault(b => b.Id == OrderID);
                 if (order is not null)
                 {
+                    // check if this is the last detail and delete the master
                     order.OrderMaster.Total -= order.DetailPrice;
                     OrderDetail deletedOrderDetail = await orderDetailRepository.DeleteAsync(order);
                     await orderDetailRepository.SaveChangesAsync();

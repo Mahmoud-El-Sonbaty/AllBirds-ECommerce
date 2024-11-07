@@ -44,7 +44,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     expires: DateTime.Now.AddHours(2),
                     signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
                     );
-                var TokenStr = new JwtSecurityTokenHandler().WriteToken(token);
+                string TokenStr = new JwtSecurityTokenHandler().WriteToken(token);
                 return Ok(TokenStr);
             }
             else

@@ -4,6 +4,7 @@ using AllBirds.DTOs.Shared;
 using AllBirds.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,7 +108,7 @@ namespace AllBirds.Application.Services.AccountServices
                         else // API Login
                         {
                             bool isClient = await userManager.IsInRoleAsync(findUserEmail, "Client");
-                            bool isModNotClient = (await accountRoleRepository.GetAllAccountRolesAsync()).Any(ar => ar.UserId == findUserEmail.Id && modRolesIds.Contains(ar.RoleId) && ar.RoleId != clientRoleId);
+                            bool isModNotClient = await (await accountRoleRepository.GetAllAccountRolesAsync()).AllAsync(ar => ar.UserId == findUserEmail.Id && modRolesIds.Contains(ar.RoleId) && ar.RoleId != clientRoleId);
                             if (isClient || isModNotClient)
                             {
                                 if (isModNotClient)
