@@ -417,5 +417,142 @@ namespace AllBirds.Application.Services.CategoryServices
 
         }
 
+
+
+
+        
+
+
+
+        //Services for Localization  By ahmed Elghoul
+        //================================================================================================
+
+        public List<GetAllCategoryWithLangDTO> testLocal(List<Category> allCats, int parentId,string lang)
+        {
+            List<GetAllCategoryWithLangDTO> result = new();
+            //List<Category> subChildren = children.Where(c => c.ParentCategoryId == parentId).ToList();
+            foreach (Category child in allCats.Where(c => c.ParentCategoryId == parentId))
+            {
+                GetAllCategoryWithLangDTO obj = new();
+                obj.Id = child.Id;
+                obj.Name = (lang == "en") ? child.NameEn : child.NameAr;
+                obj.Level = child.Level;
+                obj.IsParentCategory = child.IsParentCategory;
+                obj.ParentCategoryId = child.ParentCategoryId;
+                obj.Children = [];
+                if (child.IsParentCategory)
+                {
+                    obj.Children = testLocal(allCats, child.Id, lang);
+                }
+                result.Add(obj);
+            }
+            return result;
+        }
+
+
+
+        public async Task<ResultView<List<GetAllCategoryWithLangDTO>>> GetAllAPIWithlang(string lang)
+        {
+            ResultView<List<GetAllCategoryWithLangDTO>> resultView = new();
+            try
+            {
+                List<Category> allCats = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
+                List<GetAllCategoryWithLangDTO> result = new();
+                List<Category> grandParents = allCats.Where(c => c.ParentCategoryId == 0).ToList();
+                foreach (Category parent in grandParents)
+                {
+                    GetAllCategoryWithLangDTO mappedObj = new();
+                    mappedObj.Id = parent.Id;
+                    mappedObj.Name = (lang == "en") ? parent.NameEn : parent.NameAr;
+                    mappedObj.Level = parent.Level;
+                    mappedObj.IsParentCategory = parent.IsParentCategory;
+                    mappedObj.ParentCategoryId = parent.ParentCategoryId;
+                    mappedObj.Children = [];
+                    if (parent.IsParentCategory)
+                    {
+                        mappedObj.Children = testLocal(allCats, parent.Id,lang);
+                    }
+                    result.Add(mappedObj);
+                }
+                resultView.IsSuccess = true;
+                resultView.Data = result;
+                resultView.Msg = "All Categories Fetched Successfully";
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Fetching Categories {ex.Message}";
+            }
+            return resultView;
+            //string jsonResult = JsonSerializer.Serialize(result);
+            //Console.WriteLine(jsonResult);
+        }
+
+
+        public async Task<ResultView<GetAllCategoryWithLangDTO>> GetCategoryByIdAPIWithLang(int Id,string lang)
+        {
+            ResultView<GetAllCategoryWithLangDTO> resultView = new();
+            try
+            {
+                List<Category> allCats = [.. (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).AsNoTracking()];
+                Category ParentCategory = allCats.FirstOrDefault(P => P.Id == Id);
+
+                // Check On Parent Category Has Data Or Null !!
+                if (ParentCategory == null)
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Msg = "Category not found.";
+                    return resultView;
+                }
+
+
+                GetAllCategoryWithLangDTO getAllCategoryNestedDTO = new()
+                {
+                    Id = ParentCategory.Id,
+                    IsParentCategory = ParentCategory.IsParentCategory,
+                    Level = ParentCategory.Level,
+                    Name = (lang == "en") ? ParentCategory.NameEn : ParentCategory.NameAr,
+                    ParentCategoryId = ParentCategory.ParentCategoryId,
+                    Children = [],
+                };
+
+
+                if (ParentCategory.IsParentCategory)
+                {
+
+                    // Check On Parent Category Has Chlid Or Sub Category Or No ?? 
+                    foreach (Category nestedDTO in allCats.Where(P => P.ParentCategoryId == Id))
+                    {
+
+                        GetAllCategoryWithLangDTO nestedDTO1 = new GetAllCategoryWithLangDTO()
+                        {
+                            Id = nestedDTO.Id,
+                            Level = nestedDTO.Level,
+                            Name = (lang == "en") ? nestedDTO.NameEn : nestedDTO.NameAr,
+                            ParentCategoryId = nestedDTO.ParentCategoryId,
+                            IsParentCategory = nestedDTO.IsParentCategory,
+                            Children = [],
+                        };
+                        getAllCategoryNestedDTO.Children.Add(nestedDTO1);
+                    }
+
+                    resultView.IsSuccess = true;
+                    resultView.Data = getAllCategoryNestedDTO;
+                    resultView.Msg = "All Categories Fetched Successfully";
+                }
+            }
+
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Fetching Categories {ex.Message}";
+            }
+            return resultView;
+
+        }
+
+
     }
 }

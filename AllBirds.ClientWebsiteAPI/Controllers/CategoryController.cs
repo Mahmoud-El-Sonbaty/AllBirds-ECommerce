@@ -25,11 +25,34 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return Ok(allCats);
         }
 
+
+        
+
         [HttpGet]
         [Route("{CatId:int}")]
         public async Task<IActionResult> GetCategoryById(int CatId)
         {
             ResultView<GetAllCategoryNestedDTO> productCardDTOs = await categoryService.GetCategoryByIdAPI(CatId);
+            return Ok(productCardDTOs);
+        }
+
+        //for localization 
+
+
+        [HttpGet]
+        [Route("lang/{Lang}")]
+
+        public async Task<IActionResult> GetAllCategoriesWithLang(string Lang)
+        {
+            ResultView<List<GetAllCategoryWithLangDTO>> allCats = await categoryService.GetAllAPIWithlang(Lang);
+            return Ok(allCats);
+        }
+
+        [HttpGet]
+        [Route("category/{CatId:int}/lang/{Lang}")]
+        public async Task<IActionResult> GetCategoryByIdWithLang(int CatId,string Lang)
+        {
+            ResultView<GetAllCategoryWithLangDTO> productCardDTOs = await categoryService.GetCategoryByIdAPIWithLang(CatId, Lang);
             return Ok(productCardDTOs);
         }
     }

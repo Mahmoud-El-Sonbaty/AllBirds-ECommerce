@@ -28,12 +28,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 return BadRequest(products.Msg);
 
         }
-    }
-        public ProductController(IProductService _productService)
-        {
-            productService = _productService;
-        }
-
+    
         [HttpGet]
         [Route("{CatId:int}")]
         public async Task<IActionResult> GetProductsByCategoryId(int CatId)

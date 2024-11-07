@@ -21,5 +21,13 @@ namespace AllBirds.Application.Services.CategoryServices
         //================================================================================================
         public Task<ResultView<List<GetAllCategoryNestedDTO>>> GetAllAPI();
         Task<ResultView<GetAllCategoryNestedDTO>> GetCategoryByIdAPI(int catId);
+
+        // services for localization by Ahmed Elghoul
+        //================================================================================================
+        public Task<ResultView<List<GetAllCategoryWithLangDTO>>> GetAllAPIWithlang(string lang);
+        public Task<ResultView<GetAllCategoryWithLangDTO>> GetCategoryByIdAPIWithLang(int catId,string lang);
+
+
+
     }
 }
