@@ -298,7 +298,6 @@ namespace AllBirds.Context
                 new ProductColor { Id = 25, ProductId = 4, ColorId = 9, MainImageId = 169, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new ProductColor { Id = 26, ProductId = 4, ColorId = 6, MainImageId = 176, CreatedBy = 1, Created = new DateTime(2024, 10, 19) }
             );
-            // Seed ProductColorImages
             modelBuilder.Entity<ProductColorImage>().HasData(
                 new ProductColorImage { Id = 1, ProductColorId = 1, ImagePath = "/images/product-color-images/A10604M080_Natural_Black_Blizzard_ANGLE-192.png", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new ProductColorImage { Id = 2, ProductColorId = 1, ImagePath = "/images/product-color-images/A10604M080_Natural_Black_Blizzard_LEFT-271.png", CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
