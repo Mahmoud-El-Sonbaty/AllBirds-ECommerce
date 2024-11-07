@@ -18,6 +18,10 @@ namespace AllBirds.Application.Services.ProductServices
         public Task<ResultView<List<GetAllProductDTO>>> GetAllAsync();
         public Task<ResultView<CUProductDTO>> GetByIdAsync(int productId);
         public Task<ResultView<List<GetTopProductsDTO>>> GetNOfProductByCatId(int catId, int numberofProduct);
+        public Task<ResultView<List<ProductCardDTO>>> GetAllPrdCatIdAsync( int CatId);
+        public Task<ResultView<List<ProductCardDTO>>> ProductFilteration(TypeFilterOfProductDTO typeFilterOfProductDTO);
+
+
 
     }
 }

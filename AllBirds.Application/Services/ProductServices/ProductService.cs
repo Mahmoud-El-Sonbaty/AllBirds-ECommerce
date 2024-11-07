@@ -1,6 +1,8 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.CategoryProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
+using AllBirds.DTOs.ProductColorImageDTOs;
+using AllBirds.DTOs.ProductColorSizeDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
@@ -94,6 +96,8 @@ namespace AllBirds.Application.Services.ProductServices
             result.Msg = "All Products Fetched Successfully";
             return result;
         }
+
+
 
         public async Task<ResultView<CUProductDTO>> GetByIdAsync(int productId)
         {
@@ -263,7 +267,7 @@ namespace AllBirds.Application.Services.ProductServices
             try
             {
                 bool CheckPrdExist = (await productrepoistory.GetAllAsync()).Any(P => P.Id == cUProductDTO.Id && !P.IsDeleted);
-                if(CheckPrdExist)
+                if (CheckPrdExist)
                 {
                     Product prdUpdat = mapper.Map<Product>(cUProductDTO);
                     Product prdUpdated = await productrepoistory.UpdateAsync(prdUpdat);
@@ -294,5 +298,181 @@ namespace AllBirds.Application.Services.ProductServices
             }
             return resultView;
         }
+        //======================== Product API ======================
+        public async Task<ResultView<List<ProductCardDTO>>> GetAllPrdCatIdAsync(int CatId)
+        {
+            ResultView<List<ProductCardDTO>> resultView = new();
+
+            if (CatId != 0)
+            {
+                List<ProductCardDTO> productCardDTOs = new();
+
+                List<Product> filteredProducts = (await productrepoistory.GetAllAsync()).Include(p => p.Categories)
+                    .Include(P => P.AvailableColors).ThenInclude(P => P.Images).Include(P => P.AvailableColors).ThenInclude(P => P.Color).Include(P => P.AvailableColors).ThenInclude(P => P.AvailableSizes).ThenInclude(P => P.Size)
+                    .Where(p => p.Categories.Any(c => c.CategoryId == CatId)).ToList();
+
+                foreach (Product product in filteredProducts)
+                {
+                    ProductCardDTO productCardDTO = new()
+                    {
+                        ProductColors = [],
+                    };
+                    productCardDTO.Id = product.Id;
+                    productCardDTO.NameEn = product.NameEn;
+                    productCardDTO.NameAr = product.NameAr;
+                    productCardDTO.Price = product.Price;
+                    foreach (ProductColor productColor in product.AvailableColors)
+                    {
+                        GetAllProductColorImageDTO getAllProductColorImageDTO = new();
+                        getAllProductColorImageDTO.ProductColorId = productColor.Id;
+                        getAllProductColorImageDTO.NameEn = productColor.Color.NameEn;
+                        getAllProductColorImageDTO.NameAr = productColor.Color.NameAr;
+                        getAllProductColorImageDTO.Code = productColor.Color.Code;
+                        getAllProductColorImageDTO.ImagePath = productColor.Images.FirstOrDefault(P => P.Id == productColor.MainImageId)?.ImagePath;
+                        getAllProductColorImageDTO.ProductSizes = new List<GetPCSDTO>();
+                        foreach (ProductColorSize productColorSize in productColor.AvailableSizes)
+                        {
+                            GetPCSDTO getPCSDTO = new();
+                            getPCSDTO.ProductColorSizeId = productColorSize.Id;
+                            getPCSDTO.SizeNumber = productColorSize.Size.SizeNumber;
+                            getPCSDTO.UnitsInStock = productColorSize.UnitsInStock;
+                            getAllProductColorImageDTO.ProductSizes.Add(getPCSDTO);
+                        }
+                        productCardDTO.ProductColors.Add(getAllProductColorImageDTO);
+
+                    }
+
+                    productCardDTOs.Add(productCardDTO);
+                }
+
+
+                if (productCardDTOs != null && productCardDTOs.Count > 0)
+                {
+                    resultView.Data = productCardDTOs;
+                    resultView.IsSuccess = true;
+                    resultView.Msg = "All Products Fetched Successfully";
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Msg = "This Category Not Contain Any Product .. Sorry! ";
+                    resultView.Data = null;
+                }
+            }
+            else
+            {
+                resultView.IsSuccess = false;
+                resultView.Msg = "This Category Not Contain Any Product .. Sorry! ";
+                resultView.Data = null;
+            }
+            return resultView;
+        }
+
+        public async Task<ResultView<List<ProductCardDTO>>> ProductFilteration(TypeFilterOfProductDTO typeFilterOfProductDTO)
+        {
+            ResultView<List<ProductCardDTO>> resultView = new();
+            List<ProductCardDTO> productCardDTOs = new();
+            if (typeFilterOfProductDTO.colorCode != null || typeFilterOfProductDTO.sizeNumber != null)
+            {
+                List<Product> products = (await productrepoistory.GetAllAsync()).Include(p => p.Categories)
+                        .Include(P => P.AvailableColors).ThenInclude(P => P.Images).Include(P => P.AvailableColors).ThenInclude(P => P.Color).Include(P => P.AvailableColors).ThenInclude(P => P.AvailableSizes).ThenInclude(P => P.Size)
+                        .Where(p => p.Categories.Any(c => c.CategoryId == typeFilterOfProductDTO.categoryId)).ToList();
+
+                List<Product> filteredProducts = [];
+
+                if (products.Count > 0 && typeFilterOfProductDTO.colorCode != null && typeFilterOfProductDTO.colorCode.Count > 0)
+                {
+                    if(filteredProducts.Count > 0 && filteredProducts != null)
+                    {
+                    filteredProducts = filteredProducts.Where(p => p.AvailableColors.Any(pc => typeFilterOfProductDTO.colorCode.Contains(pc.Color.Code))).ToList();
+
+                    }
+                    else
+                    {
+                        filteredProducts = products.Where(p => p.AvailableColors.Any(pc => typeFilterOfProductDTO.colorCode.Contains(pc.Color.Code))).ToList();
+
+                    }
+                }
+
+
+                if (typeFilterOfProductDTO.sizeNumber != null && typeFilterOfProductDTO.sizeNumber.Count > 0)
+                {
+                    if(filteredProducts.Count > 0 && filteredProducts != null )
+                    {
+                    filteredProducts = filteredProducts.Where(p => p.AvailableColors != null && p.AvailableColors.Any(pc => pc.AvailableSizes != null && pc.AvailableSizes.Any(ps =>
+                    ps.Size != null && typeFilterOfProductDTO.sizeNumber.Contains(ps.Size.SizeNumber)))).ToList();
+
+                    }
+                    else
+                    {
+                        filteredProducts = products.Where(p => p.AvailableColors != null && p.AvailableColors.Any(pc => pc.AvailableSizes != null && pc.AvailableSizes.Any(ps =>
+                        ps.Size != null && typeFilterOfProductDTO.sizeNumber.Contains(ps.Size.SizeNumber)))).ToList();
+                    }
+
+                }
+
+
+                foreach (Product product in filteredProducts)
+                {
+                    ProductCardDTO productCardDTO = new()
+                    {
+                        ProductColors = [],
+                    };
+                    productCardDTO.Id = product.Id;
+                    productCardDTO.NameEn = product.NameEn;
+                    productCardDTO.NameAr = product.NameAr;
+                    productCardDTO.Price = product.Price;
+                    foreach (ProductColor productColor in product.AvailableColors)
+                    {
+                        GetAllProductColorImageDTO getAllProductColorImageDTO = new();
+                        getAllProductColorImageDTO.ProductColorId = productColor.Id;
+                        getAllProductColorImageDTO.NameEn = productColor.Color.NameEn;
+                        getAllProductColorImageDTO.NameAr = productColor.Color.NameAr;
+                        getAllProductColorImageDTO.Code = productColor.Color.Code;
+                        getAllProductColorImageDTO.ImagePath = productColor.Images.FirstOrDefault(P => P.Id == productColor.MainImageId)?.ImagePath;
+                        getAllProductColorImageDTO.ProductSizes = new List<GetPCSDTO>();
+                        foreach (ProductColorSize productColorSize in productColor.AvailableSizes)
+                        {
+                            GetPCSDTO getPCSDTO = new();
+                            getPCSDTO.ProductColorSizeId = productColorSize.Id;
+                            getPCSDTO.SizeNumber = productColorSize.Size.SizeNumber;
+                            getPCSDTO.UnitsInStock = productColorSize.UnitsInStock;
+                            getAllProductColorImageDTO.ProductSizes.Add(getPCSDTO);
+                        }
+                        productCardDTO.ProductColors.Add(getAllProductColorImageDTO);
+
+                    }
+
+                    productCardDTOs.Add(productCardDTO);
+                }
+
+
+                if (productCardDTOs != null && productCardDTOs.Count > 0)
+                {
+                    resultView.Data = productCardDTOs;
+                    resultView.IsSuccess = true;
+                    resultView.Msg = "All Products Fetched Successfully";
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Msg = "This Type Of Filter Not Contain Any Product .. Sorry! ";
+                    resultView.Data = null;
+                }
+
+            }
+            else
+            {
+                resultView.IsSuccess = false;
+                resultView.Msg = "This Type Of Filter Not Contain Any Product .. Sorry! ";
+                resultView.Data = null;
+            }
+            return resultView;
+
+        }
+
+
+
+
     }
 }

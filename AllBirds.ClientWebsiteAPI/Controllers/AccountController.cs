@@ -44,7 +44,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     expires: DateTime.Now.AddHours(2),
                     signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
                     );
-                var TokenStr = new JwtSecurityTokenHandler().WriteToken(token);
+                string TokenStr = new JwtSecurityTokenHandler().WriteToken(token);
                 return Ok(TokenStr);
             }
             else
@@ -54,9 +54,9 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(CUAccountDTO cUAccountDTO)
+        public async Task<IActionResult> Register(ClientRegisterDTO cUAccountDTO)
         {
-            ResultView<CUAccountDTO> resultView = await accountService.RegisterAsync(cUAccountDTO);
+            ResultView<ClientRegisterDTO> resultView = await accountService.RegisterAsync(cUAccountDTO);
             if (resultView.IsSuccess)
             {
                 return Created();

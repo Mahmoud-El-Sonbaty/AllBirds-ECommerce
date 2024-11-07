@@ -4,6 +4,7 @@ using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.Models;
 using AutoMapper;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace AllBirds.Application.Services.CategoryServices
 {
@@ -149,7 +150,7 @@ namespace AllBirds.Application.Services.CategoryServices
                 //================================================================================================
                 List<Category> successCategorys = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
                 List<GetAllCategoryDTO> successCategorySDTO = mapper.Map<List<GetAllCategoryDTO>>(successCategorys);
-                resultView.IsSuccess=true;
+                resultView.IsSuccess = true;
                 resultView.Data = successCategorySDTO;
                 resultView.Msg = "All Categories Fetched Successfully";
             }
@@ -245,16 +246,16 @@ namespace AllBirds.Application.Services.CategoryServices
                 if (successCategory is not null)
                 {
                     bool dependentCats = (await categoryRepository.GetAllAsync()).Any(c => c.ParentCategoryId == id);
-                        if (dependentCats)
-                        {
-                            successCategory.IsDeleted = true;
-                            resultView.Msg = $"Category {successCategory.NameEn} Was Soft Deleted As There Are Categories That Depend On It";
-                        }
-                        else
-                        {
-                            Category successCategory2 = await categoryRepository.DeleteAsync(successCategory);
-                            resultView.Msg = $"Category {successCategory.NameEn} Was Hard Deleted Successfully";
-                        }
+                    if (dependentCats)
+                    {
+                        successCategory.IsDeleted = true;
+                        resultView.Msg = $"Category {successCategory.NameEn} Was Soft Deleted As There Are Categories That Depend On It";
+                    }
+                    else
+                    {
+                        Category successCategory2 = await categoryRepository.DeleteAsync(successCategory);
+                        resultView.Msg = $"Category {successCategory.NameEn} Was Hard Deleted Successfully";
+                    }
                     await categoryRepository.SaveChangesAsync();
                     GetOneCategoryDTO successCategoryDTO = mapper.Map<GetOneCategoryDTO>(successCategory);
                     resultView.IsSuccess = true;
@@ -348,5 +349,73 @@ namespace AllBirds.Application.Services.CategoryServices
             //string jsonResult = JsonSerializer.Serialize(result);
             //Console.WriteLine(jsonResult);
         }
+
+
+        // Get Parent Category Additional All Sub Category Follower Parent Category 
+        public async Task<ResultView<GetAllCategoryNestedDTO>> GetCategoryByIdAPI(int Id)
+        {
+            ResultView<GetAllCategoryNestedDTO> resultView = new();
+            try
+            {
+                List<Category> allCats = [.. (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).AsNoTracking()];
+                Category ParentCategory = allCats.FirstOrDefault(P => P.Id == Id);
+
+                // Check On Parent Category Has Data Or Null !!
+                if (ParentCategory == null)
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Msg = "Category not found.";
+                    return resultView;
+                }
+
+
+                GetAllCategoryNestedDTO getAllCategoryNestedDTO = new()
+                {
+                    Id = ParentCategory.Id,
+                    IsParentCategory = ParentCategory.IsParentCategory,
+                    Level = ParentCategory.Level,
+                    NameEn = ParentCategory.NameEn,
+                    NameAr = ParentCategory.NameAr,
+                    ParentCategoryId = ParentCategory.ParentCategoryId,
+                    Children = [],
+                };
+
+
+                if (ParentCategory.IsParentCategory)
+                {
+
+                    // Check On Parent Category Has Chlid Or Sub Category Or No ?? 
+                    foreach (Category nestedDTO in allCats.Where(P => P.ParentCategoryId == Id))
+                    {
+
+                        GetAllCategoryNestedDTO nestedDTO1 = new GetAllCategoryNestedDTO()
+                        {
+                            Id = nestedDTO.Id,
+                            Level = nestedDTO.Level,
+                            NameEn = nestedDTO.NameEn,
+                            NameAr = nestedDTO.NameAr,
+                            ParentCategoryId = nestedDTO.ParentCategoryId,
+                            IsParentCategory = nestedDTO.IsParentCategory,
+                            Children = [],
+                        };
+                        getAllCategoryNestedDTO.Children.Add(nestedDTO1);
+                    }
+
+                    resultView.IsSuccess = true;
+                    resultView.Data = getAllCategoryNestedDTO;
+                    resultView.Msg = "All Categories Fetched Successfully";
+                }
+            }
+
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Fetching Categories {ex.Message}";
+            }
+            return resultView;
+
+        }
+
     }
 }

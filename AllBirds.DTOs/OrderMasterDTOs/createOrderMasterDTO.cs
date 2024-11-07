@@ -22,7 +22,7 @@ namespace AllBirds.DTOs.OrderMasterDTOs
         //public int? CouponId { get; set; } // not needed in creation
         public int Id { get; set; } = 0;
 
-        public int ClientId { get; set; }
+        public int ClientId { get; set; } = 0;
 
         [Range(10,15000)]
         public decimal Total { get; set; }
