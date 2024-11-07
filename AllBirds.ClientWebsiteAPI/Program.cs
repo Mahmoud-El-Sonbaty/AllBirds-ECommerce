@@ -153,7 +153,7 @@ builder.Services.AddAuthentication(op =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration["jwt:Audience"],
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"] ?? "AllBirdsDefaultJWTKey"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"]))
     };
 });
 builder.Services.AddCors(op =>
@@ -187,9 +187,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("Default");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("Default");
 
 app.MapControllers();
 
