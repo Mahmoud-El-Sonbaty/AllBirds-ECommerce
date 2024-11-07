@@ -1,5 +1,7 @@
 ﻿using AllBirds.Application.Services.CategoryServices;
+using AllBirds.Application.Services.ProductServices;
 using AllBirds.DTOs.CategoryDTOs;
+using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +23,14 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         {
             ResultView<List<GetAllCategoryNestedDTO>> allCats = await categoryService.GetAllAPI();
             return Ok(allCats);
+        }
+
+        [HttpGet]
+        [Route("{CatId:int}")]
+        public async Task<IActionResult> GetCategoryById(int CatId)
+        {
+            ResultView<GetAllCategoryNestedDTO> productCardDTOs = await categoryService.GetCategoryByIdAPI(CatId);
+            return Ok(productCardDTOs);
         }
     }
 }

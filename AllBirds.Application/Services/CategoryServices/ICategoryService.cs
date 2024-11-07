@@ -20,5 +20,6 @@ namespace AllBirds.Application.Services.CategoryServices
         // services for api project
         //================================================================================================
         public Task<ResultView<List<GetAllCategoryNestedDTO>>> GetAllAPI();
+        Task<ResultView<GetAllCategoryNestedDTO>> GetCategoryByIdAPI(int catId);
     }
 }

@@ -112,7 +112,7 @@ builder.Services.AddIdentity<CustomUser, IdentityRole<int>>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(sa =>
 {
-    sa.SwaggerDoc("V1", new OpenApiInfo
+    sa.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Client API",
         Version = "v1"
@@ -158,7 +158,7 @@ builder.Services.AddAuthentication(op =>
 });
 builder.Services.AddCors(op =>
 {
-    op.AddPolicy("Derfault", policy =>
+    op.AddPolicy("Default", policy =>
     {
         //policy.WithOrigins("http://localhost:4200", "http://anydomain:domainport", "null")
         //.WithHeaders("Key")
