@@ -437,5 +437,111 @@ namespace AllBirds.Application.Services.OrderMasterServices
             return resultView;
         }
 
+
+
+
+
+        //Services for Localization  By ahmed Elghoul
+        //================================================================================================
+        public async Task<ResultView<GetUserCartCheckOutWithLangDTO>> GetUserCartWithLangAsync(int userId, string Lang)
+        {
+
+            ResultView<GetUserCartCheckOutWithLangDTO> resultView = new();
+            try
+            {
+
+
+                GetUserCartCheckOutWithLangDTO? orderMaster2 = (await orderMasterRepository.GetAllAsync()).Select(om => new GetUserCartCheckOutWithLangDTO
+                {
+                    Id = om.Id,
+                    OrderNo = om.OrderNo,
+                    ClientId = om.ClientId,
+                    Total = om.Total,
+                    OrderStateId = om.OrderStateId,
+                    Notes = om.Notes,
+                    CouponId = om.CouponId,
+                    CouponCode = om.Coupon.Code,
+                    DiscountAmount = $"{om.Coupon.Discount * om.Total / 100}",
+                    DiscountPerctnage = $"{om.Coupon.Discount} %",
+                    OrderDetails = om.OrderDetails.Select(od => new GetAllCartCheckoutDetailsWithLangDTO()
+                    {
+                        Id = od.Id,
+                        DetailPrice = od.DetailPrice,
+                        Quantity = od.Quantity,
+                        ProductName = (Lang == "en") ? od.ProductColorSize.ProductColor.Product.NameEn : od.ProductColorSize.ProductColor.Product.NameAr,
+                        ColorName = (Lang == "en") ? od.ProductColorSize.ProductColor.Color.NameEn : od.ProductColorSize.ProductColor.Color.NameAr,
+                        SizeNumber = od.ProductColorSize.Size.SizeNumber,
+                        ImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath
+                    }).ToList()
+                }).FirstOrDefault(om => om.ClientId == userId);
+                if (orderMaster2 is not null)
+                {
+                    resultView.IsSuccess = true;
+                    resultView.Data = orderMaster2;
+                    resultView.Msg = $"Cart For User {userId} Was Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Getting the Cart For User Id {userId} {ex.Message}";
+            }
+            return resultView;
+        }
+
+
+        public async Task<ResultView<List<GetAllClientOrderMasterDTO>>> GetByUserWithLangAsync(int userId,string Lang)
+        {
+            ResultView<List<GetAllClientOrderMasterDTO>> resultView = new();
+            try
+            {
+      
+
+                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Select(om =>
+                new GetAllClientOrderMasterDTO
+                {
+                    Id = om.Id,
+                    ClientId = om.ClientId,
+                    ClientName = $"{om.Client.FirstName} {om.Client.LastName}",
+                    ClientAddress = om.Client.Address,
+                    OrderStateId = om.OrderStateId,                    
+                    OrderStateName = (Lang == "en")? om.OrderState.StateEn:om.OrderState.StateAr,
+                    Total = om.Total,
+                    DateOrdered = om.Created.Value.ToShortDateString(),
+                    Details = om.OrderDetails.Select(od => new GetAllClientOrderDetailsDTO
+                    {
+                        Id = od.Id,
+                        ProductId = od.ProductColorSizeId,
+                        ProductName = (Lang == "en")? od.ProductColorSize.ProductColor.Product.NameEn:od.ProductColorSize.ProductColor.Product.NameAr,
+                        ProductImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath,
+                        Price = od.ProductColorSize.ProductColor.Product.Price,
+                        Quantity = od.Quantity,
+                        DetailPrice = od.DetailPrice,
+                        ColorName = (Lang == "en")? od.ProductColorSize.ProductColor.Color.NameEn:od.ProductColorSize.ProductColor.Color.NameAr,
+                        SizeNumber = od.ProductColorSize.Size.SizeNumber
+                    }).ToList()
+                })];
+                if (userOrders is null || !(userOrders.Count > 0))
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = $"No Orders Were Found For This Client {userId}";
+                }
+                else
+                {
+                    resultView.IsSuccess = true;
+                    resultView.Data = userOrders;
+                    resultView.Msg = $"All Orders For This Client Fetched Successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Fetching Orders For This Client {userId} {ex.Message}";
+            }
+            return resultView;
+        }
     }
 }

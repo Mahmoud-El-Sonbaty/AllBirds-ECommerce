@@ -43,6 +43,9 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
         }
 
+
+
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateOrder(CreateOrderMasterDTO createOrderMasterDTO)
@@ -106,6 +109,8 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 return BadRequest(orderDetailUpdated.Msg);
         }
 
+
+
         [Authorize]
         [HttpGet("PlaceOrder")]
         public async Task<IActionResult> PlaceOrder() // here we should minus the units of stock of the products in the order details
@@ -139,5 +144,63 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             }
             return Unauthorized();
         }
+
+
+
+
+
+
+
+        /*=======================================================================
+                                    for localization 
+        ========================================================================*/
+
+
+        [Authorize]
+        [HttpGet]
+        [Route("/{Lang:twoLetterLang}")]
+        public async Task<IActionResult> GetUserCartWithLang(string Lang)
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+            if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                ResultView<GetUserCartCheckOutWithLangDTO> userCart = await orderMasterService.GetUserCartWithLangAsync(userId,Lang);
+                if (userCart.IsSuccess)
+                    return Ok(userCart);
+                else
+                    return NotFound();
+            }
+            else
+            {
+                return Unauthorized("Invalid token or user ID");
+            }
+
+        }
+
+
+
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetAllClientOrders/{Lang:twoLetterLang}")]
+
+        public async Task<IActionResult> GetByUser(string Lang)
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+            if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                ResultView<List<GetAllClientOrderMasterDTO>> resultView = await orderMasterService.GetByUserWithLangAsync(userId,Lang);
+                if (resultView.IsSuccess)
+                {
+                    return Ok(resultView);
+                }
+                return BadRequest(resultView.Msg);
+            }
+            return Unauthorized();
+        }
+
+
+
+
     }
 }

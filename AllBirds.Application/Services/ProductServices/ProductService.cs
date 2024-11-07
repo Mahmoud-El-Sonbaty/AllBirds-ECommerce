@@ -493,10 +493,11 @@ namespace AllBirds.Application.Services.ProductServices
                     Name = (Lang == "en") ? sec.NameEn : sec.NameAr ,
                     Id = sec.Id,
                     Price = sec.Price,
-                    ColorName= (Lang == "en") ?  sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
-                                      .Select(s => s.Color.NameAr).FirstOrDefault() 
-                                      : sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
-                                      .Select(s => s.Color.NameEn).FirstOrDefault(),
+                    ColorName= (Lang == "en") ? sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                                                 .Select(s => s.Color.NameEn).FirstOrDefault()
+                                                  :sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                                                    .Select(s => s.Color.NameAr).FirstOrDefault() ,
+                                      
 
                     MainImagePath = sec.AvailableColors
                                       .Where(ac => ac.Id == sec.MainColorId)

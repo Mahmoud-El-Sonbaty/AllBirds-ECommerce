@@ -21,5 +21,13 @@ namespace AllBirds.Application.Services.OrderMasterServices
         public Task<ResultView<GetOneOrderMasterDTO>> GetByIdAsync(int OrderId);
         public Task<ResultView<bool>> ChangingStateAsync(int StateId, int OrderID);
         public Task<ResultView<CreateOrderMasterDTO>> PlaceOrderAsync(int userId);
+
+
+        // services for localization by Ahmed Elghoul
+        //================================================================================================
+        public Task<ResultView<GetUserCartCheckOutWithLangDTO>> GetUserCartWithLangAsync(int userId,string Lang);
+        
+        public Task<ResultView<List<GetAllClientOrderMasterDTO>>> GetByUserWithLangAsync(int userId,string Lang);
+
     }
 }
