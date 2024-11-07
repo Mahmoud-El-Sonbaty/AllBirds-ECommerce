@@ -36,7 +36,9 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return Ok(productCardDTOs);
         }
 
-        //for localization 
+        /*=======================================================================
+                                    for localization 
+        ========================================================================*/
 
 
         [HttpGet]

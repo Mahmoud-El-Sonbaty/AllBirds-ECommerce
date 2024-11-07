@@ -45,7 +45,31 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return Ok(productCardDTOs);
         }
 
+        /*=======================================================================
+                                     for localization 
+         ========================================================================*/
 
+
+        [HttpGet]
+        [Route("product/{CatId:int}/{numberofProduct:int}/{Lang:twoLetterLang}")]
+
+        public async Task<IActionResult> GetNOfProductByCatIdWithlang(int CatId, int numberofProduct ,string Lang)
+        {
+            ResultView<List<GetTopProductWithLangDTO>> products = await productService.GetNOfProductByCatIdWithLang(CatId, numberofProduct, Lang);
+            if (products.IsSuccess)
+                return Ok(products);
+            else
+                return BadRequest(products.Msg);
+
+        }
+
+        [HttpGet]
+        [Route("{CatId:int}/{Lang:twoLetterLang}")]
+        public async Task<IActionResult> GetProductsByCategoryIdWithlang(int CatId, string Lang)
+        {
+            ResultView<List<GetProductCardWithlangDTO>> productCardDTOs = await productService.GetAllPrdCatIdWithLangAsync(CatId, Lang);
+            return Ok(productCardDTOs);
+        }
 
     }
 

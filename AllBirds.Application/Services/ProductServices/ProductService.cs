@@ -118,58 +118,6 @@ namespace AllBirds.Application.Services.ProductServices
             }
             return resultView;
         }
-
-
-
-        public async Task<ResultView<List<GetTopProductsDTO>>> GetNOfProductByCatId(int catId, int numberofProduct)
-        {
-
-            ResultView<List<GetTopProductsDTO>> resultView = new();
-            try
-            {
-                List<GetTopProductsDTO> products = (await productrepoistory.GetAllAsync()).Select(sec => new GetTopProductsDTO()
-                {
-                    NameEn = sec.NameEn,
-                    NameAr = sec.NameAr,
-                    Id = sec.Id,
-                    Price = sec.Price,
-                    ColorNameAr = sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
-                                      .Select(s => s.Color.NameAr).FirstOrDefault(),
-                    ColorNameEn = sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
-                                      .Select(s => s.Color.NameEn).FirstOrDefault(),
-                 
-                    MainImagePath = sec.AvailableColors
-                                      .Where(ac => ac.Id == sec.MainColorId)
-                                      .Select(ac => ac.Images.FirstOrDefault(img => img.Id == ac.MainImageId).ImagePath)
-                                      .FirstOrDefault()
-                }).Take(numberofProduct).ToList();
-
-
-                if (products.Count() != 0)
-                {
-                    resultView.IsSuccess = true;
-                    resultView.Data = products;
-                    resultView.Msg = $"Get The Top {numberofProduct} Done";
-
-
-                }
-                else
-                {
-                    resultView.IsSuccess = false;
-                    resultView.Data = null;
-                    resultView.Msg = " Product List Is Empty ";
-                }
-
-            }
-            catch (Exception ex)
-            {
-                resultView.IsSuccess = false;
-                resultView.Data = null;
-                resultView.Msg = $"Error Happen While Get The Top Products " + ex.Message;
-
-            }
-            return resultView;
-        }
         public async Task<ResultView<CUProductDTO>> HardDeleteAsync(int productId)
         {
             ResultView<CUProductDTO> resultView = new();
@@ -299,6 +247,58 @@ namespace AllBirds.Application.Services.ProductServices
             return resultView;
         }
         //======================== Product API ======================
+
+
+        public async Task<ResultView<List<GetTopProductsDTO>>> GetNOfProductByCatId(int catId, int numberofProduct)
+        {
+
+            ResultView<List<GetTopProductsDTO>> resultView = new();
+            try
+            {
+                List<GetTopProductsDTO> products = (await productrepoistory.GetAllAsync()).Select(sec => new GetTopProductsDTO()
+                {
+                    NameEn = sec.NameEn,
+                    NameAr = sec.NameAr,
+                    Id = sec.Id,
+                    Price = sec.Price,
+                    ColorNameAr = sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                                      .Select(s => s.Color.NameAr).FirstOrDefault(),
+                    ColorNameEn = sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                                      .Select(s => s.Color.NameEn).FirstOrDefault(),
+
+                    MainImagePath = sec.AvailableColors
+                                      .Where(ac => ac.Id == sec.MainColorId)
+                                      .Select(ac => ac.Images.FirstOrDefault(img => img.Id == ac.MainImageId).ImagePath)
+                                      .FirstOrDefault()
+                }).Take(numberofProduct).ToList();
+
+
+                if (products.Count() != 0)
+                {
+                    resultView.IsSuccess = true;
+                    resultView.Data = products;
+                    resultView.Msg = $"Get The Top {numberofProduct} Done";
+
+
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = " Product List Is Empty ";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Get The Top Products " + ex.Message;
+
+            }
+            return resultView;
+        }
+
         public async Task<ResultView<List<ProductCardDTO>>> GetAllPrdCatIdAsync(int CatId)
         {
             ResultView<List<ProductCardDTO>> resultView = new();
@@ -473,6 +473,130 @@ namespace AllBirds.Application.Services.ProductServices
 
 
 
+
+        //Services for Localization  By ahmed Elghoul
+        //================================================================================================
+
+
+
+
+
+
+
+        public async Task<ResultView<List<GetTopProductWithLangDTO>>> GetNOfProductByCatIdWithLang(int catId, int numberofProduct, string Lang)
+        {
+            ResultView<List<GetTopProductWithLangDTO>> resultView = new();
+            try
+            {
+                List<GetTopProductWithLangDTO> products = (await productrepoistory.GetAllAsync()).Select(sec => new GetTopProductWithLangDTO()
+                {
+                    Name = (Lang == "en") ? sec.NameEn : sec.NameAr ,
+                    Id = sec.Id,
+                    Price = sec.Price,
+                    ColorName= (Lang == "en") ?  sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                                      .Select(s => s.Color.NameAr).FirstOrDefault() 
+                                      : sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                                      .Select(s => s.Color.NameEn).FirstOrDefault(),
+
+                    MainImagePath = sec.AvailableColors
+                                      .Where(ac => ac.Id == sec.MainColorId)
+                                      .Select(ac => ac.Images.FirstOrDefault(img => img.Id == ac.MainImageId).ImagePath)
+                                      .FirstOrDefault()
+                }).Take(numberofProduct).ToList();
+
+
+                if (products.Count() != 0)
+                {
+                    resultView.IsSuccess = true;
+                    resultView.Data = products;
+                    resultView.Msg = $"Get The Top {numberofProduct} Done";
+
+
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = " Product List Is Empty ";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happen While Get The Top Products " + ex.Message;
+
+            }
+            return resultView;
+        }
+
+        public async Task<ResultView<List<GetProductCardWithlangDTO>>> GetAllPrdCatIdWithLangAsync(int CatId, string Lang)
+        {
+            ResultView<List<GetProductCardWithlangDTO>> resultView = new();
+
+            if (CatId != 0)
+            {
+                List<GetProductCardWithlangDTO> productCardDTOs = new();
+
+                List<Product> filteredProducts = (await productrepoistory.GetAllAsync()).Include(p => p.Categories)
+                    .Include(P => P.AvailableColors).ThenInclude(P => P.Images).Include(P => P.AvailableColors).ThenInclude(P => P.Color).Include(P => P.AvailableColors).ThenInclude(P => P.AvailableSizes).ThenInclude(P => P.Size)
+                    .Where(p => p.Categories.Any(c => c.CategoryId == CatId)).ToList();
+
+                foreach (Product product in filteredProducts)
+                {
+                    GetProductCardWithlangDTO productCardDTO = new()
+                    {
+                        ProductColors = [],
+                    };
+                    productCardDTO.Id = product.Id;
+                    productCardDTO.Name = (Lang == "en") ? product.NameEn : product.NameAr;
+                    productCardDTO.Price = product.Price;
+                    foreach (ProductColor productColor in product.AvailableColors)
+                    {
+                        GetAllProdcutColorImageWithlang getAllProductColorImageDTO = new();
+                        getAllProductColorImageDTO.ProductColorId = productColor.Id;
+                        getAllProductColorImageDTO.Name =  (Lang == "en") ? productColor.Color.NameEn : productColor.Color.NameAr;
+                        getAllProductColorImageDTO.Code = productColor.Color.Code;
+                        getAllProductColorImageDTO.ImagePath = productColor.Images.FirstOrDefault(P => P.Id == productColor.MainImageId)?.ImagePath;
+                        getAllProductColorImageDTO.ProductSizes = new List<GetPCSDTO>();
+                        foreach (ProductColorSize productColorSize in productColor.AvailableSizes)
+                        {
+                            GetPCSDTO getPCSDTO = new();
+                            getPCSDTO.ProductColorSizeId = productColorSize.Id;
+                            getPCSDTO.SizeNumber = productColorSize.Size.SizeNumber;
+                            getPCSDTO.UnitsInStock = productColorSize.UnitsInStock;
+                            getAllProductColorImageDTO.ProductSizes.Add(getPCSDTO);
+                        }
+                        productCardDTO.ProductColors.Add(getAllProductColorImageDTO);
+
+                    }
+
+                    productCardDTOs.Add(productCardDTO);
+                }
+
+
+                if (productCardDTOs != null && productCardDTOs.Count > 0)
+                {
+                    resultView.Data = productCardDTOs;
+                    resultView.IsSuccess = true;
+                    resultView.Msg = "All Products Fetched Successfully";
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Msg = "This Category Has not Any Product .. Sorry! ";
+                    resultView.Data = null;
+                }
+            }
+            else
+            {
+                resultView.IsSuccess = false;
+                resultView.Msg = "This Category Not Contain Any Product .. Sorry! ";
+                resultView.Data = null;
+            }
+            return resultView;
+        }
 
     }
 }
