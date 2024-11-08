@@ -126,7 +126,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [Authorize]
         [HttpGet("GetAllClientOrders")]
         public async Task<IActionResult> GetByUser()
-        {
+       {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
             if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
             {
