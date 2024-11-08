@@ -158,7 +158,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("/{Lang:twoLetterLang}")]
+        [Route("{Lang:twoLetterLang}")]
         public async Task<IActionResult> GetUserCartWithLang(string Lang)
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
