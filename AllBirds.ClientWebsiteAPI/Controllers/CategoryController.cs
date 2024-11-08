@@ -50,7 +50,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         }
 
         [HttpGet]
-        [Route("category/{CatId:int}/{Lang:twoLetterLang}")]
+        [Route("{CatId:int}/{Lang:twoLetterLang}")]
         public async Task<IActionResult> GetCategoryByIdWithLang(int CatId, string Lang)
         {
             ResultView<GetAllCategoryWithLangDTO> productCardDTOs = await categoryService.GetCategoryByIdAPIWithLang(CatId, Lang);
