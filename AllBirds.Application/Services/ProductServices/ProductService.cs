@@ -538,7 +538,7 @@ namespace AllBirds.Application.Services.ProductServices
                 }
                 else
                 {
-                productCardDTOs = [.. (await productrepoistory.GetAllAsync()).Where(N => N.NameAr.Contains(PrdName)).Select(P => new ProductSearchDTOWithLang()
+                    productCardDTOs = [.. (await productrepoistory.GetAllAsync()).Where(N => N.NameAr.Contains(PrdName)).Select(P => new ProductSearchDTOWithLang()
                 {
                     Id = P.Id,
                     Name = P.NameAr,
@@ -562,6 +562,9 @@ namespace AllBirds.Application.Services.ProductServices
                     }
 
                 }
+            }
+            return resultView;
+        }
 
 
 
