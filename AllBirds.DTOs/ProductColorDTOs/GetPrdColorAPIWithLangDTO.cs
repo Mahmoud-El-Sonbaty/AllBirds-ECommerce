@@ -12,6 +12,7 @@ namespace AllBirds.DTOs.ProductColorDTOs
     {
         public int PrdColorId { get; set; }
         public string? ColorName { get; set; }
+        public string? ColorCode { get; set; }
         public int MainImageId { get; set; }
         public List<GetPrdColorImgAPIWithLangDTO>? PrdColorImages { get; set; }
         public List<GetPCSDTO>? PrdColorSizes { get; set; }

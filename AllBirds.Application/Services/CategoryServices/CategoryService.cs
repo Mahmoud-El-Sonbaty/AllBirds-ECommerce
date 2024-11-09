@@ -267,7 +267,7 @@ namespace AllBirds.Application.Services.CategoryServices
                         //var tet2 = (await categoryRepository.GetAllAsync()).Any(c => c.Products.Count > 0);
                         resultView.IsSuccess = false;
                         resultView.Data = null;
-                        resultView.Msg = $"Category {successCategory.NameEn} Couldn't Be Deleted As There Are Produccts That Depend On It";
+                        resultView.Msg = $"Category {successCategory.NameEn} Couldn't Be Deleted As There Are Products That Depend On It";
                     }
                     else
                     {
