@@ -40,7 +40,15 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return Ok(productResult);
         }
 
-
+        [HttpGet]
+        [Route("SingleProduct/{id:int}")]
+        public async Task<IActionResult> GetSingleProduct(int id)
+        {
+            ResultView<SingleProductAPIWithLangDTO> prdResultView = await productService.GetSingleProduct(id);
+            if(prdResultView.IsSuccess)
+                return Ok(prdResultView);
+            return BadRequest(prdResultView);
+        }
     }
 
 }

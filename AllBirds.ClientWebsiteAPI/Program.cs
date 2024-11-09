@@ -112,7 +112,7 @@ builder.Services.AddIdentity<CustomUser, IdentityRole<int>>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(sa =>
 {
-    sa.SwaggerDoc("v1", new OpenApiInfo
+    sa.SwaggerDoc("v1", new OpenApiInfo //here the name (v1) must be (v1) small ant there is no relation with the version below
     {
         Title = "Client API",
         Version = "v1"
@@ -153,7 +153,7 @@ builder.Services.AddAuthentication(op =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration["jwt:Audience"],
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"] ?? "AllBirdsDefaultJWTKey"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"]))
     };
 });
 builder.Services.AddCors(op =>
@@ -175,13 +175,21 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    //app.UseSwagger();
+
+    //// Ensure Swagger UI is configured with the correct endpoint
+    //app.UseSwaggerUI(c =>
+    //{
+    //    c.SwaggerEndpoint("/swagger/V1/swagger.json", "Client API V1");
+    //    //c.RoutePrefix = ""; // Ensures Swagger loads at root (http://localhost:5120)
+    //});
 }
 
 app.UseHttpsRedirection();
 
+app.UseCors("Default");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("Default");
 
 app.MapControllers();
 

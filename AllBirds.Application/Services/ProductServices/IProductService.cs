@@ -21,7 +21,7 @@ namespace AllBirds.Application.Services.ProductServices
         public Task<ResultView<List<ProductSearchDTOWithLang>>> GetProductSearchAsync(string PrdName , string Lang);
 
 
-
+        public Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id);
 
     }
 }

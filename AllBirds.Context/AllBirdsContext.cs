@@ -119,33 +119,44 @@ namespace AllBirds.Context
                 new Category { Id = 4, NameAr = "أحذية نشطة", NameEn = "Active Shoes", ParentCategoryId = 2, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new Category { Id = 5, NameAr = "أحذية مقاومة للماء", NameEn = "Water-Repellent Shoes", ParentCategoryId = 2, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new Category { Id = 6, NameAr = "أحذية بدون أربطة", NameEn = "Slip-Ons", ParentCategoryId = 2, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 7, NameAr = "عروض الأحذية", NameEn = "Sale Shoes", ParentCategoryId = 2, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 7, NameAr = "أحذية ذات رقبة ", NameEn = "High Tops", ParentCategoryId = 2, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new Category { Id = 8, NameAr = "الأكثر مبيعًا", NameEn = "Bestsellers", ParentCategoryId = 1, Level = 1, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new Category { Id = 9, NameAr = "ملابس والمزيد", NameEn = "Apparel & More", ParentCategoryId = 1, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new Category { Id = 10, NameAr = "ملابس داخلية", NameEn = "Underwear", ParentCategoryId = 9, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new Category { Id = 11, NameAr = "تي شيرتات", NameEn = "Tees", ParentCategoryId = 9, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new Category { Id = 12, NameAr = "نعال", NameEn = "Insoles", ParentCategoryId = 9, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
                 new Category { Id = 13, NameAr = "بطاقات هدايا", NameEn = "Gift Cards", ParentCategoryId = 9, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 14, NameAr = "عروض الملابس والجوارب", NameEn = "Sale Apparel & Socks", ParentCategoryId = 9, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 15, NameAr = "وصل حديثًا", NameEn = "New Arrivals", ParentCategoryId = 1, Level = 1, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 16, NameAr = "نساء", NameEn = "Women", ParentCategoryId = 0, Level = 0, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 17, NameAr = "أحذية", NameEn = "Shoes", ParentCategoryId = 16, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 18, NameAr = "أحذية رياضية يومية", NameEn = "Everyday Sneakers", ParentCategoryId = 17, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 19, NameAr = "أحذية نشطة", NameEn = "Active Shoes", ParentCategoryId = 17, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 20, NameAr = "أحذية مقاومة للماء", NameEn = "Water-Repellent Sneakers", ParentCategoryId = 17, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 21, NameAr = "أحذية مسطحة", NameEn = "Flats", ParentCategoryId = 17, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 22, NameAr = "أحذية بدون أربطة", NameEn = "Slip-Ons", ParentCategoryId = 17, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 23, NameAr = "عروض الأحذية", NameEn = "Sale Shoes", ParentCategoryId = 17, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 24, NameAr = "الأكثر مبيعًا", NameEn = "Bestsellers", ParentCategoryId = 16, Level = 1, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 25, NameAr = "ملابس والمزيد", NameEn = "Apparel & More", ParentCategoryId = 16, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 26, NameAr = "ملابس داخلية", NameEn = "Underwear", ParentCategoryId = 25, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 27, NameAr = "تي شيرتات", NameEn = "Tees", ParentCategoryId = 25, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 28, NameAr = "نعال", NameEn = "Insoles", ParentCategoryId = 25, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 29, NameAr = "بطاقات هدايا", NameEn = "Gift Cards", ParentCategoryId = 25, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 30, NameAr = "عروض الملابس والجوارب", NameEn = "Sale Apparel & Socks", ParentCategoryId = 25, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 31, NameAr = "وصل حديثًا", NameEn = "New Arrivals", ParentCategoryId = 16, Level = 1, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 32, NameAr = "جوارب", NameEn = "Socks", ParentCategoryId = 0, Level = 0, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
-                new Category { Id = 33, NameAr = "عروض", NameEn = "Sale", ParentCategoryId = 0, Level = 0, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) }
+                new Category { Id = 14, NameAr = "مميز", NameEn = "Featured", ParentCategoryId = 1, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 15, NameAr = "وصل حديثًا", NameEn = "New Arrivals", ParentCategoryId = 14, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 16, NameAr = "هدايا أقل من $100", NameEn = "Gifts Under $100", ParentCategoryId = 14, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 17, NameAr = "نساء", NameEn = "Women", ParentCategoryId = 0, Level = 0, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 18, NameAr = "أحذية", NameEn = "Shoes", ParentCategoryId = 17, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 19, NameAr = "أحذية رياضية يومية", NameEn = "Everyday Sneakers", ParentCategoryId = 18, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 20, NameAr = "أحذية نشطة", NameEn = "Active Shoes", ParentCategoryId = 18, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 21, NameAr = "أحذية مقاومة للماء", NameEn = "Water-Repellent Sneakers", ParentCategoryId = 18, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 22, NameAr = "أحذية مسطحة", NameEn = "Flats", ParentCategoryId = 18, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 23, NameAr = "أحذية بدون أربطة", NameEn = "Slip-Ons", ParentCategoryId = 18, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 24, NameAr = "أحذية ذات رقبة ", NameEn = "High Tops", ParentCategoryId = 18, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 25, NameAr = "الأكثر مبيعًا", NameEn = "Bestsellers", ParentCategoryId = 17, Level = 1, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 26, NameAr = "ملابس والمزيد", NameEn = "Apparel & More", ParentCategoryId = 17, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 27, NameAr = "ملابس داخلية", NameEn = "Underwear", ParentCategoryId = 26, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 28, NameAr = "تي شيرتات", NameEn = "Tees", ParentCategoryId = 26, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 29, NameAr = "نعال", NameEn = "Insoles", ParentCategoryId = 26, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 30, NameAr = "بطاقات هدايا", NameEn = "Gift Cards", ParentCategoryId = 26, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 31, NameAr = "مميز", NameEn = "Featured", ParentCategoryId = 17, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 32, NameAr = "وصل حديثًا", NameEn = "New Arrivals", ParentCategoryId = 31, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 33, NameAr = "هدايا أقل من $100", NameEn = "Gifts Under $100", ParentCategoryId = 31, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 34, NameAr = "جوارب", NameEn = "Socks", ParentCategoryId = 0, Level = 0, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 35, NameAr = "عروض", NameEn = "Sale", ParentCategoryId = 0, Level = 0, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 36, NameAr = "عروض الرجال", NameEn = "Men's Sale", ParentCategoryId = 35, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 37, NameAr = "عروض الأحذية", NameEn = "Sale Shoes", ParentCategoryId = 36, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 38, NameAr = "عروض الملابس والجوارب", NameEn = "Sale Apparel & Socks", ParentCategoryId = 36, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 39, NameAr = "عروض النساء", NameEn = "Women's Sale", ParentCategoryId = 35, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 40, NameAr = "عروض الأحذية", NameEn = "Sale Shoes", ParentCategoryId = 39, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 41, NameAr = "عروض الملابس والجوارب", NameEn = "Sale Apparel & Socks", ParentCategoryId = 39, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 42, NameAr = "مميز", NameEn = "Featured", ParentCategoryId = 35, Level = 1, IsParentCategory = true, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 43, NameAr = "عروض الرجال", NameEn = "Men's Sale", ParentCategoryId = 42, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) },
+                new Category { Id = 44, NameAr = "عروض النساء", NameEn = "Women's Sale", ParentCategoryId = 42, Level = 2, IsParentCategory = false, CreatedBy = 1, Created = new DateTime(2024, 10, 19) }
             );
             // Seeding Products
             modelBuilder.Entity<Product>().HasData(
@@ -840,9 +851,6 @@ namespace AllBirds.Context
             );
         }
 
-
-
-        
         //public int SaveChanges(bool acceptAllChangesOnSuccess, int userId)
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {

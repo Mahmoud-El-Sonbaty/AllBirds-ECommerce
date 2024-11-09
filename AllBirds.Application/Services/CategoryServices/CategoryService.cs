@@ -29,7 +29,7 @@ namespace AllBirds.Application.Services.CategoryServices
                 {
                     resultView.IsSuccess = false;
                     resultView.Data = null;
-                    resultView.Msg = $"Category With Same Name ({entity.NameEn}) Already Exist";
+                    resultView.Msg = $"Category With Same Name ({entity.NameEn}/{entity.NameAr}) Already Exist";
                 }
                 else
                 {
@@ -83,6 +83,13 @@ namespace AllBirds.Application.Services.CategoryServices
                     return resultView;
                 }
                 // modifications by sonbaty
+                else if ((await categoryRepository.GetAllAsync()).Any(c => c.Id != entity.Id && c.NameEn == entity.NameEn || c.NameAr == entity.NameAr))
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = $"Category With Name ({entity.NameEn}/{entity.NameAr}) Exists Before";
+                    return resultView;
+                }
                 if (entity.ParentCategoryId != 0)
                 {
                     Category? parentCategory = (await categoryRepository.GetAllAsync()).FirstOrDefault(c => c.Id == entity.ParentCategoryId);
@@ -117,38 +124,39 @@ namespace AllBirds.Application.Services.CategoryServices
             }
         }
 
-        public async Task<ResultView<List<GetAllCategoryDTO>>> GetAllAsync()
+        public async Task<ResultView<List<GetAllCategoryDTO>>> GetAllAsync(bool onlyParents = false)
         {
             ResultView<List<GetAllCategoryDTO>> resultView = new();
             try
             {
-                List<Category> allCats = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
-                List<GetAllCategoryNestedDTO> result = new();
-                List<Category> grandParents = allCats.Where(c => c.ParentCategoryId == 0).ToList();
-                foreach (Category parent in grandParents)
-                {
-                    GetAllCategoryNestedDTO mappedObj = new();
-                    mappedObj.Id = parent.Id;
-                    mappedObj.NameAr = parent.NameAr;
-                    mappedObj.NameEn = parent.NameEn;
-                    mappedObj.Level = parent.Level;
-                    mappedObj.IsParentCategory = parent.IsParentCategory;
-                    mappedObj.ParentCategoryId = parent.ParentCategoryId;
-                    //mappedObj.Children = parent.IsParentCategory ? test(allCats.Where(ch => ch.ParentCategoryId == parent.Id).ToList(), parent) : [];
-                    mappedObj.Children = [];
-                    if (parent.IsParentCategory)
-                    {
-                        mappedObj.Children = test(allCats, parent.Id);
-                    }
-                    result.Add(mappedObj);
-                }
-                var jsonResult = JsonSerializer.Serialize(result);
-
-                Console.WriteLine(jsonResult);
+                //List<Category> allCats = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
+                //List<GetAllCategoryNestedDTO> result = new();
+                //List<Category> grandParents = allCats.Where(c => c.ParentCategoryId == 0).ToList();
+                //foreach (Category parent in grandParents)
+                //{
+                //    GetAllCategoryNestedDTO mappedObj = new();
+                //    mappedObj.Id = parent.Id;
+                //    mappedObj.NameAr = parent.NameAr;
+                //    mappedObj.NameEn = parent.NameEn;
+                //    mappedObj.Level = parent.Level;
+                //    mappedObj.IsParentCategory = parent.IsParentCategory;
+                //    mappedObj.ParentCategoryId = parent.ParentCategoryId;
+                //    //mappedObj.Children = parent.IsParentCategory ? test(allCats.Where(ch => ch.ParentCategoryId == parent.Id).ToList(), parent) : [];
+                //    mappedObj.Children = [];
+                //    if (parent.IsParentCategory)
+                //    {
+                //        mappedObj.Children = test(allCats, parent.Id);
+                //    }
+                //    result.Add(mappedObj);
+                //}
 
 
                 //================================================================================================
-                List<Category> successCategorys = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
+                List<Category> successCategorys;
+                if (onlyParents)
+                    successCategorys = [.. (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted && a.IsParentCategory == true).OrderByDescending(c => c.Created)];
+                else
+                    successCategorys = [.. (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).OrderByDescending(c => c.Created)];
                 List<GetAllCategoryDTO> successCategorySDTO = mapper.Map<List<GetAllCategoryDTO>>(successCategorys);
                 resultView.IsSuccess = true;
                 resultView.Data = successCategorySDTO;
@@ -248,26 +256,36 @@ namespace AllBirds.Application.Services.CategoryServices
                     bool dependentCats = (await categoryRepository.GetAllAsync()).Any(c => c.ParentCategoryId == id);
                     if (dependentCats)
                     {
-                        successCategory.IsDeleted = true;
-                        resultView.Msg = $"Category {successCategory.NameEn} Was Soft Deleted As There Are Categories That Depend On It";
+                        //successCategory.IsDeleted = true;
+                        resultView.IsSuccess = false;
+                        resultView.Data = null;
+                        resultView.Msg = $"Category {successCategory.NameEn} Couldn't Be Deleted As There Are Categories That Depend On It";
+                    }
+                    else if ((await categoryRepository.GetAllAsync()).Any(c => c.Id == id && c.Products.Any(p => p.CategoryId == c.Id)))
+                    {
+                        //var tet = (await categoryRepository.GetAllAsync()).Any(c => c.Id == id && c.Products.Any(p => p.CategoryId == c.Id));
+                        //var tet2 = (await categoryRepository.GetAllAsync()).Any(c => c.Products.Count > 0);
+                        resultView.IsSuccess = false;
+                        resultView.Data = null;
+                        resultView.Msg = $"Category {successCategory.NameEn} Couldn't Be Deleted As There Are Produccts That Depend On It";
                     }
                     else
                     {
                         Category successCategory2 = await categoryRepository.DeleteAsync(successCategory);
+                        await categoryRepository.SaveChangesAsync();
+                        GetOneCategoryDTO successCategoryDTO = mapper.Map<GetOneCategoryDTO>(successCategory2);
+                        resultView.IsSuccess = true;
+                        resultView.Data = successCategoryDTO;
                         resultView.Msg = $"Category {successCategory.NameEn} Was Hard Deleted Successfully";
                     }
-                    await categoryRepository.SaveChangesAsync();
-                    GetOneCategoryDTO successCategoryDTO = mapper.Map<GetOneCategoryDTO>(successCategory);
-                    resultView.IsSuccess = true;
-                    resultView.Data = successCategoryDTO;
-                    return resultView;
+                    //return resultView;
                 }
                 else
                 {
                     resultView.IsSuccess = false;
                     resultView.Data = null;
                     resultView.Msg = $"category {successCategory.NameEn} is not found";
-                    return resultView;
+                    //return resultView;
                 }
             }
             catch (Exception ex)
@@ -275,8 +293,8 @@ namespace AllBirds.Application.Services.CategoryServices
                 resultView.IsSuccess = false;
                 resultView.Data = null;
                 resultView.Msg = $"Error Happen While find Category " + ex.Message;
-                return resultView;
             }
+            return resultView;
         }
 
         public Task<int> SaveChangesAsync()

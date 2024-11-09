@@ -10,8 +10,9 @@ namespace AllBirds.Application.Services.OrderDetailServices
 {
     public interface IOrderDetailService
     {
-        public Task<ResultView<CreateOrderDetailsDTO>> CreateAsync(CreateOrderDetailsDTO createOrderMDTo);
-        public Task<ResultView<CreateOrderDetailsDTO>> UpdateAsync(CreateOrderDetailsDTO createOrderMDTo);
+        public Task<ResultView<CreateOrderDetailDTO>> CreateAsync(CreateOrderDetailDTO createOrderMDTo);
+        public Task<ResultView<CreateOrderDetailDTO>> UpdateAsync(CreateOrderDetailDTO createOrderMDTo);
+        public Task<ResultView<CreateOrderDetailDTO>> UpdataQuantityAsync(int detailId, int newQuantity);
         public Task<ResultView<GetOneOrderDetailsDTO>> SoftDeleteAsync(int OrderID);
         public Task<ResultView<GetOneOrderDetailsDTO>> HardDeleteAsync(int OrderID);
         public Task<ResultView<List<GetAllOrderDetailsDTO>>> GetAllAsync();

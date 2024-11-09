@@ -1,8 +1,11 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.CategoryProductServices;
+using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductColorImageDTOs;
 using AllBirds.DTOs.ProductColorSizeDTOs;
+using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductDTOs;
+using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
 using AllBirds.DTOs.SpecificationDTOs;
 using AllBirds.Models;
@@ -111,7 +114,6 @@ namespace AllBirds.Application.Services.ProductServices
                 resultView.Msg = $"Product {productId} Not Found";
             }
             return resultView;
-
         }
 
         public async Task<ResultView<CUProductDTO>> HardDeleteAsync(int productId)
@@ -562,9 +564,6 @@ namespace AllBirds.Application.Services.ProductServices
                 }
 
 
-            }
-            return resultView;
 
-        }
     }
 }
