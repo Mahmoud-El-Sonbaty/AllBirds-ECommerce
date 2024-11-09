@@ -19,6 +19,7 @@ namespace AllBirds.Application.Services.ProductServices
         public Task<ResultView<List<ProductCardDTO>>> GetAllPrdCatIdAsync( int CatId);
         public Task<ResultView<List<ProductCardDTO>>> ProductFilterationAsync(TypeFilterOfProductDTO typeFilterOfProductDTO);
         public Task<ResultView<List<ProductSearchDTOWithLang>>> GetProductSearchAsync(string PrdName , string Lang);
+        public Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id);
 
 
 

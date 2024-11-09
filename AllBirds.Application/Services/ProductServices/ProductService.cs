@@ -566,6 +566,79 @@ namespace AllBirds.Application.Services.ProductServices
             return resultView;
         }
 
+        public async Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id)
+        {
+            ResultView<SingleProductAPIWithLangDTO> resultView = new();
+            try
+            {
+                SingleProductAPIWithLangDTO? fullPrd = (await productrepoistory.GetAllAsync()).Where(p => p.Id == id).Select(p => new SingleProductAPIWithLangDTO()
+                {
+                    Id = p.Id,
+                    Name = p.NameEn,
+                    Price = p.Price,
+                    Discount = p.Discount,
+                    FreeShipping = p.FreeShipping,
+                    Highlights = p.HighlightsEn,
+                    Sustainability = p.SustainabilityEn,
+                    SustainableMaterials = p.SustainableMaterialsEn,
+                    CareGuide = p.CareGuideEn,
+                    ShippingAndReturns = p.ShippingAndReturnsEn,
+                    MainColorId = p.MainColorId,
+                    PrdColors = p.AvailableColors.Select(ac => new GetPrdColorAPIWithLangDTO()
+                    {
+                        PrdColorId = ac.Id,
+                        ColorName = ac.Color.NameEn,
+                        MainImageId = ac.MainImageId,
+                        PrdColorImages = ac.Images.Select(i => new GetPrdColorImgAPIWithLangDTO()
+                        {
+                            PrdColorImageId = i.Id,
+                            ImagePath = i.ImagePath
+                        }).ToList(),
+                        PrdColorSizes = ac.AvailableSizes.Select(s => new GetPCSDTO()
+                        {
+                            ProductColorSizeId = s.Id,
+                            SizeNumber = s.Size.SizeNumber,
+                            UnitsInStock = s.UnitsInStock
+                        }).ToList()
+                    }).ToList(),
+                    Specifications = p.Specifications.Select(s => new GetSpecAPIWithLangDTO()
+                    {
+                        SpecId = s.Id,
+                        Name = s.Specification.NameEn,
+                        Content = s.ContentEn
+                    }).ToList(),
+                    Details = p.Details.Select(d => new GetPrdDetailsAPIWithLangDTO()
+                    {
+                        PrdDetailId = d.Id,
+                        Title = d.TitleEn,
+                        Description = d.DescriptionEn,
+                        ImagePath = d.ImagePath
+                    }).ToList()
+                }).FirstOrDefault();
+                if (fullPrd is not null)
+                {
+                    resultView.IsSuccess = true;
+                    resultView.Data = fullPrd;
+                    resultView.Msg = $"Product ({fullPrd.Name}) Fetched Successfully";
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = "This Product Was Not Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Fetcheing Product Id ({id}), {ex.Message}";
+            }
+            return resultView;
+        }
+
+
+
 
 
     }
