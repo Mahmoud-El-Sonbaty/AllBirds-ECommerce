@@ -41,7 +41,6 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         }
 
 
-
     }
 
 }

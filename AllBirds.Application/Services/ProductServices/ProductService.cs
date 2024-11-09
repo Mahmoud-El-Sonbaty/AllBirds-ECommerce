@@ -541,26 +541,27 @@ namespace AllBirds.Application.Services.ProductServices
                     Id = P.Id,
                     Name = P.NameAr,
                     Price = P.Price,
-                    ColorName = P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId).Color.NameEn,
+                    ColorName = P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId).Color.NameAr,
                     MainImagePath = P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId)
                    .Images.FirstOrDefault(img => img.Id == P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId).MainImageId).ImagePath
                 })];
+                    if (productCardDTOs.Count > 0 && productCardDTOs != null)
+                    {
+                        resultView.Data = productCardDTOs;
+                        resultView.IsSuccess = true;
+                        resultView.Msg = "Products Fetched Successfull";
+
+                    }
+                    else
+                    {
+                        resultView.Data = null;
+                        resultView.IsSuccess = false;
+                        resultView.Msg = $"لا يوجد منتج بهذا الأسم {PrdName} معذره";
+                    }
 
                 }
 
-                if (productCardDTOs.Count > 0 && productCardDTOs != null)
-                {
-                    resultView.Data = productCardDTOs;
-                    resultView.IsSuccess = true;
-                    resultView.Msg = "Products Fetched Successfull";
 
-                }
-                else
-                {
-                    resultView.Data = null;
-                    resultView.IsSuccess = false;
-                    resultView.Msg = $"Sorry, there are no results for {PrdName}";
-                }
             }
             return resultView;
 
