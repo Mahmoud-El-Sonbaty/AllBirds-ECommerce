@@ -16,14 +16,17 @@ namespace AllBirds.Application.Services.AccountServices
     public class AccountService : IAccountService
     {
         private readonly IAccountRoleRepository accountRoleRepository;
+        private readonly IOrderMasterRepository orderMasterRepository;
         private readonly UserManager<CustomUser> userManager;
         private readonly SignInManager<CustomUser> signInManager;
         private readonly RoleManager<IdentityRole<int>> roleManager;
         private readonly IMapper mapper;
-        public AccountService(IAccountRoleRepository _accountRoleRepository, UserManager<CustomUser> _userManager, SignInManager<CustomUser> _signInManager,
+        public AccountService(IAccountRoleRepository _accountRoleRepository, IOrderMasterRepository _orderMasterRepository,
+            UserManager<CustomUser> _userManager, SignInManager<CustomUser> _signInManager,
             RoleManager<IdentityRole<int>> _roleManager, IMapper _mapper)
         {
             this.accountRoleRepository = _accountRoleRepository;
+            this.orderMasterRepository = _orderMasterRepository;
             this.signInManager = _signInManager;
             this.userManager = _userManager;
             this.roleManager = _roleManager;
@@ -204,6 +207,69 @@ namespace AllBirds.Application.Services.AccountServices
             return resultView;
         }
 
+        public async Task<ResultView<CUAccountDTO>> DeleteAsync(int userId)
+        {
+            ResultView<CUAccountDTO> resultView = new();
+            try
+            {
+                CustomUser? findUser = await userManager.FindByIdAsync($"{userId}");
+                if (findUser is not null)
+                {
+                    if ((await orderMasterRepository.GetAllAsync()).Any(om => om.ClientId == findUser.Id))
+                    {
+                        resultView.IsSuccess = false;
+                        resultView.Data = null;
+                        List<IdentityUserRole<int>> userRoles = [.. (await accountRoleRepository.GetAllAccountRolesAsync()).Where(iur => iur.RoleId != 4)];
+                        if (userRoles.Count != 0)
+                        {
+                            foreach (IdentityUserRole<int> role in userRoles)
+                            {
+                                await accountRoleRepository.DeleteAsync(role);
+                            }
+                        }
+                        resultView.Msg = $"Cannot Delete Admin ({findUser.FirstName ?? findUser.UserName} {findUser.LastName ?? ""}) Because Of His/Her Orders Made Before, We Removed His/Her Role Instead";
+                    }
+                    IdentityResult deleteUser = await userManager.DeleteAsync(findUser);
+                    if (deleteUser.Succeeded)
+                    {
+                        resultView.IsSuccess = true;
+                        resultView.Data = mapper.Map<CUAccountDTO>(findUser);
+                        resultView.Msg = $"Admin {findUser.FirstName ?? findUser.UserName} {findUser.LastName ?? ""} Deleted Successfully";
+                    }
+                    else
+                    {
+                        resultView.IsSuccess = false;
+                        resultView.Data = null;
+                        if (deleteUser.Errors.Any())
+                        {
+                            StringBuilder stringBuilder = new StringBuilder();
+                            foreach (IdentityError err in deleteUser.Errors)
+                            {
+                                stringBuilder.Append(err.Description + ',');
+                            }
+                            resultView.Msg = $"Couldn't Delete Admin {findUser.FirstName ?? findUser.UserName} {findUser.LastName ?? ""} Because Of The Following Errors: {stringBuilder}";
+                        }
+                        else
+                        {
+                            resultView.Msg = $"Couldn't Delete Admin {findUser.FirstName ?? findUser.UserName} {findUser.LastName ?? ""}";
+                        }
+                    }
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = $"User With Id ({userId}) Not Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Deleting User With Id ({userId}), {ex.Message}";
+            }
+            return resultView;
+        }
         // For API
         public async Task<ResultView<ClientRegisterDTO>> RegisterAsync(ClientRegisterDTO cUAccountDTO)
         {
@@ -296,5 +362,6 @@ namespace AllBirds.Application.Services.AccountServices
         {
             await signInManager.SignOutAsync();
         }
+
     }
 }

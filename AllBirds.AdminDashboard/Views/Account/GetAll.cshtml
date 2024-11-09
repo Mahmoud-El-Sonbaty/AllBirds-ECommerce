@@ -38,14 +38,17 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">All @Context.Request.Query["role"]s</h3>
-                <p class="card-description">
-                    <a class="btn btn-primary" asp-controller="Account" asp-action="Register"><i class="fas fa-plus"></i> New</a>
-                </p>
+                @if (Context.Request.Query["role"] == "admin")
+                {
+                    <p class="card-description">
+                        <a class="btn btn-primary" asp-controller="Account" asp-action="AddModerator"><i class="fas fa-plus"></i> New Admin</a>
+                    </p>    
+                }
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th> User </th>
+                                @* <th> User </th> *@
                                 <th> First name </th>
                                 <th> Last name </th>
                                 <th> Username </th>
@@ -53,7 +56,10 @@
                                 <th> Email Confirmed </th>
                                 <th> PhoneNumber </th>
                                 <th> PhoneNumber Confirmed </th>
-                                <th> Actions </th>
+                                @if (Context.Request.Query["role"] == "admin")
+                                {
+                                    <th> Actions </th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -62,11 +68,11 @@
                                 @foreach(GetAllAdminsDTO adminDTO in Model)
                                 {
                                     <tr>
-                                        <td class="py-1">
+                                        @* <td class="py-1">
                                             <img src="@adminDTO.ImagePath" alt="image" />
-                                        </td>
-                                        <td> @adminDTO.FirstName??NA </td>
-                                        <td> @adminDTO.LastName??NA </td>
+                                        </td> *@
+                                        <td> @adminDTO.FirstName </td>
+                                        <td> @adminDTO.LastName </td>
                                         <td> @adminDTO.UserName </td>
                                         <td> @adminDTO.Email </td>
                                         @{
@@ -90,11 +96,14 @@
                                                 <td> <lablel class="badge badge-danger">Unconfirmed</lablel> </td>
                                             }
                                         }
-                                        <td>
-                                            <a type="button" asp-action="Details" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                            <a type="button" asp-action="Update" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
-                                            <a type="button" asp-action="Delete" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
-                                        </td>
+                                        @if (Context.Request.Query["role"] == "admin")
+                                        {
+                                            <td>
+                                                @* <a type="button" asp-action="Details" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a> *@
+                                                @* <a type="button" asp-action="Update" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a> *@
+                                                <a type="button" asp-action="DeleteAdmin" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                            </td>
+                                        }
                                     </tr>                                    
                                 }
                             }
