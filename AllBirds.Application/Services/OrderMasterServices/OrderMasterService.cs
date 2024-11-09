@@ -307,6 +307,12 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     resultView.Data = orderMaster2;
                     resultView.Msg = $"Cart For User {userId} Was Found";
                 }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = $"No Cart Found For This Client";
+                }
             }
             catch (Exception ex)
             {

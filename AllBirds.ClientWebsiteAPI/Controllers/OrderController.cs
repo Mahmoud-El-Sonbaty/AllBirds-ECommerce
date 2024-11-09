@@ -26,7 +26,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetUserCart()
-        {
+       {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
             if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
             {
@@ -34,13 +34,12 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 if (userCart.IsSuccess)
                     return Ok(userCart);
                 else
-                    return NotFound();
+                    return NotFound(userCart.Msg);
             }
             else
             {
                 return Unauthorized("Invalid token or user ID");
             }
-
         }
 
         [Authorize]
