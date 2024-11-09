@@ -21,7 +21,7 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync();
+            ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync(onlyParents: true);
             ViewBag.getAllCategoryDTOs = getAllCategoryDTOs.Data;
             return View();
         }
@@ -49,10 +49,20 @@ namespace AllBirds.AdminDashboard.Controllers
                 ResultView<CUCategoryDTO> resultView = await categoryService.CreateAsync(cUCategoryDTO);
 
                 // here we need to check if the result is success and do different things accordingly
+                TempData.Add("IsSuccess", resultView.IsSuccess);
+                TempData.Add("Msg", resultView.Msg);
+                if (!resultView.IsSuccess)
+                {
+                    ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync(onlyParents: true);
+                    ViewBag.getAllCategoryDTOs = getAllCategoryDTOs.Data;
+                    return View(cUCategoryDTO);
+                }
                 return RedirectToAction("GetAll");
             }
             else
             {
+                ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync(onlyParents: true);
+                ViewBag.getAllCategoryDTOs = getAllCategoryDTOs.Data;
                 return View(cUCategoryDTO);
             }
         }
@@ -61,7 +71,7 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> Update(int id)
         {
             ////to make chose parent catgory
-            ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync();
+            ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync(onlyParents: true);
             ViewBag.getAllCategoryDTOs = getAllCategoryDTOs.Data;
             //
             ResultView<CUCategoryDTO> ResultView = await categoryService.GetOneAsync(id);
@@ -97,10 +107,20 @@ namespace AllBirds.AdminDashboard.Controllers
                 ResultView<CUCategoryDTO> resultView = await categoryService.UpdateAsync(cUCategoryDTO);
 
                 // here we need to check if the result is success and do different things accordingly
+                TempData.Add("IsSuccess", resultView.IsSuccess);
+                TempData.Add("Msg", resultView.Msg);
+                if (!resultView.IsSuccess)
+                {
+                    ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync(onlyParents: true);
+                    ViewBag.getAllCategoryDTOs = getAllCategoryDTOs.Data;
+                    return View(cUCategoryDTO);
+                }
                 return RedirectToAction("GetAll");
             }
             else
             {
+                ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync(onlyParents: true);
+                ViewBag.getAllCategoryDTOs = getAllCategoryDTOs.Data;
                 return View(cUCategoryDTO);
             }
         }
@@ -109,6 +129,11 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> GetAll()
         {
             ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync();
+            if (!getAllCategoryDTOs.IsSuccess)
+            {
+                TempData.Add("IsSuccess", false);
+                TempData.Add("Msg", getAllCategoryDTOs.Msg);
+            }
             return View(getAllCategoryDTOs.Data);
         }
 
@@ -116,6 +141,8 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             ResultView<GetOneCategoryDTO> deletCategory = await categoryService.DeleteAsync(id);
+            TempData.Add("IsSuccess", deletCategory.IsSuccess);
+            TempData.Add("Msg", deletCategory.Msg);
             return RedirectToAction("GetAll");
         }
 
