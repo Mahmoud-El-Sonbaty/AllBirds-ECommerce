@@ -49,11 +49,17 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                ResultView<CreateOrderMasterDTO> createdOrderMaster = await orderMasterService.CreateAsync(createOrderMasterDTO);
-                if (createdOrderMaster.IsSuccess)
-                    return Ok(createdOrderMaster);
-                else
-                    return BadRequest(createdOrderMaster.Msg);
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+                if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    createOrderMasterDTO.ClientId = userId;
+                    ResultView<CreateOrderMasterDTO> createdOrderMaster = await orderMasterService.CreateAsync(createOrderMasterDTO);
+                    if (createdOrderMaster.IsSuccess)
+                        return Ok(createdOrderMaster);
+                    else
+                        return BadRequest(createdOrderMaster.Msg);
+                }
+                return Unauthorized();
             }
             return NotFound();
         }
@@ -64,11 +70,17 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ResultView<CreateOrderMasterDTO> updatedOrderMaster = await orderMasterService.UpdateAsync(createOrderMasterDTO);
-                if (updatedOrderMaster.IsSuccess)
-                    return Ok(updatedOrderMaster);
-                else
-                    return BadRequest(updatedOrderMaster.Msg);
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+                if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    createOrderMasterDTO.ClientId = userId;
+                    ResultView<CreateOrderMasterDTO> createdOrderMaster = await orderMasterService.UpdateAsync(createOrderMasterDTO);
+                    if (createdOrderMaster.IsSuccess)
+                        return Ok(createdOrderMaster);
+                    else
+                        return BadRequest(createdOrderMaster.Msg);
+                }
+                return Unauthorized();
             }
             return NotFound();
         }

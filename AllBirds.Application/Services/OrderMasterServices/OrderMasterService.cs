@@ -77,7 +77,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                 }
                 else
                 {
-                    var gg = createOrderMDTo.ProductColorSizeId.Select(p => $"{p.ProductId}{p.Quantity}{(int)p.DetailPrice}");
+                    //var gg = createOrderMDTo.ProductColorSizeId.Select(p => $"{p.ProductId}{p.Quantity}{(int)p.DetailPrice}");
                     OrderMaster mapedorder = mapper.Map<OrderMaster>(createOrderMDTo);
                     if (createOrderMDTo.ProductColorSizeId is not null)
                     {
