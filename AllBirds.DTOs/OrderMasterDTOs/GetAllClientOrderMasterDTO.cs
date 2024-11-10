@@ -10,6 +10,7 @@ namespace AllBirds.DTOs.OrderMasterDTOs
     public class GetAllClientOrderMasterDTO
     {
         public int Id { get; set; } = 0;
+        public string OrderNo { get; set; }
         public int ClientId { get; set; } = 0;
         public string? ClientName { get; set; }
         public string? ClientAddress { get; set; }

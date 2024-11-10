@@ -1,8 +1,10 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.CategoryProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
+using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductColorImageDTOs;
 using AllBirds.DTOs.ProductColorSizeDTOs;
+using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
@@ -17,14 +19,14 @@ namespace AllBirds.Application.Services.ProductServices
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository productrepoistory;
+        private readonly IProductRepository productRepoistory;
         private readonly ICategoryProductService categoryProductService;
         public IMapper mapper;
         private readonly IProductSpecificationService productSpecificationRepo;
 
         public ProductService(IProductRepository _productRepository, IMapper _mapper, ICategoryProductService _categoryProductService, IProductSpecificationService _productSpecificationRepo)
         {
-            productrepoistory = _productRepository;
+            productRepoistory = _productRepository;
             mapper = _mapper;
             categoryProductService = _categoryProductService;
 
@@ -35,7 +37,7 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<CUProductDTO> resultView = new();
             try
             {
-                bool productExist = (await productrepoistory.GetAllAsync()).Any(p => p.Id == cUProductDTO.Id || p.ProductNo == cUProductDTO.ProductNo);
+                bool productExist = (await productRepoistory.GetAllAsync()).Any(p => p.Id == cUProductDTO.Id || p.ProductNo == cUProductDTO.ProductNo);
                 if (productExist)
                 {
                     resultView.IsSuccess = false;
@@ -44,10 +46,10 @@ namespace AllBirds.Application.Services.ProductServices
                     return resultView;
                 }
                 Product mappedProduct = mapper.Map<Product>(cUProductDTO);
-                Product createdProduct = await productrepoistory.CreateAsync(mappedProduct);
+                Product createdProduct = await productRepoistory.CreateAsync(mappedProduct);
                 if (createdProduct is not null) // would it ever be null ?
                 {
-                    await productrepoistory.SaveChangesAsync();
+                    await productRepoistory.SaveChangesAsync();
                     CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(createdProduct);
                     resultView.IsSuccess = true;
                     resultView.Data = mappedCUProductDTO;
@@ -77,7 +79,7 @@ namespace AllBirds.Application.Services.ProductServices
             //        .ThenInclude(pc => pc.Color)
             //    .Include(p => p.AvailableColors)
             //        .ThenInclude(pc => pc.Images)];
-            List<GetAllProductDTO> getAllPrds = [.. (await productrepoistory.GetAllAsync()).Select(p => new GetAllProductDTO()
+            List<GetAllProductDTO> getAllPrds = [.. (await productRepoistory.GetAllAsync()).Select(p => new GetAllProductDTO()
             {
                 Id = p.Id,
                 ProductNo = p.ProductNo,
@@ -102,7 +104,7 @@ namespace AllBirds.Application.Services.ProductServices
         public async Task<ResultView<CUProductDTO>> GetByIdAsync(int productId)
         {
             ResultView<CUProductDTO> resultView = new();
-            Product? getProduct = (await productrepoistory.GetAllAsync()).Include(p => p.Categories).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
+            Product? getProduct = (await productRepoistory.GetAllAsync()).Include(p => p.Categories).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
             if (getProduct is not null)
             {
                 CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
@@ -123,11 +125,11 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<CUProductDTO> resultView = new();
             try
             {
-                Product? getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId);
+                Product? getProduct = (await productRepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId);
                 if (getProduct is not null)
                 {
-                    Product deletedPrd = await productrepoistory.DeleteAsync(getProduct);
-                    int saveStatus = await productrepoistory.SaveChangesAsync();
+                    Product deletedPrd = await productRepoistory.DeleteAsync(getProduct);
+                    int saveStatus = await productRepoistory.SaveChangesAsync();
                     //if (saveStatus > 0)
                     //{
                     CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
@@ -164,7 +166,7 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<CUProductDTO> resultView = new();
             try
             {
-                Product? getProduct = (await productrepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId);
+                Product? getProduct = (await productRepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId);
                 if (getProduct is not null)
                 {
                     CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
@@ -177,7 +179,7 @@ namespace AllBirds.Application.Services.ProductServices
                     else
                     {
                         getProduct.IsDeleted = true;
-                        int saveStatus = await productrepoistory.SaveChangesAsync();
+                        int saveStatus = await productRepoistory.SaveChangesAsync();
                         //if (saveStatus > 0)
                         //{
                         resultView.IsSuccess = true;
@@ -214,18 +216,18 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<CUProductDTO> resultView = new();
             try
             {
-                bool CheckPrdExist = (await productrepoistory.GetAllAsync()).Any(P => P.Id == cUProductDTO.Id && !P.IsDeleted);
+                bool CheckPrdExist = (await productRepoistory.GetAllAsync()).Any(P => P.Id == cUProductDTO.Id && !P.IsDeleted);
                 if (CheckPrdExist)
                 {
                     Product prdUpdat = mapper.Map<Product>(cUProductDTO);
-                    Product prdUpdated = await productrepoistory.UpdateAsync(prdUpdat);
+                    Product prdUpdated = await productRepoistory.UpdateAsync(prdUpdat);
                     //var prdCats = await categoryProductService.ge
                     /*foreach (int catId in cUProductDTO.CategoriesId)
                     {
                         var cat = new CategoryProduct() {  CategoryId = catId, ProductId = cUProductDTO.Id };
                         //ICategoryRepository.createAsync(cat)
                     }*/
-                    await productrepoistory.SaveChangesAsync();
+                    await productRepoistory.SaveChangesAsync();
                     CUProductDTO mappedUpdatedPrd = mapper.Map<CUProductDTO>(prdUpdated);
                     resultView.IsSuccess = true;
                     resultView.Data = mappedUpdatedPrd;
@@ -307,7 +309,7 @@ namespace AllBirds.Application.Services.ProductServices
             {
                 List<ProductCardDTO> productCardDTOs = new();
 
-                List<Product> filteredProducts = (await productrepoistory.GetAllAsync()).Include(p => p.Categories)
+                List<Product> filteredProducts = (await productRepoistory.GetAllAsync()).Include(p => p.Categories)
                     .Include(P => P.AvailableColors).ThenInclude(P => P.Images).Include(P => P.AvailableColors).ThenInclude(P => P.Color).Include(P => P.AvailableColors).ThenInclude(P => P.AvailableSizes).ThenInclude(P => P.Size)
                     .Where(p => p.Categories.Any(c => c.CategoryId == CatId)).ToList();
 
@@ -374,7 +376,7 @@ namespace AllBirds.Application.Services.ProductServices
             List<ProductCardDTO> productCardDTOs = new();
             if (typeFilterOfProductDTO.colorCode != null || typeFilterOfProductDTO.sizeNumber != null)
             {
-                List<Product> products = (await productrepoistory.GetAllAsync()).Include(p => p.Categories)
+                List<Product> products = (await productRepoistory.GetAllAsync()).Include(p => p.Categories)
                         .Include(P => P.AvailableColors).ThenInclude(P => P.Images).Include(P => P.AvailableColors).ThenInclude(P => P.Color).Include(P => P.AvailableColors).ThenInclude(P => P.AvailableSizes).ThenInclude(P => P.Size)
                         .Where(p => p.Categories.Any(c => c.CategoryId == typeFilterOfProductDTO.categoryId)).ToList();
 

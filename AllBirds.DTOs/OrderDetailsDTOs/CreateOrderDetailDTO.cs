@@ -9,9 +9,9 @@ namespace AllBirds.DTOs.OrderDetailsDTOs
 {
     public class CreateOrderDetailDTO
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = 0;
 
-        public int OrderMasterId { get; set; }
+        public int OrderMasterId { get; set; } = 0;
 
         public int ProductId { get; set; }
 
