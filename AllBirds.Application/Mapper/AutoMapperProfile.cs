@@ -83,14 +83,12 @@ namespace AllBirds.Application.Mapper
             //     .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.ProductColorSize.Size.SizeNumber))
             //     .ForMember(dest => dest.MainImage, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Images.FirstOrDefault().ImagePath));
 
-            CreateMap<OrderDetail, GetAllCartCheckoutDetailsDTO>()
-                .ForMember(dest => dest.ProductNameEn, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Product.NameEn))
-                .ForMember(dest => dest.ProductNameAr, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Product.NameAr))
-                .ForMember(dest => dest.ColorNameEn, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Color.NameEn))
-                .ForMember(dest => dest.ColorNameAr, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Color.NameAr))
-                .ForMember(dest => dest.SizeNumber, opt => opt.MapFrom(src => src.ProductColorSize.Size.SizeNumber))
-                .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Images
-                .FirstOrDefault(i => i.Id == src.ProductColorSize.ProductColor.MainImageId).ImagePath));
+            //CreateMap<OrderDetail, GetAllCartCheckoutDetailsDTO>()
+            //    .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Product.NameEn))
+            //    .ForMember(dest => dest.ColorName, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Color.NameEn))
+            //    .ForMember(dest => dest.SizeNumber, opt => opt.MapFrom(src => src.ProductColorSize.Size.SizeNumber))
+            //    .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Images
+            //    .FirstOrDefault(i => i.Id == src.ProductColorSize.ProductColor.MainImageId).ImagePath));
 
             CreateMap<OrderDetail, ProductColorSizeImageDTO>()
                 .ForMember(dest => dest.ColorNameAR, opt => opt.MapFrom(src => src.ProductColorSize.ProductColor.Color.NameAr))
