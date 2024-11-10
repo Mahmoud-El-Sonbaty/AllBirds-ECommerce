@@ -28,29 +28,26 @@ namespace AllBirds.Application.Services.OrderDetailServices
 
         public async Task<ResultView<CreateOrderDetailDTO>> CreateAsync(CreateOrderDetailDTO createOrderMDTo)
         {
-
             ResultView<CreateOrderDetailDTO> result = new();
             try
             {
-                var item = (await orderDetailRepository.GetAllAsync()).Any(b => b.Id == createOrderMDTo.Id);
-                if (item)
+                OrderDetail? item = (await orderDetailRepository.GetAllAsync()).FirstOrDefault(b => b.Id == createOrderMDTo.Id || b.OrderMaster.OrderState.StateEn != "In Cart");
+                if (item is not null)
                 {
                     result.IsSuccess = false;
                     result.Data = null;
-                    result.Msg = "the Order's item Is already Exist";
-
+                    result.Msg = item.Id == createOrderMDTo.Id ? "the Order's item Is already Exist" : $"This Order Is Not In Cart, It's State Is {item.OrderMaster.OrderState.StateEn} Instead";
                 }
                 else
                 {
                     OrderDetail mappedOrderDetails = mapper.Map<OrderDetail>(createOrderMDTo);
-                    OrderDetail createdOrderDetails = await orderDetailRepository.CreateAsync(mappedOrderDetails);
+                    OrderDetail createdOrderDetail = await orderDetailRepository.CreateAsync(mappedOrderDetails);
+                    OrderMaster orderMaster = (await orderMasterRepository.GetAllAsync()).FirstOrDefault(om => om.Id == createOrderMDTo.OrderMasterId);
+                    orderMaster.Total += mappedOrderDetails.DetailPrice;
                     await orderDetailRepository.SaveChangesAsync();
-
-
-
                     result.IsSuccess = true;
-                    result.Data = mapper.Map<CreateOrderDetailDTO>(createdOrderDetails);
-                    result.Msg = $"Order item with id {createdOrderDetails.Id} Is created Successfully ";
+                    result.Data = mapper.Map<CreateOrderDetailDTO>(createdOrderDetail);
+                    result.Msg = $"Order item with id {createdOrderDetail.Id} Is created Successfully ";
 
                 }
 

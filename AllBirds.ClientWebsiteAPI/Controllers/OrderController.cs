@@ -67,7 +67,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateOrder(CreateOrderMasterDTO createOrderMasterDTO)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
                 if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
@@ -82,6 +82,26 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 return Unauthorized();
             }
             return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost("AddOrderDetail")]
+        public async Task<IActionResult> AddOrderDetail(CreateOrderDetailDTO createOrderDetailDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+                if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    ResultView<CreateOrderDetailDTO> createdOrderDetail = await orderDetailService.CreateAsync(createOrderDetailDTO);
+                    if (createdOrderDetail.IsSuccess)
+                        return Ok(createdOrderDetail);
+                    else
+                        return BadRequest(createdOrderDetail.Msg);
+                }
+                return Unauthorized();
+            }
+            return BadRequest("validation errors");
         }
 
         [Authorize]
