@@ -257,7 +257,7 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<List<GetTopProductsDTO>> resultView = new();
             try
             {
-                List<GetTopProductsDTO> products = (await productrepoistory.GetAllAsync()).Select(sec => new GetTopProductsDTO()
+                List<GetTopProductsDTO> products = (await productRepoistory.GetAllAsync()).Select(sec => new GetTopProductsDTO()
                 {
                     NameEn = sec.NameEn,
                     NameAr = sec.NameAr,
@@ -490,7 +490,7 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<List<GetTopProductWithLangDTO>> resultView = new();
             try
             {
-                List<GetTopProductWithLangDTO> products = (await productrepoistory.GetAllAsync()).Select(sec => new GetTopProductWithLangDTO()
+                List<GetTopProductWithLangDTO> products = (await productRepoistory.GetAllAsync()).Select(sec => new GetTopProductWithLangDTO()
                 {
                     Name = (Lang == "en") ? sec.NameEn : sec.NameAr ,
                     Id = sec.Id,
@@ -542,7 +542,7 @@ namespace AllBirds.Application.Services.ProductServices
             {
                 List<GetProductCardWithlangDTO> productCardDTOs = new();
 
-                List<Product> filteredProducts = (await productrepoistory.GetAllAsync()).Include(p => p.Categories)
+                List<Product> filteredProducts = (await productRepoistory.GetAllAsync()).Include(p => p.Categories)
                     .Include(P => P.AvailableColors).ThenInclude(P => P.Images).Include(P => P.AvailableColors).ThenInclude(P => P.Color).Include(P => P.AvailableColors).ThenInclude(P => P.AvailableSizes).ThenInclude(P => P.Size)
                     .Where(p => p.Categories.Any(c => c.CategoryId == CatId)).ToList();
 
@@ -601,5 +601,9 @@ namespace AllBirds.Application.Services.ProductServices
             return resultView;
         }
 
+        public Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
