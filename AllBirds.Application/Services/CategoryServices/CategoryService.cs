@@ -248,23 +248,18 @@ namespace AllBirds.Application.Services.CategoryServices
             ResultView<GetOneCategoryDTO> resultView = new();
             try
             {
-                //Category category = mapper.Map<Category>(entity);
-                // GetOneCategoryDTO SuccessCategoryDTO = mapper.Map<GetOneCategoryDTO>(category);
                 Category? successCategory = (await categoryRepository.GetAllAsync()).FirstOrDefault(c => c.Id == id);
                 if (successCategory is not null)
                 {
                     bool dependentCats = (await categoryRepository.GetAllAsync()).Any(c => c.ParentCategoryId == id);
                     if (dependentCats)
                     {
-                        //successCategory.IsDeleted = true;
                         resultView.IsSuccess = false;
                         resultView.Data = null;
                         resultView.Msg = $"Category {successCategory.NameEn} Couldn't Be Deleted As There Are Categories That Depend On It";
                     }
                     else if ((await categoryRepository.GetAllAsync()).Any(c => c.Id == id && c.Products.Any(p => p.CategoryId == c.Id)))
                     {
-                        //var tet = (await categoryRepository.GetAllAsync()).Any(c => c.Id == id && c.Products.Any(p => p.CategoryId == c.Id));
-                        //var tet2 = (await categoryRepository.GetAllAsync()).Any(c => c.Products.Count > 0);
                         resultView.IsSuccess = false;
                         resultView.Data = null;
                         resultView.Msg = $"Category {successCategory.NameEn} Couldn't Be Deleted As There Are Products That Depend On It";
@@ -278,14 +273,12 @@ namespace AllBirds.Application.Services.CategoryServices
                         resultView.Data = successCategoryDTO;
                         resultView.Msg = $"Category {successCategory.NameEn} Was Hard Deleted Successfully";
                     }
-                    //return resultView;
                 }
                 else
                 {
                     resultView.IsSuccess = false;
                     resultView.Data = null;
                     resultView.Msg = $"category {successCategory.NameEn} is not found";
-                    //return resultView;
                 }
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
-﻿using AllBirds.Application.Services.ProductServices;
+﻿using AllBirds.Application.Services.CategoryServices;
+using AllBirds.Application.Services.ProductServices;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,17 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             if(prdResultView.IsSuccess)
                 return Ok(prdResultView);
             return BadRequest(prdResultView);
+        }
+
+        [HttpGet("GetSocks")]
+        public async Task<IActionResult> GetSocks()
+        {
+            ResultView<List<ProductCardDTO>> productCardDTOs = await productService.GetAllPrdCatIdAsync(34);
+            if (productCardDTOs.IsSuccess)
+                return Ok(productCardDTOs);
+            return BadRequest(productCardDTOs);
+
+
         }
     }
 

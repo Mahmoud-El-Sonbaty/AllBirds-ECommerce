@@ -322,9 +322,9 @@ namespace AllBirds.Application.Services.OrderMasterServices
             return resultView;
         }
 
-        public async Task<ResultView<GetOneOrderMasterDTO>> HardDeleteAsync(int OrderID)
+        public async Task<ResultView<CreateOrderMasterDTO>> HardDeleteAsync(int OrderID)
         {
-            ResultView<GetOneOrderMasterDTO> result = new();
+            ResultView<CreateOrderMasterDTO> result = new();
             try
             {
                 OrderMaster order = (await orderMasterRepository.GetAllAsync()).FirstOrDefault(b => b.Id == OrderID);
@@ -333,7 +333,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     OrderMaster deletedOrderMaster = await orderMasterRepository.DeleteAsync(order);
                     await orderMasterRepository.SaveChangesAsync();
                     result.IsSuccess = true;
-                    result.Data = mapper.Map<GetOneOrderMasterDTO>(deletedOrderMaster);
+                    result.Data = mapper.Map<CreateOrderMasterDTO>(deletedOrderMaster);
                     result.Msg = $"Delete order with Id: {OrderID}  Is done  ";
                 }
                 else

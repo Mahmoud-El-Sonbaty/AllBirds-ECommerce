@@ -41,7 +41,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     issuer: configuration["jwt:Issuer"],
                     audience: configuration["jwt:Audience"],
                     claims: claims,
-                    expires: DateTime.Now.AddHours(2),
+                    expires: DateTime.Now.AddDays(2),
                     signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
                     );
                 string TokenStr = new JwtSecurityTokenHandler().WriteToken(token);

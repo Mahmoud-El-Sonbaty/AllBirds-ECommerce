@@ -204,21 +204,28 @@ namespace AllBirds.Application.Services.OrderDetailServices
             //return mapper.Map<GetOneOrderDetailsDTO>(order);
         }
 
-        public async Task<ResultView<GetOneOrderDetailsDTO>> HardDeleteAsync(int OrderID)
+        public async Task<ResultView<CreateOrderDetailDTO>> HardDeleteAsync(int OrderID)
         {
-            ResultView<GetOneOrderDetailsDTO> result = new();
+            ResultView<CreateOrderDetailDTO> result = new();
             try
             {
-                OrderDetail order = (await orderDetailRepository.GetAllAsync()).Include(od => od.OrderMaster).FirstOrDefault(b => b.Id == OrderID);
+                OrderDetail order = (await orderDetailRepository.GetAllAsync()).Include(od => od.OrderMaster.OrderDetails).FirstOrDefault(b => b.Id == OrderID);
                 if (order is not null)
                 {
                     // check if this is the last detail and delete the master
-                    order.OrderMaster.Total -= order.DetailPrice;
-                    OrderDetail deletedOrderDetail = await orderDetailRepository.DeleteAsync(order);
+                    if (order.OrderMaster.OrderDetails.Count == 1)
+                    {
+                        OrderMaster deletedOrderMaster = await orderMasterRepository.DeleteAsync(order.OrderMaster);
+                    }
+                    else
+                    {
+                        order.OrderMaster.Total -= order.DetailPrice;
+                        OrderDetail deletedOrderDetail = await orderDetailRepository.DeleteAsync(order);
+                    }
                     await orderDetailRepository.SaveChangesAsync();
                     result.IsSuccess = true;
-                    result.Data = mapper.Map<GetOneOrderDetailsDTO>(order);
-                    result.Msg = $"Delete Order's Item with Id: {OrderID}  Is done  ";
+                    result.Data = mapper.Map<CreateOrderDetailDTO>(order);
+                    result.Msg = $"Delete Order's Item with Id: {OrderID}  Is done ";
                 }
                 else
                 {
