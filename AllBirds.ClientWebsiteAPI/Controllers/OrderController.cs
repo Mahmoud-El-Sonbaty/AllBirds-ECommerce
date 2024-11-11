@@ -106,13 +106,18 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
         [Authorize]
         [HttpDelete("DeleteOrderMaster")]
-        public async Task<IActionResult> DeleteOrderMaster(int orderMasterId)
+        public async Task<IActionResult> DeleteOrderMaster()
         {
-            ResultView<CreateOrderMasterDTO> deletedOrder = await orderMasterService.HardDeleteAsync(orderMasterId);
-            if (deletedOrder.IsSuccess)
-                return Ok(deletedOrder);
-            else
-                return BadRequest(deletedOrder);
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+            if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                ResultView<CreateOrderMasterDTO> deletedOrder = await orderMasterService.HardDeleteAsync(userId);
+                if (deletedOrder.IsSuccess)
+                    return Ok(deletedOrder);
+                else
+                    return BadRequest(deletedOrder);
+            }
+            return Unauthorized();
         }
 
         [Authorize]

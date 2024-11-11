@@ -322,19 +322,19 @@ namespace AllBirds.Application.Services.OrderMasterServices
             return resultView;
         }
 
-        public async Task<ResultView<CreateOrderMasterDTO>> HardDeleteAsync(int OrderID)
+        public async Task<ResultView<CreateOrderMasterDTO>> HardDeleteAsync(int userId)
         {
             ResultView<CreateOrderMasterDTO> result = new();
             try
             {
-                OrderMaster order = (await orderMasterRepository.GetAllAsync()).FirstOrDefault(b => b.Id == OrderID);
+                OrderMaster order = (await orderMasterRepository.GetAllAsync()).FirstOrDefault(b => b.ClientId == userId && b.OrderState.StateEn == "In Cart");
                 if (order is not null)
                 {
                     OrderMaster deletedOrderMaster = await orderMasterRepository.DeleteAsync(order);
                     await orderMasterRepository.SaveChangesAsync();
                     result.IsSuccess = true;
                     result.Data = mapper.Map<CreateOrderMasterDTO>(deletedOrderMaster);
-                    result.Msg = $"Delete order with Id: {OrderID}  Is done  ";
+                    result.Msg = $"Delete order with Id: {deletedOrderMaster.Id} Is done";
                 }
                 else
                 {
@@ -347,8 +347,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
             {
                 result.IsSuccess = false;
                 result.Data = null;
-                result.Msg = $"Error Happen While Delete the Order With Id {OrderID} " + ex.Message;
-
+                result.Msg = $"Error Happen While Delete the Order With Id {userId} " + ex.Message;
             }
             return result;
         }
