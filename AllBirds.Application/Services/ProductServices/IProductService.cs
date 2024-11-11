@@ -26,7 +26,7 @@ namespace AllBirds.Application.Services.ProductServices
         public Task<ResultView<List<ProductCardDTO>>> GetAllPrdCatIdAsync( int CatId);
         public Task<ResultView<List<ProductCardDTO>>> ProductFilteration(TypeFilterOfProductDTO typeFilterOfProductDTO);
 
-        public Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id);
+        public Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id,string Lang);
 
 
         // services for localization by Ahmed Elghoul

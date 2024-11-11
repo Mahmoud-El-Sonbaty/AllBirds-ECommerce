@@ -72,10 +72,10 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         }
 
         [HttpGet]
-        [Route("SingleProduct/{id:int}")]
-        public async Task<IActionResult> GetSingleProduct(int id)
+        [Route("SingleProduct/{id:int}/{Lang:twoLetterLang}")]
+        public async Task<IActionResult> GetSingleProduct(int id,string Lang)
         {
-            ResultView<SingleProductAPIWithLangDTO> prdResultView = await productService.GetSingleProduct(id);
+            ResultView<SingleProductAPIWithLangDTO> prdResultView = await productService.GetSingleProduct(id,Lang);
             if(prdResultView.IsSuccess)
                 return Ok(prdResultView);
             return BadRequest(prdResultView);

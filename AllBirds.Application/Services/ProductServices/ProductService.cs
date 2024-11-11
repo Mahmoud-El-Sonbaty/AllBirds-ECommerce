@@ -601,7 +601,7 @@ namespace AllBirds.Application.Services.ProductServices
             return resultView;
         }
 
-        public async Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id)
+        public async Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id,string Lang)
         {
             ResultView<SingleProductAPIWithLangDTO> resultView = new();
             try
@@ -609,22 +609,22 @@ namespace AllBirds.Application.Services.ProductServices
                 SingleProductAPIWithLangDTO? fullPrd = (await productRepoistory.GetAllAsync()).Where(p => p.Id == id).Select(p => new SingleProductAPIWithLangDTO()
                 {
                     Id = p.Id,
-                    Name = p.NameEn,
+                    Name = (Lang == "en") ? p.NameEn : p.NameAr,
                     Price = p.Price,
                     Discount = p.Discount,
                     FreeShipping = p.FreeShipping,
-                    Highlights = p.HighlightsEn,
-                    Sustainability = p.SustainabilityEn,
-                    SustainableMaterials = p.SustainableMaterialsEn,
-                    CareGuide = p.CareGuideEn,
-                    ShippingAndReturns = p.ShippingAndReturnsEn,
+                    Highlights = (Lang == "en")? p.HighlightsEn:p.HighlightsAr,
+                    Sustainability = (Lang == "en") ? p.SustainabilityEn:p.SustainabilityAr,
+                    SustainableMaterials = (Lang == "en") ? p.SustainableMaterialsEn:p.SustainableMaterialsAr,
+                    CareGuide = (Lang == "en")?p.CareGuideEn:p.CareGuideAr,
+                    ShippingAndReturns = (Lang == "en")? p.ShippingAndReturnsEn:p.ShippingAndReturnsAr,
                     MainColorId = p.MainColorId,
                     ReviewsCount = p.Reviews.Count,
                     TotalRate = p.Reviews.Count > 0 ? Convert.ToInt32(Math.Ceiling(p.Reviews.Average(r => r.Rating))) : 0,
                     PrdColors = p.AvailableColors.Select(ac => new GetPrdColorAPIWithLangDTO()
                     {
                         PrdColorId = ac.Id,
-                        ColorName = ac.Color.NameEn,
+                        ColorName = (Lang == "en") ? ac.Color.NameEn:ac.Color.NameAr,
                         ColorCode = ac.Color.Code,
                         MainImageId = ac.MainImageId,
                         PrdColorImages = ac.Images.Select(i => new GetPrdColorImgAPIWithLangDTO()
@@ -642,14 +642,14 @@ namespace AllBirds.Application.Services.ProductServices
                     Specifications = p.Specifications.Select(s => new GetSpecAPIWithLangDTO()
                     {
                         SpecId = s.Id,
-                        Name = s.Specification.NameEn,
+                        Name = (Lang == "en") ? s.Specification.NameEn:s.Specification.NameAr,
                         Content = s.ContentEn
                     }).ToList(),
                     Details = p.Details.Select(d => new GetPrdDetailsAPIWithLangDTO()
                     {
                         PrdDetailId = d.Id,
                         Title = d.TitleEn,
-                        Description = d.DescriptionEn,
+                        Description = (Lang == "en") ? d.DescriptionEn:d.DescriptionAr,
                         ImagePath = d.ImagePath
                     }).ToList()
                 }).FirstOrDefault();
