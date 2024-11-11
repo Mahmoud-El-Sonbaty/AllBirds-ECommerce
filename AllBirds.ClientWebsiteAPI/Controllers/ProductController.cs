@@ -51,7 +51,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
 
         [HttpGet]
-        [Route("product/{CatId:int}/{numberofProduct:int}/{Lang:twoLetterLang}")]
+        [Route("{CatId:int}/{numberofProduct:int}/{Lang:twoLetterLang}")]
 
         public async Task<IActionResult> GetNOfProductByCatIdWithlang(int CatId, int numberofProduct ,string Lang)
         {
