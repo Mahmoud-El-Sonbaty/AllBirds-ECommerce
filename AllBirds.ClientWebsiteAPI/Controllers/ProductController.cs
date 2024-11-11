@@ -1,4 +1,5 @@
-﻿using AllBirds.Application.Services.ProductServices;
+﻿using AllBirds.Application.Services.CategoryServices;
+using AllBirds.Application.Services.ProductServices;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +12,11 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService productService;
-        public ProductController(IProductService _productService)
+        private readonly ICategoryService categoryService;
+        public ProductController(IProductService _productService , ICategoryService _categoryService)
         {
             productService = _productService;
+        categoryService = _categoryService;
         }
 
         [HttpGet]
@@ -23,7 +26,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             ResultView<List<ProductCardDTO>> productCardDTOs = await productService.GetAllPrdCatIdAsync(CatId);
             return Ok(productCardDTOs);
         }
-
+      
         [HttpPost("filter")]
         public async Task<IActionResult> getProductFilter( TypeFilterOfProductDTO typeFilterOfProductDTO)
         {
@@ -32,6 +35,23 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return Ok(productCardDTOs);
         }
 
+          [HttpGet]
+        public async Task<IActionResult> GetSocks()
+        {
+
+            var cat = await categoryService.GetAllAsync();
+            foreach (var item in cat.Data)
+            {
+                if (item.NameEn == "Socks") {
+                    ResultView<List<ProductCardDTO>> productCardDTOs = await productService.GetAllPrdCatIdAsync(item.Id);
+                    return Ok(productCardDTOs);
+
+                }
+            }
+            return Ok(null);
+
+
+        }
 
 
     }

@@ -1,6 +1,6 @@
 ﻿@model CUCategoryDTO;
 @{
-    ViewData["Title"] = "CategiryDetils";
+     ViewData["Title"] = "CategiryDetils";
 }
 @section Navbar {
 
@@ -14,13 +14,13 @@
 
     <partial name="_FooterPartial" />
 }
-<h1>CategoryDetils</h1>
+@* <h1>Category Detils</h1> *@
 
 <div class="row ">
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">CategoryDetils</h4>
+              @*   <h4 class="card-title">CategoryDetils</h4> *@
                 <p class="card-description">
                     <a class="btn btn-primary" asp-controller="Category" asp-action="GetAll"><i class="mdi mdi-backburger"></i> GetAll</a>
                 </p>

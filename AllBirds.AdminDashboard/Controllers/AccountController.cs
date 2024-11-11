@@ -67,7 +67,7 @@ namespace AllBirds.AdminDashboard.Controllers
                         ViewBag.Name = getUserRes.Data.FirstName + " " + getUserRes.Data.LastName;
                         ViewBag.Img = getUserRes.Data.ImagePath;
                         ViewBag.Role = "Super User";
-                        User.AddIdentity(new(new List<Claim>() { new("UserImg", getUserRes.Data.ImagePath), new("Name", $"{getUserRes.Data.FirstName} {getUserRes.Data.LastName}"), new("Role", "testrole") }));
+                        //User.AddIdentity(new(new List<Claim>() { new("UserImg", getUserRes.Data.ImagePath), new("Name", $"{getUserRes.Data.FirstName} {getUserRes.Data.LastName}"), new("Role", "testrole") }));
                     }
                     return Redirect("/");
                 }

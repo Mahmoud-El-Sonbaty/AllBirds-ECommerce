@@ -39,6 +39,7 @@ namespace AllBirds.Application.Services.CategoryServices
                         Category? parentCategory = (await categoryRepository.GetAllAsync()).FirstOrDefault(c => c.Id == entity.ParentCategoryId);
                         if (parentCategory is not null)
                         {
+                           //
                             entity.Level = parentCategory.Level + 1;
                         }
                         else
