@@ -619,6 +619,8 @@ namespace AllBirds.Application.Services.ProductServices
                     CareGuide = p.CareGuideEn,
                     ShippingAndReturns = p.ShippingAndReturnsEn,
                     MainColorId = p.MainColorId,
+                    ReviewsCount = p.Reviews.Count,
+                    TotalRate = p.Reviews.Count > 0 ? Convert.ToInt32(Math.Ceiling(p.Reviews.Average(r => r.Rating))) : 0,
                     PrdColors = p.AvailableColors.Select(ac => new GetPrdColorAPIWithLangDTO()
                     {
                         PrdColorId = ac.Id,

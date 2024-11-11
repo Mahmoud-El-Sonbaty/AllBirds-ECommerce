@@ -22,6 +22,8 @@ namespace AllBirds.DTOs.ProductDTOs
         public int Discount { get; set; }
         public bool FreeShipping { get; set; }
         public int MainColorId { get; set; }
+        public int ReviewsCount { get; set; } = 0;
+        public int TotalRate { get; set; } = 0;
         public List<GetPrdColorAPIWithLangDTO>? PrdColors { get; set; }
         public List<GetSpecAPIWithLangDTO>? Specifications { get; set; }
         public List<GetPrdDetailsAPIWithLangDTO>? Details { get; set; }

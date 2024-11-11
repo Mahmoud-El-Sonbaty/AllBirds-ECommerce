@@ -54,7 +54,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryProductService, CategoryProductService>();
 builder.Services.AddScoped<ICategoryProductRepository, CategoryProductRepository>();
 // ClientFavorite
-
+//builder.Services.AddScoped<IClientFavoriteService, ClientFavoriteService>();
+//builder.Services.AddScoped<IClientFavoriteRepository, ClientFavoriteRepository>();
 // Color
 builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IColorRepository, ColorRepository>();
@@ -80,12 +81,14 @@ builder.Services.AddScoped<IProductColorRepository, ProductColorRepository>();
 builder.Services.AddScoped<IProductColorImageRepository, ProductColorImageRepository>();
 builder.Services.AddScoped<IProductColotImageService, ProductColorImageService>();
 // ProductColorSize
-
+//builder.Services.AddScoped<IProductColorSizeService, ProductColorSizeService>();
+builder.Services.AddScoped<IProductColorSizeRepository, ProductColorSizeRepository>();
 // ProductDetail
 builder.Services.AddScoped<IProductDetailsService, ProductDetailsService>();
 builder.Services.AddScoped<IProductDetailsRepository, ProductDetailsRepository>();
 // ProductReview
-
+//builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
+//builder.Services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
 // ProductSpecification
 builder.Services.AddScoped<IProductSpecificationService, ProductSpecificationService>();
 builder.Services.AddScoped<IProductSpecificationRepository, ProductSpecificationRepository>();
