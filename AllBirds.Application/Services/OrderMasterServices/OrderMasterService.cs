@@ -418,7 +418,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
             ResultView<CreateOrderMasterDTO> resultView = new();
             try
             {
-                OrderMaster? inCartOrder = (await orderMasterRepository.GetAllAsync()).FirstOrDefault(om => om.ClientId == userId && om.OrderState.StateEn == "InCart");
+                OrderMaster? inCartOrder = (await orderMasterRepository.GetAllAsync()).Include(om => om.OrderDetails).FirstOrDefault(om => om.ClientId == userId && om.OrderState.StateEn == "In Cart");
                 if (inCartOrder is null)
                 {
                     resultView.IsSuccess = false;
@@ -427,7 +427,6 @@ namespace AllBirds.Application.Services.OrderMasterServices
                 }
                 else
                 {
-                    inCartOrder.OrderStateId = 2;
                     List<int> prdIds = [.. inCartOrder.OrderDetails.Select(od => od.ProductColorSizeId)];
                     List<ProductColorSize> prdsColorSizeList = [.. (await productColorSizeRepository.GetAllAsync())
                         .Include(pcs => pcs.ProductColor.Product).Where(pcs => prdIds.Contains(pcs.Id))];
@@ -444,6 +443,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                         }
                         prdSize.UnitsInStock = newUnitsInStock;
                     }
+                    inCartOrder.OrderStateId = 2;
                     await orderMasterRepository.SaveChangesAsync();
                     resultView.IsSuccess = true;
                     resultView.Data = mapper.Map<CreateOrderMasterDTO>(inCartOrder);
