@@ -31,7 +31,7 @@ namespace AllBirds.Application.Services.OrderDetailServices
             ResultView<CreateOrderDetailDTO> result = new();
             try
             {
-                OrderDetail? item = (await orderDetailRepository.GetAllAsync()).FirstOrDefault(b => b.Id == createOrderMDTo.Id || b.OrderMaster.OrderState.StateEn != "In Cart");
+                OrderDetail? item = (await orderDetailRepository.GetAllAsync()).FirstOrDefault(b => b.Id == createOrderMDTo.Id || b.OrderMasterId == createOrderMDTo.OrderMasterId && b.OrderMaster.OrderState.StateEn != "In Cart");
                 if (item is not null)
                 {
                     result.IsSuccess = false;
@@ -48,24 +48,15 @@ namespace AllBirds.Application.Services.OrderDetailServices
                     result.IsSuccess = true;
                     result.Data = mapper.Map<CreateOrderDetailDTO>(createdOrderDetail);
                     result.Msg = $"Order item with id {createdOrderDetail.Id} Is created Successfully ";
-
                 }
-
             }
             catch (Exception ex)
             {
                 result.IsSuccess = false;
                 result.Data = null;
                 result.Msg = $"Error Happen While Creating Order's item " + ex.Message;
-
             }
             return result;
-            //OrderDetail mappedOrderDetails= mapper.Map<OrderDetail>(createOrderMDTo);
-            //OrderDetail createdOrderDetails= await orderDetailsRepository.CreateAsync(mappedOrderDetails);
-            ////await orderDetailsRepository.SaveChangesAsync();
-            //return mapper.Map<CreateOrderDetailsDTO>(createdOrderDetails);
-
-
         }
 
         public async Task<ResultView<List<GetAllOrderDetailsDTO>>> GetAllAsync()

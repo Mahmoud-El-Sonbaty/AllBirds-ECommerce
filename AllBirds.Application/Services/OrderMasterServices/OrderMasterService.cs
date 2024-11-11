@@ -18,14 +18,14 @@ namespace AllBirds.Application.Services.OrderMasterServices
     {
         private readonly IOrderMasterRepository orderMasterRepository;
         private readonly IMapper mapper;
-        private readonly IOrderDetailService orderDetailsService;
+        private readonly IOrderDetailRepository orderDetailRepository;
         private readonly IProductColorSizeRepository productColorSizeRepository;
 
-        public OrderMasterService(IOrderMasterRepository orderM, IMapper Mapper, IOrderDetailService _orderDetailService, IProductColorSizeRepository _productColorSizeRepository)
+        public OrderMasterService(IOrderMasterRepository orderM, IMapper Mapper, IOrderDetailRepository _orderDetailRepository, IProductColorSizeRepository _productColorSizeRepository)
         {
             orderMasterRepository = orderM;
             mapper = Mapper;
-            orderDetailsService = _orderDetailService;
+            orderDetailRepository = _orderDetailRepository;
             productColorSizeRepository = _productColorSizeRepository;
         }
 
@@ -292,6 +292,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     {
                         Id = od.Id,
                         ProductColorSizeId = od.ProductColorSizeId,
+                        ProductId = od.ProductColorSize.ProductColor.ProductId,
                         DetailPrice = od.DetailPrice,
                         Quantity = od.Quantity,
                         ProductName = od.ProductColorSize.ProductColor.Product.NameEn,
@@ -387,8 +388,8 @@ namespace AllBirds.Application.Services.OrderMasterServices
             ResultView<CreateOrderMasterDTO> result = new();
             try
             {
-                bool orderMaster = (await orderMasterRepository.GetAllAsync()).Any(b => b.Id == createOrderMDTo.Id && !b.IsDeleted);
-                if (!orderMaster)
+                OrderMaster orderMaster = (await orderMasterRepository.GetAllAsync()).Include(om => om.OrderDetails).FirstOrDefault(b => b.Id == createOrderMDTo.Id && !b.IsDeleted);
+                if (orderMaster is null)
                 {
                     result.IsSuccess = false;
                     result.Data = null;
@@ -396,8 +397,23 @@ namespace AllBirds.Application.Services.OrderMasterServices
                 }
                 else
                 {
-                    var order = mapper.Map<OrderMaster>(createOrderMDTo);
-                    OrderMaster updatedOredermaster = await orderMasterRepository.UpdateAsync(order);
+                    foreach (OrderDetail orderDetail in orderMaster.OrderDetails)
+                    {
+                        await orderDetailRepository.DeleteAsync(orderDetail);
+                    }
+                    orderMaster.OrderDetails.Clear();
+                    orderMaster.Total = 0;
+                    foreach (CreateOrderDetailDTO item in createOrderMDTo.ProductColorSizeId)
+                    {
+                        OrderDetail detailToCreate = mapper.Map<OrderDetail>(item);
+                        detailToCreate.Id = 0;
+                        //item.OrderMasterId = orderMaster.Id;
+                        orderMaster.Total += detailToCreate.DetailPrice;
+                        orderMaster.OrderDetails.Add(detailToCreate);
+                        //await orderDetailRepository.CreateAsync(detailToCreate);
+                    }
+                    //var order = mapper.Map<OrderMaster>(createOrderMDTo);
+                    OrderMaster updatedOredermaster = await orderMasterRepository.UpdateAsync(orderMaster);
                     await orderMasterRepository.SaveChangesAsync();
                     result.IsSuccess = true;
                     result.Data = mapper.Map<CreateOrderMasterDTO>(updatedOredermaster);
