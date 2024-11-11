@@ -71,6 +71,18 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return Ok(productCardDTOs);
         }
 
+
+        [HttpGet]
+        [Route("{PrdName}/{Lang:twoLetterLang}")]
+        public async Task<IActionResult> GetProductSearchAsync(string PrdName, string Lang)
+        {
+
+            ResultView<List<ProductSearchDTOWithLang>> productResult = await productService.GetProductSearchAsync(PrdName, Lang);
+            return Ok(productResult);
+        }
+
+
+
         [HttpGet]
         [Route("SingleProduct/{id:int}/{Lang:twoLetterLang}")]
         public async Task<IActionResult> GetSingleProduct(int id,string Lang)

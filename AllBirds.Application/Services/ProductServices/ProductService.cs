@@ -601,6 +601,51 @@ namespace AllBirds.Application.Services.ProductServices
             return resultView;
         }
 
+
+
+        public async Task<ResultView<List<ProductSearchDTOWithLang>>> GetProductSearchAsync(string PrdName, string Lang)
+        {
+            ResultView<List<ProductSearchDTOWithLang>> resultView = new();
+
+            if (!string.IsNullOrEmpty(PrdName))
+            {
+                List<ProductSearchDTOWithLang> productCardDTOs = (await productRepoistory.GetAllAsync())
+                    .Where(p => p.NameEn.Contains(PrdName))
+                    .Select(p => new ProductSearchDTOWithLang()
+                    {
+                        Id = p.Id,
+                        Name = (Lang == "en") ? p.NameEn : p.NameAr,
+                        Price = p.Price,
+                        ColorName = (Lang == "en")
+                            ? p.AvailableColors.FirstOrDefault(ac => ac.Id == p.MainColorId).Color.NameEn
+                            : p.AvailableColors.FirstOrDefault(ac => ac.Id == p.MainColorId).Color.NameAr,
+                        MainImagePath = p.AvailableColors.FirstOrDefault(ac => ac.Id == p.MainColorId)
+                            .Images.FirstOrDefault(img => img.Id == p.AvailableColors.FirstOrDefault(ac => ac.Id == p.MainColorId).MainImageId).ImagePath
+                    }).ToList();
+
+                if (productCardDTOs.Count > 0)
+                {
+                    resultView.Data = productCardDTOs;
+                    resultView.IsSuccess = true;
+                    resultView.Msg = (Lang == "en") ? "Products fetched successfully" : "تم جلب المنتجات بنجاح";
+                }
+                else
+                {
+                    resultView.Data = null;
+                    resultView.IsSuccess = false;
+                    resultView.Msg = (Lang == "en") ? $"There is no product with the name '{PrdName}'" : $"لا يوجد منتج بهذا الاسم '{PrdName}'";
+                }
+            }
+            else
+            {
+                resultView.Data = null;
+                resultView.IsSuccess = false;
+                resultView.Msg = (Lang == "en") ? "Product name cannot be null or empty" : "لا يمكن أن يكون اسم المنتج فارغًا";
+            }
+
+            return resultView;
+        }
+
         public async Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id,string Lang)
         {
             ResultView<SingleProductAPIWithLangDTO> resultView = new();
