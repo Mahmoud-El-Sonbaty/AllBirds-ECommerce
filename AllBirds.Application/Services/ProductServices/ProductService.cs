@@ -490,16 +490,18 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<List<GetTopProductWithLangDTO>> resultView = new();
             try
             {
+                List<Product> prd = (await productRepoistory.GetAllAsync()).Include(c => c.AvailableColors).ThenInclude(p => p.Color).ToList() ;
                 List<GetTopProductWithLangDTO> products = (await productRepoistory.GetAllAsync()).Select(sec => new GetTopProductWithLangDTO()
                 {
                     Name = (Lang == "en") ? sec.NameEn : sec.NameAr ,
                     Id = sec.Id,
                     Price = sec.Price,
-                    ColorName= (Lang == "en") ? sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
-                                                 .Select(s => s.Color.NameEn).FirstOrDefault()
-                                                  :sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
-                                                    .Select(s => s.Color.NameAr).FirstOrDefault() ,
-                                      
+                    ColorName= (Lang == "en") ? sec.AvailableColors.FirstOrDefault(se => se.Id == sec.MainColorId).Color.NameEn
+                                                  :sec.AvailableColors.FirstOrDefault(se => se.Id == sec.MainColorId).Color.NameAr,
+                    //ColorName = (Lang == "en") ? sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                    //                             .Select(s => s.Color.NameEn).FirstOrDefault()
+                    //                              : sec.AvailableColors.Where(se => se.ColorId == sec.MainColorId)
+                    //                                .Select(s => s.Color.NameAr).FirstOrDefault(),
 
                     MainImagePath = sec.AvailableColors
                                       .Where(ac => ac.Id == sec.MainColorId)
@@ -693,7 +695,7 @@ namespace AllBirds.Application.Services.ProductServices
                     Details = p.Details.Select(d => new GetPrdDetailsAPIWithLangDTO()
                     {
                         PrdDetailId = d.Id,
-                        Title = d.TitleEn,
+                        Title = (Lang == "en") ? d.TitleEn : d.TitleAr,
                         Description = (Lang == "en") ? d.DescriptionEn:d.DescriptionAr,
                         ImagePath = d.ImagePath
                     }).ToList()

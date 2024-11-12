@@ -506,7 +506,7 @@ namespace AllBirds.Application.Services.CategoryServices
             ResultView<GetAllCategoryWithLangDTO> resultView = new();
             try
             {
-                List<Category> allCats = [.. (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).AsNoTracking()];
+                List<Category> allCats = [.. (await categoryRepository.GetAllAsync()).Where(P => P.ParentCategoryId == Id && !P.IsDeleted||P.Id==Id).AsNoTracking()];
                 Category ParentCategory = allCats.FirstOrDefault(P => P.Id == Id);
 
                 // Check On Parent Category Has Data Or Null !!
