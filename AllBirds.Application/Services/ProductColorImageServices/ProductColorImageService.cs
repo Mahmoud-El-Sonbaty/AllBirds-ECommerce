@@ -110,10 +110,10 @@ namespace AllBirds.Application.Services.ProductColorImageServices
                 return null;
         }
 
-        public async Task<ResultView<CUProductColorImageDTO>> HardDeleteProductColorImage(CUProductColorImageDTO cUProductColorImageDTO)
+        public async Task<ResultView<CUProductColorImageDTO>> HardDeleteProductColorImage(int Id)
         {
 
-            ProductColorImage productColorImage = (await productColorImageRepository.GetAllAsync()).FirstOrDefault(P => P.Id == cUProductColorImageDTO.Id);
+            ProductColorImage productColorImage = (await productColorImageRepository.GetAllAsync()).FirstOrDefault(P => P.Id == Id);
             if (productColorImage is not null)
             {
                 string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");

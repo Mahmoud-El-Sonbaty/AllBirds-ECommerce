@@ -1,8 +1,9 @@
 ﻿using AllBirds.Application.Contracts;
+using AllBirds.DTOs.ColorDTOs;
+using AllBirds.DTOs.Shared;
 using AllBirds.DTOs.SizeDTOs;
 using AllBirds.Models;
 using AutoMapper;
-
 namespace AllBirds.Application.Services.SizeServices
 {
     public class SizeService : ISizeService
@@ -16,24 +17,79 @@ namespace AllBirds.Application.Services.SizeServices
             _mapper = mapper;
         }
 
-        public async Task<CUSizeDTO> CreateAsync(CUSizeDTO cUSizeDTO)
+        public async Task<ResultView<CUSizeDTO>> CreateAsync(CUSizeDTO cUSizeDTO)
         {
-            Size mappedSize = _mapper.Map<Size>(cUSizeDTO);
-            Size createdSize = await _sizeRepository.CreateAsync(mappedSize);
-            await _sizeRepository.SaveChangesAsync();
-            return _mapper.Map<CUSizeDTO>(createdSize);
+            ResultView<CUSizeDTO> resultView = new();
+            try
+            {
+                bool Check = (await _sizeRepository.GetAllAsync()).Any(P => P.Id == cUSizeDTO.Id || P.SizeNumber == cUSizeDTO.SizeNumber);
+                if (Check)
+                {
+                    resultView.Data = cUSizeDTO;
+                    resultView.IsSuccess = false;
+                    resultView.Msg = $"This Size {cUSizeDTO.SizeNumber} Already Exist";
+                    return resultView;
+                }
+                Size mappedSize = _mapper.Map<Size>(cUSizeDTO);
+                Size createdSize = await _sizeRepository.CreateAsync(mappedSize);
+                if (createdSize is not null)
+                {
+                    await _sizeRepository.SaveChangesAsync();
+                    CUSizeDTO cUSize = _mapper.Map<CUSizeDTO>(createdSize);
+                    resultView.Data = cUSize;
+                    resultView.IsSuccess = true;
+                    resultView.Msg = $"Size {cUSize.SizeNumber} Created Successfully";
+                    return resultView;
+                }
+
+
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Not Created Successfully";
+                return resultView;
+
+
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Creating Color ${cUSizeDTO.SizeNumber} ${ex.Message}";
+            }
+            return resultView;
+
         }
 
-        public async Task<CUSizeDTO> UpdateAsync(CUSizeDTO cUSizeDTO)
+        public async Task<ResultView<CUSizeDTO>> UpdateAsync(CUSizeDTO cUSizeDTO)
         {
+            ResultView<CUSizeDTO> resultView = new();
+            bool Check = (await _sizeRepository.GetAllAsync()).Any(P => P.SizeNumber == cUSizeDTO.SizeNumber);
+            if(Check)
+            {
+                resultView.Data = cUSizeDTO;
+                resultView.IsSuccess = false;
+                resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Already Exist";
+                return resultView;
+            }
+
+
             Size? sizeObj = (await _sizeRepository.GetAllAsync()).FirstOrDefault(s => s.Id == cUSizeDTO.Id && s.IsDeleted == false);
             if (sizeObj is not null)
             {
                 sizeObj.SizeNumber = cUSizeDTO.SizeNumber;
                 await _sizeRepository.SaveChangesAsync();
-                return _mapper.Map<CUSizeDTO>(sizeObj);
+                CUSizeDTO cUSize = _mapper.Map<CUSizeDTO>(sizeObj);
+                resultView.Data = cUSize;
+                resultView.IsSuccess = true;
+                resultView.Msg = $"Size {cUSize.SizeNumber} Updated Successfully";
+                return resultView;
+
             }
-            return null;
+
+            resultView.Data = null;
+            resultView.IsSuccess = false;
+            resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Not Updated Successfully";
+            return resultView;
         }
 
         public async Task<CUSizeDTO> SoftDeleteAsync(int sizeId)
@@ -47,16 +103,26 @@ namespace AllBirds.Application.Services.SizeServices
             }
             return null;
         }
-        public async Task<CUSizeDTO> HardDeleteAsync(int sizeId) // will this throw tracking exception ??
+        public async Task<ResultView<CUSizeDTO>> HardDeleteAsync(int sizeId) // will this throw tracking exception ??
         {
+            ResultView<CUSizeDTO> resultView = new();
+
             Size? sizeObj = (await _sizeRepository.GetAllAsync()).FirstOrDefault(s => s.Id == sizeId && s.IsDeleted == false);
             if (sizeObj is not null)
             {
                 Size deletedSize = await _sizeRepository.DeleteAsync(sizeObj);
+
                 await _sizeRepository.SaveChangesAsync();
-                return _mapper.Map<CUSizeDTO>(deletedSize);
+                CUSizeDTO cUSize = _mapper.Map<CUSizeDTO>(deletedSize);
+                resultView.IsSuccess = true;
+                resultView.Data = cUSize;
+                resultView.Msg = $"Size {cUSize.SizeNumber} Deleted Successfully ";
+                return resultView;
             }
-            return null;
+            resultView.IsSuccess = false;
+            resultView.Data = null;
+            resultView.Msg = $"Size Is Not Found ";
+            return resultView;
         }
 
         public async Task<List<CUSizeDTO>> GetAllAsync()

@@ -1,6 +1,17 @@
 ﻿@using AllBirds.DTOs.ColorDTOs
 @model CUColorDTO
 
+
+@if (TempData["IsSuccess"] is bool Success)
+{
+    @if (!Success)
+    {
+        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+
+}
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">Create Color</h4>
@@ -8,12 +19,12 @@
 
         <form asp-action="Create" method="post" class="forms-sample">
             <div class="form-group">
-                <label for="ColorName">Color NameEn</label>
-                <input type="text" class="form-control" asp-for="NameEn" />                
-                <label for="ColorName">Color NameAr</label>
-                <input type="text" class="form-control" asp-for="NameAr" />
-                <label for="ColorName">Color Code</label>
-                <input type="text" class="form-control" asp-for="Code" />
+                <label style="margin-top:6px" for="ColorName">Color NameEn</label>
+                <input style="margin-top:4px" type="text" class="form-control" asp-for="NameEn" />                
+                <label style="margin-top:6px" for="ColorName">Color NameAr</label>
+                <input style="margin-top:4px" type="text" class="form-control" asp-for="NameAr" />
+                <label style="margin-top:6px" for="ColorName">Color Code</label>
+                <input style="margin-top:4px" type="text" class="form-control" asp-for="Code" />
             </div>
 
             <button type="submit" class="btn btn-primary mr-2">Create</button>

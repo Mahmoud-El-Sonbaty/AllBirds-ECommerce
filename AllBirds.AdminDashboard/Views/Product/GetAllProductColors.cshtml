@@ -12,7 +12,21 @@
 
     <partial name="_FooterPartial" />
 }
-
+@if (TempData["IsSuccess"] is bool Success)
+{
+    @if (Success)
+    {
+        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+    else
+    {
+        <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+}
 <div class="row">
 
     <div class="col-lg-12 grid-margin stretch-card">
@@ -31,6 +45,7 @@
                                 <th>product name </th>
                                 <th>Color Name </th>
                                 <th>Color </th>
+                                <th>Deleted</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -48,13 +63,27 @@
 
                                         <td>@item.PNameEn</td>
                                         <td>@item.ColorNameEn</td>
-                                        <td><label class="badge  rounded text-light" style="background-color: @item.ColorCode; width: 35px;height: 35px; border-radius: 50%;">   </label></td>
+
+                                        <td><label class="rounded text-light" style="background-color: @item.ColorCode; width: 35px;height: 35px; border-radius: 50%;"></label></td>
+
+                                            @{
+
+                                                if (item.IsDeleted)
+                                                {
+                                                <td> <label class="badge badge-danger">Deleted</label> </td>
+                                                }
+                                                else
+                                                {
+                                                <td> <lablel class="badge badge-success">Present</lablel> </td>
+                                                }
+                                            }
 
                                         <td>
-                                            <a type="button" class="btn btn-outline-danger"> <i class="fas fa-trash-alt"></i></a>
+                                            <a type="button" class="btn btn-outline-danger" asp-controller="Product" asp-route-id="@item.Id" asp-action="DeleteProductColor"> <i class="fas fa-trash-alt"></i></a>
                                             <a type="button" class="btn btn-inverse-primary  for inverse buttons p-2  m-1" asp-route-id="@item.Id" asp-controller="Product" asp-action="GetProductColorImages"><i class="fas fa-eye"></i></a>
-
                                         </td>
+
+
                                     </tr>
 
                                 }

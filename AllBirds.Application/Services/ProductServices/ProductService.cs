@@ -168,9 +168,23 @@ namespace AllBirds.Application.Services.ProductServices
                     CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
                     if (getProduct.IsDeleted)
                     {
+                        bool CheckProduct = (await productrepoistory.GetAllAsync()).AsNoTracking().Any(P => P.AvailableColors.Any());
+                        if(CheckProduct)
+                        {
                         resultView.IsSuccess = false;
-                        resultView.Data = mappedCUProductDTO;
-                        resultView.Msg = $"Product {mappedCUProductDTO.ProductNo} Is Soft Deleted Already";
+                        resultView.Data = null;
+                        resultView.Msg = $"Product {mappedCUProductDTO.ProductNo} Have Depend On It Like Colors And Specifications..! I Cannot Delete This Product  ";
+
+                        }
+                        else
+                        {
+                            await productrepoistory.DeleteAsync(getProduct);
+                            await productrepoistory.SaveChangesAsync();
+
+                            resultView.IsSuccess = true;
+                            resultView.Data = mappedCUProductDTO;
+                            resultView.Msg = $"Product {mappedCUProductDTO.ProductNo} Hard Deleted Successfully";
+                        }
                     }
                     else
                     {

@@ -190,7 +190,8 @@ namespace AllBirds.Application.Mapper
                 .ForMember(dest => dest.ProductNo, opt => opt.MapFrom(src => src.Product.ProductNo))
                 .ForMember(dest => dest.MainImagePath, opt => opt.MapFrom(src => src.Images.FirstOrDefault(p => p.Id == src.MainImageId).ImagePath))
                 .ForMember(dest => dest.Sizes, opt => opt.MapFrom(src => src.AvailableSizes.Select(r => r.Size.SizeNumber).ToList()))
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(r => r.ImagePath).ToList()));
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(r => r.ImagePath).ToList()))
+                .ForMember(dest => dest.ProductColorImageId, opt => opt.MapFrom(src => src.Images.Select(r => r.Id).ToList()));
 
 
 

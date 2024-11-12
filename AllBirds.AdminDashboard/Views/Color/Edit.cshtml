@@ -6,10 +6,14 @@
         <h4 class="card-title">Edit Color</h4>
         <p class="card-description">Use this form to edit the color</p>
 
-        <form asp-action="Edit" method="post" class="forms-sample">
+        <form asp-action="Edit" method="post" asp-controller="Color" class="forms-sample">
             <div class="form-group">
-                <label for="ColorName">Color Name</label>
-                <input type="text" class="form-control" id="ColorName" name="Name" value="@Model.NameEn" placeholder="Enter color name" />
+                <label style="margin-top:6px" for="ColorName">Color NameEn</label>
+                <input style="margin-top:4px" type="text" class="form-control" id="ColorName" name="NameEn" value="@Model.NameEn" placeholder="Enter color nameEn" />
+                <label style="margin-top:6px" for="ColorName">Color NameAr</label>
+                <input style="margin-top:4px" type="text" class="form-control" id="ColorName" name="NameAr" value="@Model.NameAr" placeholder="Enter color nameAr" />
+                <label style="margin-top:6px" for="ColorName">Color Code</label>
+                <input style="margin-top:4px" type="color" class="form-control" id="ColorName" name="Code" value="@Model.Code" />
             </div>
 
             <button type="submit" class="btn btn-primary mr-2">Update</button>
