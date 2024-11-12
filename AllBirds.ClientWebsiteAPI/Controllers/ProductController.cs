@@ -3,6 +3,7 @@ using AllBirds.Application.Services.ProductServices;
 using AllBirds.DTOs.OrderMasterDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
+using AllBirds.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             if (products.IsSuccess)
                 return Ok(products);
             else
-                return BadRequest(products.Msg);
+                return BadRequest(products);
 
         }
     
@@ -59,7 +60,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             if (products.IsSuccess)
                 return Ok(products);
             else
-                return BadRequest(products.Msg);
+                return BadRequest(products);
 
         }
 
@@ -68,7 +69,10 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         public async Task<IActionResult> GetProductsByCategoryIdWithlang(int CatId, string Lang)
         {
             ResultView<List<GetProductCardWithlangDTO>> productCardDTOs = await productService.GetAllPrdCatIdWithLangAsync(CatId, Lang);
-            return Ok(productCardDTOs);
+            if (productCardDTOs.IsSuccess)
+                return Ok(productCardDTOs);
+            else
+                return BadRequest(productCardDTOs);
         }
 
 
@@ -78,7 +82,10 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         {
 
             ResultView<List<ProductSearchDTOWithLang>> productResult = await productService.GetProductSearchAsync(PrdName, Lang);
-            return Ok(productResult);
+            if (productResult.IsSuccess)
+                return Ok(productResult);
+            else
+                return BadRequest(productResult);
         }
 
 
