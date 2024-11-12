@@ -4,6 +4,7 @@ using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Sockets;
 
 namespace AllBirds.ClientWebsiteAPI.Controllers
 {
@@ -42,6 +43,8 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             var cat = await categoryService.GetAllAsync();
             foreach (var item in cat.Data)
             {
+                
+                    //Shoes
                 if (item.NameEn == "Socks") {
                     ResultView<List<ProductCardDTO>> productCardDTOs = await productService.GetAllPrdCatIdAsync(item.Id);
                     return Ok(productCardDTOs);
@@ -53,7 +56,15 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
         }
 
-
+        [HttpGet]
+        [Route("SingleProduct/{id:int}")]
+        public async Task<IActionResult> GetSingleProduct(int id)
+        {
+            ResultView<SingleProductAPIWithLangDTO> prdResultView = await productService.GetSingleProduct(id);
+            if(prdResultView.IsSuccess)
+                return Ok(prdResultView);
+            return BadRequest(prdResultView);
+        }
     }
 
 }

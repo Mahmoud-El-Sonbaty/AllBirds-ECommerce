@@ -4,7 +4,10 @@
     ViewData["Title"] = "Create ";
 }
 
+<<<<<<< HEAD
 @* <h1>Create Category</h1> *@
+=======
+>>>>>>> main
 
 @{
     // ViewData["Title"] = "CreateProduct";
@@ -23,9 +26,28 @@
 
     <partial name="_FooterPartial" />
 }
+<<<<<<< HEAD
 
 @* <h1>Create Category</h1>
  *@
+=======
+@if (TempData["IsSuccess"] is bool Success)
+{
+    @if (Success)
+    {
+        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+    else
+    {
+        <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+}
+<h1>Create Category</h1>
+>>>>>>> main
 
 <div class="row">
     <div class="col-12 grid-margin stretch-card">

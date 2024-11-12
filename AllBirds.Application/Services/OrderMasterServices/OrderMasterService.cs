@@ -19,14 +19,14 @@ namespace AllBirds.Application.Services.OrderMasterServices
         private readonly IOrderMasterRepository orderMasterRepository;
         private readonly IMapper mapper;
         private readonly IOrderDetailService orderDetailsService;
-        private readonly IProductRepository productRepository;
+        private readonly IProductColorSizeRepository productColorSizeRepository;
 
-        public OrderMasterService(IOrderMasterRepository orderM, IMapper Mapper, IOrderDetailService _orderDetailService, IProductRepository _productRepository)
+        public OrderMasterService(IOrderMasterRepository orderM, IMapper Mapper, IOrderDetailService _orderDetailService, IProductColorSizeRepository _productColorSizeRepository)
         {
             orderMasterRepository = orderM;
             mapper = Mapper;
             orderDetailsService = _orderDetailService;
-            productRepository = _productRepository;
+            productColorSizeRepository = _productColorSizeRepository;
         }
 
         public async Task<ResultView<bool>> ChangingStateAsync(int stateId, int orderMasterId)
@@ -77,7 +77,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                 }
                 else
                 {
-                    var gg = createOrderMDTo.ProductColorSizeId.Select(p => $"{p.ProductId}{p.Quantity}{(int)p.DetailPrice}");
+                    //var gg = createOrderMDTo.ProductColorSizeId.Select(p => $"{p.ProductId}{p.Quantity}{(int)p.DetailPrice}");
                     OrderMaster mapedorder = mapper.Map<OrderMaster>(createOrderMDTo);
                     if (createOrderMDTo.ProductColorSizeId is not null)
                     {
@@ -201,7 +201,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                 //    .Include(om => om.OrderDetails).ThenInclude(od => od.ProductColorSize.Size)
                 //    .Where(om => om.ClientId == userId && om.OrderState.StateEn != "InCart")];
 
-                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Select(om =>
+                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Where(om => om.OrderState.StateEn != "In Cart").Select(om =>
                 new GetAllClientOrderMasterDTO
                 {
                     Id = om.Id,
@@ -210,14 +210,16 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     ClientAddress = om.Client.Address,
                     OrderStateId = om.OrderStateId,
                     OrderStateName = om.OrderState.StateEn,
+                    OrderNo = om.OrderNo,
                     Total = om.Total,
-                    //DiscountPercentage = om.Coupon is not null ? om.Coupon.Discount : 0,
-                    //DiscountAmount = om.Total * om.Coupon.Discount / 100,
-                    DateOrdered = om.Created.Value.ToShortDateString(),
+                    DiscountPercentage = om.Coupon != null ? om.Coupon.Discount : 0,
+                    DiscountAmount = om.Coupon != null ? om.Total * om.Coupon.Discount / 100 : 0,
+                    DateOrdered = om.Updated.Value.ToShortDateString(),
                     Details = om.OrderDetails.Select(od => new GetAllClientOrderDetailsDTO
                     {
                         Id = od.Id,
-                        ProductId = od.ProductColorSizeId,
+                        ProductId = od.ProductColorSize.ProductColor.ProductId,
+                        ProductColorSizeId = od.ProductColorSizeId,
                         ProductName = od.ProductColorSize.ProductColor.Product.NameEn,
                         ProductImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath,
                         Price = od.ProductColorSize.ProductColor.Product.Price,
@@ -274,7 +276,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                 //    .ThenInclude(od => od.Product)
                 //    .FirstOrDefault(om => om.ClientId == userId);
 
-                GetUserCartCheckoutDTO? orderMaster2 = (await orderMasterRepository.GetAllAsync()).Select(om => new GetUserCartCheckoutDTO
+                GetUserCartCheckoutDTO? orderMaster2 = (await orderMasterRepository.GetAllAsync()).Where(om => om.ClientId == userId && om.OrderState.StateEn == "In Cart").Select(om => new GetUserCartCheckoutDTO
                 {
                     Id = om.Id,
                     OrderNo = om.OrderNo,
@@ -289,21 +291,26 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     OrderDetails = om.OrderDetails.Select(od => new GetAllCartCheckoutDetailsDTO()
                     {
                         Id = od.Id,
+                        ProductColorSizeId = od.ProductColorSizeId,
                         DetailPrice = od.DetailPrice,
                         Quantity = od.Quantity,
-                        ProductNameAr = od.ProductColorSize.ProductColor.Product.NameAr,
-                        ProductNameEn = od.ProductColorSize.ProductColor.Product.NameEn,
-                        ColorNameAr = od.ProductColorSize.ProductColor.Color.NameAr,
-                        ColorNameEn = od.ProductColorSize.ProductColor.Color.NameEn,
+                        ProductName = od.ProductColorSize.ProductColor.Product.NameEn,
+                        ColorName = od.ProductColorSize.ProductColor.Color.NameEn,
                         SizeNumber = od.ProductColorSize.Size.SizeNumber,
                         ImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath
                     }).ToList()
-                }).FirstOrDefault(om => om.ClientId == userId);
+                }).FirstOrDefault();
                 if (orderMaster2 is not null)
                 {
                     resultView.IsSuccess = true;
                     resultView.Data = orderMaster2;
                     resultView.Msg = $"Cart For User {userId} Was Found";
+                }
+                else
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = $"No Cart Found For This Client";
                 }
             }
             catch (Exception ex)
@@ -422,6 +429,22 @@ namespace AllBirds.Application.Services.OrderMasterServices
                 else
                 {
                     inCartOrder.OrderStateId = 2;
+                    List<int> prdIds = [.. inCartOrder.OrderDetails.Select(od => od.ProductColorSizeId)];
+                    List<ProductColorSize> prdsColorSizeList = [.. (await productColorSizeRepository.GetAllAsync())
+                        .Include(pcs => pcs.ProductColor.Product).Where(pcs => prdIds.Contains(pcs.Id))];
+                    bool minusFailed = false;
+                    foreach (ProductColorSize prdSize in prdsColorSizeList)
+                    {
+                        int newUnitsInStock = prdSize.UnitsInStock - inCartOrder.OrderDetails.FirstOrDefault(od => od.ProductColorSizeId == prdSize.Id).Quantity;
+                        if (newUnitsInStock < 0)
+                        {
+                            resultView.IsSuccess = false;
+                            resultView.Data = mapper.Map<CreateOrderMasterDTO>(inCartOrder);
+                            resultView.Msg = $"Sorry, There Is Not Enough Units In Stock For This Product ({prdSize.ProductColor.Product.NameEn})";
+                            return resultView;
+                        }
+                        prdSize.UnitsInStock = newUnitsInStock;
+                    }
                     await orderMasterRepository.SaveChangesAsync();
                     resultView.IsSuccess = true;
                     resultView.Data = mapper.Map<CreateOrderMasterDTO>(inCartOrder);

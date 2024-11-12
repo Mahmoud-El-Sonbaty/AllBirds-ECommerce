@@ -34,13 +34,12 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 if (userCart.IsSuccess)
                     return Ok(userCart);
                 else
-                    return NotFound();
+                    return NotFound(userCart.Msg);
             }
             else
             {
                 return Unauthorized("Invalid token or user ID");
             }
-
         }
 
         [Authorize]
@@ -49,11 +48,17 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                ResultView<CreateOrderMasterDTO> createdOrderMaster = await orderMasterService.CreateAsync(createOrderMasterDTO);
-                if (createdOrderMaster.IsSuccess)
-                    return Ok(createdOrderMaster);
-                else
-                    return BadRequest(createdOrderMaster.Msg);
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+                if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    createOrderMasterDTO.ClientId = userId;
+                    ResultView<CreateOrderMasterDTO> createdOrderMaster = await orderMasterService.CreateAsync(createOrderMasterDTO);
+                    if (createdOrderMaster.IsSuccess)
+                        return Ok(createdOrderMaster);
+                    else
+                        return BadRequest(createdOrderMaster.Msg);
+                }
+                return Unauthorized();
             }
             return NotFound();
         }
@@ -62,15 +67,41 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateOrder(CreateOrderMasterDTO createOrderMasterDTO)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                ResultView<CreateOrderMasterDTO> updatedOrderMaster = await orderMasterService.UpdateAsync(createOrderMasterDTO);
-                if (updatedOrderMaster.IsSuccess)
-                    return Ok(updatedOrderMaster);
-                else
-                    return BadRequest(updatedOrderMaster.Msg);
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+                if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    createOrderMasterDTO.ClientId = userId;
+                    ResultView<CreateOrderMasterDTO> createdOrderMaster = await orderMasterService.UpdateAsync(createOrderMasterDTO);
+                    if (createdOrderMaster.IsSuccess)
+                        return Ok(createdOrderMaster);
+                    else
+                        return BadRequest(createdOrderMaster.Msg);
+                }
+                return Unauthorized();
             }
             return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost("AddOrderDetail")]
+        public async Task<IActionResult> AddOrderDetail(CreateOrderDetailDTO createOrderDetailDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+                if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    ResultView<CreateOrderDetailDTO> createdOrderDetail = await orderDetailService.CreateAsync(createOrderDetailDTO);
+                    if (createdOrderDetail.IsSuccess)
+                        return Ok(createdOrderDetail);
+                    else
+                        return BadRequest(createdOrderDetail.Msg);
+                }
+                return Unauthorized();
+            }
+            return BadRequest("validation errors");
         }
 
         [Authorize]
@@ -126,7 +157,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [Authorize]
         [HttpGet("GetAllClientOrders")]
         public async Task<IActionResult> GetByUser()
-        {
+       {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
             if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
             {
