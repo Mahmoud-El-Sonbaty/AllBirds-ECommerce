@@ -92,6 +92,17 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 return Ok(prdResultView);
             return BadRequest(prdResultView);
         }
+
+        [HttpGet("GetSocks")]
+        public async Task<IActionResult> GetSocks()
+        {
+            ResultView<List<ProductCardDTO>> productCardDTOs = await productService.GetAllPrdCatIdAsync(34);
+            if (productCardDTOs.IsSuccess)
+                return Ok(productCardDTOs);
+            return BadRequest(productCardDTOs);
+
+
+        }
     }
 
 }
