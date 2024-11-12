@@ -94,9 +94,11 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         }
 
         [HttpGet("GetSocks")]
-        public async Task<IActionResult> GetSocks()
+        [Route("Socks/{Lang:twoLetterLang}")]
+
+        public async Task<IActionResult> GetSocks(string Lang)
         {
-            ResultView<List<ProductCardDTO>> productCardDTOs = await productService.GetAllPrdCatIdAsync(34);
+            ResultView<List<GetProductCardWithlangDTO>> productCardDTOs = await productService.GetAllPrdCatIdWithLangAsync(34, Lang);
             if (productCardDTOs.IsSuccess)
                 return Ok(productCardDTOs);
             return BadRequest(productCardDTOs);
