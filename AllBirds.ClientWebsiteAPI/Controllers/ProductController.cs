@@ -93,7 +93,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return BadRequest(prdResultView);
         }
 
-        [HttpGet("GetSocks")]
+        [HttpGet]
         [Route("Socks/{Lang:twoLetterLang}")]
 
         public async Task<IActionResult> GetSocks(string Lang)

@@ -221,7 +221,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [HttpGet]
         [Route("GetAllClientOrders/{Lang:twoLetterLang}")]
 
-        public async Task<IActionResult> GetByUser(string Lang)
+        public async Task<IActionResult> GetByUserWithLang(string Lang)
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
             if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
