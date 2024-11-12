@@ -34,7 +34,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 if (userCart.IsSuccess)
                     return Ok(userCart);
                 else
-                    return NotFound(userCart.Msg);
+                    return BadRequest(userCart);
             }
             else
             {
@@ -56,7 +56,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     if (createdOrderMaster.IsSuccess)
                         return Ok(createdOrderMaster);
                     else
-                        return BadRequest(createdOrderMaster.Msg);
+                        return BadRequest(createdOrderMaster);
                 }
                 return Unauthorized();
             }
@@ -77,7 +77,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     if (createdOrderMaster.IsSuccess)
                         return Ok(createdOrderMaster);
                     else
-                        return BadRequest(createdOrderMaster.Msg);
+                        return BadRequest(createdOrderMaster);
                 }
                 return Unauthorized();
             }
@@ -97,7 +97,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     if (createdOrderDetail.IsSuccess)
                         return Ok(createdOrderDetail);
                     else
-                        return BadRequest(createdOrderDetail.Msg);
+                        return BadRequest(createdOrderDetail);
                 }
                 return Unauthorized();
             }
@@ -106,24 +106,30 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
         [Authorize]
         [HttpDelete("DeleteOrderMaster")]
-        public async Task<IActionResult> DeleteOrderMaster(int orderMasterId)
+        public async Task<IActionResult> DeleteOrderMaster()
         {
-            ResultView<GetOneOrderMasterDTO> deletedOrder = await orderMasterService.HardDeleteAsync(orderMasterId);
-            if (deletedOrder.IsSuccess)
-                return Ok(deletedOrder);
-            else
-                return BadRequest(deletedOrder.Msg);
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+            if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                ResultView<CreateOrderMasterDTO> deletedOrder = await orderMasterService.HardDeleteAsync(userId);
+                if (deletedOrder.IsSuccess)
+                    return Ok(deletedOrder);
+                else
+                    return BadRequest(deletedOrder);
+            }
+            return Unauthorized();
         }
 
         [Authorize]
-        [HttpDelete("DeleteOrderDetail")]
+        [HttpDelete]
+        [Route("DeleteOrderDetail/{orderDetailId:int}")]
         public async Task<IActionResult> DeleteOrderDetail(int orderDetailId)
         {
-            ResultView<GetOneOrderDetailsDTO> deletedOrderDetail = await orderDetailService.HardDeleteAsync(orderDetailId);
+            ResultView<CreateOrderDetailDTO> deletedOrderDetail = await orderDetailService.HardDeleteAsync(orderDetailId);
             if (deletedOrderDetail.IsSuccess)
                 return Ok(deletedOrderDetail);
             else
-                return BadRequest(deletedOrderDetail.Msg);
+                return BadRequest(deletedOrderDetail);
         }
 
         [Authorize]
@@ -134,7 +140,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             if (orderDetailUpdated.IsSuccess)
                 return Ok(orderDetailUpdated);
             else
-                return BadRequest(orderDetailUpdated.Msg);
+                return BadRequest(orderDetailUpdated);
         }
 
         [Authorize]
@@ -149,7 +155,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 {
                     return Ok(resultView);
                 }
-                return BadRequest(resultView.Msg);
+                return BadRequest(resultView);
             }
             return Unauthorized();
         }
@@ -157,7 +163,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [Authorize]
         [HttpGet("GetAllClientOrders")]
         public async Task<IActionResult> GetByUser()
-       {
+        {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
             if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
             {
@@ -166,7 +172,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 {
                     return Ok(resultView);
                 }
-                return BadRequest(resultView.Msg);
+                return BadRequest(resultView);
             }
             return Unauthorized();
         }
