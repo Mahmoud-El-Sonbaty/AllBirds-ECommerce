@@ -1,4 +1,5 @@
 ﻿using AllBirds.DTOs.ProductDTOs;
+using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,25 @@ namespace AllBirds.Application.Services.ProductServices
         public Task<ResultView<CUProductDTO>> HardDeleteAsync(int productId);
         public Task<ResultView<List<GetAllProductDTO>>> GetAllAsync();
         public Task<ResultView<CUProductDTO>> GetByIdAsync(int productId);
+
+        // services for Top product by Ahmed Elghoul
+        //================================================================================================
+        public Task<ResultView<List<GetTopProductsDTO>>> GetNOfProductByCatId(int catId, int numberofProduct);
+
+
+        public Task<ResultView<List<ProductCardDTO>>> GetAllPrdCatIdAsync( int CatId);
+        public Task<ResultView<List<ProductCardDTO>>> ProductFilteration(TypeFilterOfProductDTO typeFilterOfProductDTO);
+
+        public Task<ResultView<List<ProductSearchDTOWithLang>>> GetProductSearchAsync(string PrdName, string Lang);
+
+        public Task<ResultView<SingleProductAPIWithLangDTO>> GetSingleProduct(int id,string Lang);
+
+
+        // services for localization by Ahmed Elghoul
+        //================================================================================================
+        public Task<ResultView<List<GetTopProductWithLangDTO>>> GetNOfProductByCatIdWithLang(int catId, int numberofProduct,string Lang);
+        public Task<ResultView<List<GetProductCardWithlangDTO>>> GetAllPrdCatIdWithLangAsync(int CatId, string Lang);
+
+
     }
 }

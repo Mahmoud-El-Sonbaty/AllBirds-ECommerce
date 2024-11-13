@@ -10,13 +10,24 @@ namespace AllBirds.Application.Services.OrderMasterServices
 {
     public interface IOrderMasterService
     {
-        public Task<ResultView<createOrderMasterDTO>> CreateAsync(createOrderMasterDTO createOrderMDTo);
-        public Task<ResultView<createOrderMasterDTO>> UpdateAsync(createOrderMasterDTO createOrderMDTo);
-        public Task<ResultView<GetOneOdrerMasterDTO>> SoftDeleteAsync(int OrderID);
-        public Task<ResultView<GetOneOdrerMasterDTO>> HardDeleteAsync(int OrderID);
+        public Task<ResultView<CreateOrderMasterDTO>> CreateAsync(CreateOrderMasterDTO createOrderMDTo);
+        public Task<ResultView<CreateOrderMasterDTO>> UpdateAsync(CreateOrderMasterDTO createOrderMDTo);
+        public Task<ResultView<GetOneOrderMasterDTO>> SoftDeleteAsync(int OrderID);
+        public Task<ResultView<CreateOrderMasterDTO>> HardDeleteAsync(int userId);
+        public Task<ResultView<GetUserCartCheckoutDTO>> GetUserCartAsync(int userId);
+        public Task<ResultView<List<GetAllClientOrderMasterDTO>>> GetByUserAsync(int userId);
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllAsync();
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllWithDeletedAsync();
-        public Task<ResultView<GetOneOdrerMasterDTO>> GetByIdAsync(int OrderId);
+        public Task<ResultView<GetOneOrderMasterDTO>> GetByIdAsync(int OrderId);
         public Task<ResultView<bool>> ChangingStateAsync(int StateId, int OrderID);
+        public Task<ResultView<CreateOrderMasterDTO>> PlaceOrderAsync(int userId);
+
+
+        // services for localization by Ahmed Elghoul
+        //================================================================================================
+        public Task<ResultView<GetUserCartCheckOutWithLangDTO>> GetUserCartWithLangAsync(int userId,string Lang);
+        
+        public Task<ResultView<List<GetAllClientOrderMasterDTO>>> GetByUserWithLangAsync(int userId,string Lang);
+
     }
 }

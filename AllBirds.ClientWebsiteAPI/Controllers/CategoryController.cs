@@ -1,5 +1,7 @@
 ﻿using AllBirds.Application.Services.CategoryServices;
+using AllBirds.Application.Services.ProductServices;
 using AllBirds.DTOs.CategoryDTOs;
+using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +23,38 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         {
             ResultView<List<GetAllCategoryNestedDTO>> allCats = await categoryService.GetAllAPI();
             return Ok(allCats);
+        }
+
+
+        
+
+        [HttpGet]
+        [Route("{CatId:int}")]
+        public async Task<IActionResult> GetCategoryById(int CatId)
+        {
+            ResultView<GetAllCategoryNestedDTO> productCardDTOs = await categoryService.GetCategoryByIdAPI(CatId);
+            return Ok(productCardDTOs);
+        }
+
+        /*=======================================================================
+                                    for localization 
+        ========================================================================*/
+
+
+        [HttpGet]
+        [Route("{Lang:twoLetterLang}")]
+        public async Task<IActionResult> GetAllCategoriesWithLang(string Lang)
+        {
+            ResultView<List<GetAllCategoryWithLangDTO>> allCats = await categoryService.GetAllAPIWithlang(Lang);
+            return Ok(allCats);
+        }
+
+        [HttpGet]
+        [Route("{CatId:int}/{Lang:twoLetterLang}")]
+        public async Task<IActionResult> GetCategoryByIdWithLang(int CatId, string Lang)
+        {
+            ResultView<GetAllCategoryWithLangDTO> productCardDTOs = await categoryService.GetCategoryByIdAPIWithLang(CatId, Lang);
+            return Ok(productCardDTOs);
         }
     }
 }

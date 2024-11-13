@@ -54,7 +54,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryProductService, CategoryProductService>();
 builder.Services.AddScoped<ICategoryProductRepository, CategoryProductRepository>();
 // ClientFavorite
-
+//builder.Services.AddScoped<IClientFavoriteService, ClientFavoriteService>();
+//builder.Services.AddScoped<IClientFavoriteRepository, ClientFavoriteRepository>();
 // Color
 builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IColorRepository, ColorRepository>();
@@ -80,12 +81,14 @@ builder.Services.AddScoped<IProductColorRepository, ProductColorRepository>();
 builder.Services.AddScoped<IProductColorImageRepository, ProductColorImageRepository>();
 builder.Services.AddScoped<IProductColotImageService, ProductColorImageService>();
 // ProductColorSize
-
+//builder.Services.AddScoped<IProductColorSizeService, ProductColorSizeService>();
+builder.Services.AddScoped<IProductColorSizeRepository, ProductColorSizeRepository>();
 // ProductDetail
 builder.Services.AddScoped<IProductDetailsService, ProductDetailsService>();
 builder.Services.AddScoped<IProductDetailsRepository, ProductDetailsRepository>();
 // ProductReview
-
+//builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
+//builder.Services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
 // ProductSpecification
 builder.Services.AddScoped<IProductSpecificationService, ProductSpecificationService>();
 builder.Services.AddScoped<IProductSpecificationRepository, ProductSpecificationRepository>();
@@ -112,7 +115,7 @@ builder.Services.AddIdentity<CustomUser, IdentityRole<int>>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(sa =>
 {
-    sa.SwaggerDoc("V1", new OpenApiInfo
+    sa.SwaggerDoc("v1", new OpenApiInfo //here the name (v1) must be (v1) small ant there is no relation with the version below
     {
         Title = "Client API",
         Version = "v1"
@@ -139,6 +142,7 @@ builder.Services.AddSwaggerGen(sa =>
         }
     });
 });
+
 builder.Services.AddAuthentication(op =>
 {
     op.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -153,12 +157,12 @@ builder.Services.AddAuthentication(op =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration["jwt:Audience"],
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"] ?? "AllBirdsDefaultJWTKey"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"]))
     };
 });
 builder.Services.AddCors(op =>
 {
-    op.AddPolicy("Derfault", policy =>
+    op.AddPolicy("Default", policy =>
     {
         //policy.WithOrigins("http://localhost:4200", "http://anydomain:domainport", "null")
         //.WithHeaders("Key")
@@ -168,6 +172,13 @@ builder.Services.AddCors(op =>
         .AllowAnyMethod();
     });
 });
+
+
+builder.Services.AddRouting(options =>
+{
+    options.ConstraintMap.Add("twoLetterLang", typeof(TwoLetterLangConstraint));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -175,13 +186,21 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    //app.UseSwagger();
+
+    //// Ensure Swagger UI is configured with the correct endpoint
+    //app.UseSwaggerUI(c =>
+    //{
+    //    c.SwaggerEndpoint("/swagger/V1/swagger.json", "Client API V1");
+    //    //c.RoutePrefix = ""; // Ensures Swagger loads at root (http://localhost:5120)
+    //});
 }
 
 app.UseHttpsRedirection();
 
+app.UseCors("Default");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("Default");
 
 app.MapControllers();
 

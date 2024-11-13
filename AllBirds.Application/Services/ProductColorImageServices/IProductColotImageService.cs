@@ -1,4 +1,5 @@
 ﻿using AllBirds.DTOs.ProductColorImageDTOs;
+using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using System;
 using System.Collections.Generic;
