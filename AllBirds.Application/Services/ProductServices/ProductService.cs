@@ -1,6 +1,4 @@
 ﻿using AllBirds.Application.Contracts;
-using AllBirds.Application.Services.CategoryProductServices;
-using AllBirds.Application.Services.ProductSpecificationServices;
 using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductColorImageDTOs;
 using AllBirds.DTOs.ProductColorSizeDTOs;
@@ -8,27 +6,21 @@ using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
-using AllBirds.DTOs.SpecificationDTOs;
 using AllBirds.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AllBirds.Application.Services.ProductServices
 {
     public class ProductService : IProductService
     {
         private readonly IProductRepository productRepoistory;
-        private readonly ICategoryProductService categoryProductService;
         public IMapper mapper;
-        private readonly IProductSpecificationService productSpecificationRepo;
 
-        public ProductService(IProductRepository _productRepository, IMapper _mapper, ICategoryProductService _categoryProductService, IProductSpecificationService _productSpecificationRepo)
+        public ProductService(IProductRepository _productRepository, IMapper _mapper)
         {
             productRepoistory = _productRepository;
             mapper = _mapper;
-            categoryProductService = _categoryProductService;
 
         }
 
