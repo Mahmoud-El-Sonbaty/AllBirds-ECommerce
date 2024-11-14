@@ -42,14 +42,6 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
             return Ok(productCardDTOs);
         }
-        [HttpGet]
-        [Route("{PrdName}/{Lang}")]
-        public async Task<IActionResult> GetProductSearchAsync(string PrdName , string Lang)
-        {
-
-            ResultView<List<ProductSearchDTOWithLang>> productResult = await productService.GetProductSearchAsync(PrdName , Lang);
-            return Ok(productResult);
-        }
         /*=======================================================================
                                      for localization 
          ========================================================================*/
@@ -81,7 +73,6 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [Route("{PrdName}/{Lang:twoLetterLang}")]
         public async Task<IActionResult> GetProductSearchAsync(string PrdName, string Lang)
         {
-
             ResultView<List<ProductSearchDTOWithLang>> productResult = await productService.GetProductSearchAsync(PrdName, Lang);
             return Ok(productResult);
         }
