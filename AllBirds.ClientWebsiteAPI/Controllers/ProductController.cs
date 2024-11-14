@@ -1,6 +1,4 @@
-﻿using AllBirds.Application.Services.OrderMasterServices;
-using AllBirds.Application.Services.ProductServices;
-using AllBirds.DTOs.OrderMasterDTOs;
+﻿using AllBirds.Application.Services.ProductServices;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Http;
@@ -40,11 +38,18 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [HttpPost("filter")]
         public async Task<IActionResult> getProductFilter( TypeFilterOfProductDTO typeFilterOfProductDTO)
         {
-            ResultView<List<ProductCardDTO>> productCardDTOs = await productService.ProductFilteration(typeFilterOfProductDTO);
+            ResultView<List<ProductCardDTO>> productCardDTOs = await productService.ProductFilterationAsync(typeFilterOfProductDTO);
 
             return Ok(productCardDTOs);
         }
+        [HttpGet]
+        [Route("{PrdName}/{Lang}")]
+        public async Task<IActionResult> GetProductSearchAsync(string PrdName , string Lang)
+        {
 
+            ResultView<List<ProductSearchDTOWithLang>> productResult = await productService.GetProductSearchAsync(PrdName , Lang);
+            return Ok(productResult);
+        }
         /*=======================================================================
                                      for localization 
          ========================================================================*/

@@ -26,17 +26,19 @@ namespace AllBirds.AdminDashboard.Controllers
         private readonly ICategoryService categoryService;
         private readonly ISpecificationService specificationService;
         private readonly IProductColorService productColorService;
+        private readonly IProductColotImageService productColotImageService;
         private readonly IColorService colorService;
         private readonly IWebHostEnvironment webHostEnvironment;
 
 
-        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService, IProductColorService _productColorService, IColorService _colorService, IWebHostEnvironment _webHostEnvironment)
+        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService, IProductColorService _productColorService, IColorService _colorService , IProductColotImageService _productColotImageService, IWebHostEnvironment _webHostEnvironment)
         {
             productService = _productService;
             categoryService = _categoryService;
             productSpecService = _productSpecservice;
             specificationService = _specificationService;
             productColorService = _productColorService;
+            productColotImageService = _productColotImageService;
             colorService = _colorService;
             webHostEnvironment = _webHostEnvironment;
         }
@@ -118,13 +120,9 @@ namespace AllBirds.AdminDashboard.Controllers
             if (id > 0)
             {
                 ResultView<CUProductDTO> deletedProduct = await productService.SoftDeleteAsync(id);
-                if (deletedProduct.IsSuccess)
-                {
-                    TempData.Add("Msg", $"Product {deletedProduct.Data.ProductNo} Soft Deleted Successfully");
-                    TempData.Add("IsSuccess", true);
-                }
-                TempData.Add("Msg", $"Product {deletedProduct?.Data?.ProductNo ?? $"{id}"} Soft Delete Wasn't Successful ({deletedProduct.Msg})");
-                TempData.Add("IsSuccess", false);
+                TempData["IsSuccess"] = deletedProduct.IsSuccess;
+                TempData["Msg"] = deletedProduct.Msg;
+
             }
             return RedirectToAction("GetAll");
         }
@@ -214,6 +212,16 @@ namespace AllBirds.AdminDashboard.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DeleteProductColorImage(int id)
+        {
+            ResultView<CUProductColorImageDTO> resultView = await productColotImageService.HardDeleteProductColorImage(id);
+
+            TempData["IsSuccess"] = resultView.IsSuccess;
+            TempData["Msg"] = resultView.Msg;
+                return RedirectToAction("GetProductColorImages");
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> CreateProductColor(int Id)
@@ -255,6 +263,13 @@ namespace AllBirds.AdminDashboard.Controllers
             return View();
 
 
+        }
+        public async Task<IActionResult> DeleteProductColor(int Id)
+        {
+            ResultView<GetOneProductColorDTO> resultView = await productColorService.HardDeleteAsync(Id);
+            TempData["Msg"] = resultView.Msg;
+            TempData["IsSuccess"] = resultView.IsSuccess;
+            return Redirect($"/Product/GetAllProductColors/{resultView.Data.ProductId}");
         }
 
     }

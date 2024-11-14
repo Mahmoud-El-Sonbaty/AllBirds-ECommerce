@@ -14,7 +14,7 @@ namespace AllBirds.Application.Services.ProductColorServices
     {
         public Task<ResultView<CreateProductColorDTO>> CreateAsync(CreateProductColorDTO createProductColorDTO ,string ImagePath);
         public Task<ResultView<UpdateProductColorDTO>> UpdateAsync(UpdateProductColorDTO updateProductColorDTO);
-        public Task<ResultView<GetOneProductColorDTO>> SoftDeleteAsync(int sizeId);
+        //public Task<ResultView<GetOneProductColorDTO>> SoftDeleteAsync(int sizeId);
         public Task<ResultView<GetOneProductColorDTO>> HardDeleteAsync(int sizeId);
         public Task<ResultView<List<GetALlProductColorDTO>>> GetAllAsync(int Id);
         public Task<ResultView<List<GetOneProductColorDTO>>> GetAllWithDeletedAsync();

@@ -17,7 +17,7 @@ namespace AllBirds.Application.Services.ProductColorImageServices
 
         public Task<List<GetAllProductColorImageDTO>> GetAllProductColorImage(int Id);
 
-        public Task<ResultView<CUProductColorImageDTO>> HardDeleteProductColorImage(CUProductColorImageDTO cUProductColorImageDTO);
+        public Task<ResultView<CUProductColorImageDTO>> HardDeleteProductColorImage(int Id);
 
 
     }
