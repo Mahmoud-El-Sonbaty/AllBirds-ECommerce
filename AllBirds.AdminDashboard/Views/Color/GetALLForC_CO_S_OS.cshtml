@@ -1,17 +1,40 @@
 ﻿@using AllBirds.DTOs.ColorDTOs
-
 @model GetAll
 
 
+@section Navbar {
+
+    <partial name="_NavbarPartial" />
+}
+@section Footer {
+
+    <partial name="_FooterPartial" />
+}
+@if (TempData["IsSuccess"] is bool Success)
+{
+    @if (Success)
+    {
+        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+    else
+    {
+        <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+}
 <div class="row">
     @* ================================= *@
 
     <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">
+
             <div class="card-body">
                 <h4 class="card-title">Color Table</h4>
                 <p class="card-description">
-                    Add class <code>.table</code>
+                    <a class="btn btn-primary" asp-controller="Color" asp-action="Create"><i class="fas fa-plus"></i> New Color</a>
                 </p>
                 <div class="table-responsive">
                     <table class="table">
@@ -20,16 +43,22 @@
                                 <th>Code</th>
                                 <th>NameEn</th>
                                 <th>NameAr</th>
+                                <th>Action</th>
+
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var i in Model.cUColorDTOs)
                             {
                                 <tr>
-                                    <td>@i.Code</td>
+                                    <td><label class="rounded text-light" style="background-color: @i.Code; width: 35px;height: 35px; border-radius: 50%;"></label></td>
                                     <td>@i.NameEn</td>
                                     <td>@i.NameAr</td>
-                                  </tr>
+                                    <td>
+                                        <a type="button" asp-action="Edit" asp-controller="Color" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-outline-danger" asp-controller="Color" asp-route-id="@i.Id" asp-action="Delete"> <i class="fas fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -40,10 +69,11 @@
     @* ================================= *@
     <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">
+
             <div class="card-body">
                 <h4 class="card-title">Size Table</h4>
                 <p class="card-description">
-                    Add class <code>.table</code>
+                    <a class="btn btn-primary" asp-controller="Size" asp-action="Create"><i class="fas fa-plus"></i> New Size</a>
                 </p>
                 <div class="table-responsive">
                     <table class="table">
@@ -57,6 +87,10 @@
                             {
                                 <tr>
                                     <td>@i.SizeNumber</td>
+                                    <td>
+                                        <a type="button" asp-action="Edit" asp-controller="Size" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-outline-danger" asp-controller="Size" asp-route-id="@i.Id" asp-action="Delete"> <i class="fas fa-trash-alt"></i></a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>

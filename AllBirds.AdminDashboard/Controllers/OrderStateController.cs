@@ -56,7 +56,6 @@ namespace AllBirds.AdminDashboard.Controllers
             return View(orderStateDto);
         }
 
-        //
         public async Task<IActionResult> Delete(int id)
         {
             var orderState = await _orderStateService.GetByIdAsync(id);

@@ -489,7 +489,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
             {
 
 
-                GetUserCartCheckOutWithLangDTO? orderMaster2 = (await orderMasterRepository.GetAllAsync()).Select(om => new GetUserCartCheckOutWithLangDTO
+                GetUserCartCheckOutWithLangDTO? orderMaster2 = (await orderMasterRepository.GetAllAsync()).Where(om => om.ClientId == userId && om.OrderState.StateEn == "In Cart").Select(om => new GetUserCartCheckOutWithLangDTO
                 {
                     Id = om.Id,
                     OrderNo = om.OrderNo,
@@ -511,7 +511,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                         SizeNumber = od.ProductColorSize.Size.SizeNumber,
                         ImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath
                     }).ToList()
-                }).FirstOrDefault(om => om.ClientId == userId);
+                }).FirstOrDefault();
                 if (orderMaster2 is not null)
                 {
                     resultView.IsSuccess = true;
@@ -536,7 +536,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
             {
       
 
-                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Select(om =>
+                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Where(om => om.OrderState.StateEn != "In Cart").Select(om =>
                 new GetAllClientOrderMasterDTO
                 {
                     Id = om.Id,
@@ -546,7 +546,10 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     OrderStateId = om.OrderStateId,                    
                     OrderStateName = (Lang == "en")? om.OrderState.StateEn:om.OrderState.StateAr,
                     Total = om.Total,
-                    DateOrdered = om.Created.Value.ToShortDateString(),
+                    DateOrdered = om.Updated.Value.ToShortDateString(),
+                    OrderNo = om.OrderNo,
+                    DiscountPercentage = om.Coupon != null ? om.Coupon.Discount : 0,
+                    DiscountAmount = om.Coupon != null ? om.Total * om.Coupon.Discount / 100 : 0,
                     Details = om.OrderDetails.Select(od => new GetAllClientOrderDetailsDTO
                     {
                         Id = od.Id,

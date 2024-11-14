@@ -12,7 +12,23 @@
 
     <partial name="_FooterPartial" />
 }
+<a type="button" class="btn  bg-primary bg- mr-2" asp-action="GetAllProductColors" asp-route-id="@Model.Data.ProductId">Product Color</a>
 
+@if (TempData["IsSuccess"] is bool Success)
+{
+    @if (Success)
+    {
+        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+    else
+    {
+        <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
+            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
+        </div>
+    }
+}
 <div class="row">
 
     <div class="col-lg-12 grid-margin stretch-card">
@@ -32,15 +48,16 @@
                                 <th>ColorCode </th>
                                 <th>Sizes </th>
                                 <th>Images </th>
+                                <th>Action </th>
 
                             </tr>
                         </thead>
                         <tbody>
                             @if (Model.IsSuccess)
                             {
-                                
-                                   
-                                    @foreach (string Image in Model.Data.Images)
+
+                                int counter = 0;
+                                @foreach (string Image in Model.Data.Images)
                                     {
                                     <tr>
                                         <td>@Model.Data.ProductNo</td>
@@ -56,9 +73,12 @@
                                         }
                                          </td>
                                         <td alt="Product Image"><img src="@Image" style="width: 90px; height: 90px; border-radius: 20px;" alt="Alternate Text" /></td>
-                                    </tr>
-                                    }
+                                        <td><a type="button" class="btn btn-outline-danger" asp-controller="Product" asp-action="DeleteProductColorImage" asp-route-id="@Model.Data.ProductColorImageId[counter]"> <i class="fas fa-trash-alt"></i></a></td>
 
+                                    </tr>
+                                    counter += 1;
+                                }
+                                
                                 
 
                                
@@ -70,7 +90,6 @@
                     </table>
                     <h5 style="color:deeppink;margin-top:10px; text-align:center"> @Model.Msg </h5>
 
-                    <a type="button" class="btn  bg-primary bg- mr-2" asp-action="GetAllProductColors" asp-route-id="@Model.Data.ProductId">Product Color</a>
                 </div>
             </div>
         </div>
