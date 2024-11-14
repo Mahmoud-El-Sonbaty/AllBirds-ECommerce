@@ -533,56 +533,6 @@ namespace AllBirds.Application.Services.ProductServices
 
         }
 
-
-        public async Task<ResultView<List<ProductSearchDTOWithLang>>> GetProductSearchAsync(string PrdName, string Lang)
-        {
-            ResultView<List<ProductSearchDTOWithLang>> resultView = new();
-
-            if (PrdName != null)
-            {
-                List<ProductSearchDTOWithLang> productCardDTOs = [];
-                if (Lang == "En")
-                {
-                    productCardDTOs = [.. (await productrepoistory.GetAllAsync()).Where(N => N.NameEn.Contains(PrdName)).Select(P => new ProductSearchDTOWithLang()
-                    {
-                        Id = P.Id,
-                        Name = P.NameEn,
-                        Price = P.Price,
-                        ColorName = P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId).Color.NameEn,
-                        MainImagePath = P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId)
-                       .Images.FirstOrDefault(img => img.Id == P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId).MainImageId).ImagePath
-                    })];
-                }
-                else
-                {
-                    productCardDTOs = [.. (await productrepoistory.GetAllAsync()).Where(N => N.NameAr.Contains(PrdName)).Select(P => new ProductSearchDTOWithLang()
-                    {
-                        Id = P.Id,
-                        Name = P.NameAr,
-                        Price = P.Price,
-                        ColorName = P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId).Color.NameAr,
-                        MainImagePath = P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId)
-                       .Images.FirstOrDefault(img => img.Id == P.AvailableColors.FirstOrDefault(ac => ac.Id == P.MainColorId).MainImageId).ImagePath
-                    })];
-                    if (productCardDTOs.Count > 0 && productCardDTOs != null)
-                    {
-                        resultView.Data = productCardDTOs;
-                        resultView.IsSuccess = true;
-                        resultView.Msg = "Products Fetched Successfull";
-
-                    }
-                    else
-                    {
-                        resultView.Data = null;
-                        resultView.IsSuccess = false;
-                        resultView.Msg = $"لا يوجد منتج بهذا الأسم {PrdName} معذره";
-                    }
-                }
-            }
-            return resultView;
-        }
-
-
         //Services for Localization  By ahmed Elghoul
         //================================================================================================
 
