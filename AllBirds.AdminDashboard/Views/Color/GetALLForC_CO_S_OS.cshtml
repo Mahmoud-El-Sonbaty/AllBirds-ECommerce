@@ -105,7 +105,7 @@
             <div class="card-body">
                 <h4 class="card-title">Coupon Table</h4>
                 <p class="card-description">
-                    Add class <code>.table</code>
+                    <a class="btn btn-primary" asp-controller="Coupon" asp-action="Create"><i class="fas fa-plus"></i> New Coupon</a>
                 </p>
                 <div class="table-responsive">
                     <table class="table">
@@ -114,6 +114,7 @@
                                 <th>Code</th>
                                 <th>Discount</th>
                                 <th>IsActive</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -123,6 +124,10 @@
                                     <td>@i.Code</td>
                                     <td>@i.Discount</td>
                                     <td>@i.IsActive</td>
+                                    <td>
+                                        <a type="button" asp-action="Edit" asp-controller="Size" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-outline-danger" asp-controller="Coupon" asp-route-id="@i.Id" asp-action="HardDelete"> <i class="fas fa-trash-alt"></i></a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -137,7 +142,7 @@
             <div class="card-body">
                 <h4 class="card-title">OrderState Table</h4>
                 <p class="card-description">
-                    Add class <code>.table</code>
+                    <a class="btn btn-primary" asp-controller="OrderState" asp-action="Create"><i class="fas fa-plus"></i> New Order State</a>
                 </p>
                 <div class="table-responsive">
                     <table class="table">
@@ -145,6 +150,7 @@
                             <tr>
                                 <th>StateAr</th>
                                 <th>StateEn</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -153,6 +159,10 @@
                                 <tr>
                                     <td>@i.StateAr</td>
                                     <td>@i.StateEn</td>
+                                    <td>
+                                        <a type="button" asp-action="Edit" asp-controller="OrderState" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-outline-danger" asp-controller="OrderState" asp-route-id="@i.Id" asp-action="HardDelete"> <i class="fas fa-trash-alt"></i></a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>

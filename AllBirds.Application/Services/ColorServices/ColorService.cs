@@ -105,30 +105,59 @@ namespace AllBirds.Application.Services.ColorServices
         public async Task<ResultView<CUColorDTO>> HardDeleteAsync(int colorId) // will this throw tracking exception ??
         {
             ResultView<CUColorDTO> resultView = new();
-
-            Color? colorObj = (await _colorRepository.GetAllAsync()).FirstOrDefault(s => s.Id == colorId);
-            if (colorObj is not null)
+            try
             {
-                Color deletedColor = await _colorRepository.DeleteAsync(colorObj);
-                await _colorRepository.SaveChangesAsync();
-                CUColorDTO cUColor = _mapper.Map<CUColorDTO>(deletedColor);
-                resultView.IsSuccess = true;
-                resultView.Data = cUColor;
-                resultView.Msg = $"Color {cUColor.NameEn} Deleted Successfully";
+                Color? colorObj = (await _colorRepository.GetAllAsync()).FirstOrDefault(s => s.Id == colorId);
+                if (colorObj is not null)
+                {
+                    Color deletedColor = await _colorRepository.DeleteAsync(colorObj);
+                    await _colorRepository.SaveChangesAsync();
+                    CUColorDTO cUColor = _mapper.Map<CUColorDTO>(deletedColor);
+                    resultView.IsSuccess = true;
+                    resultView.Data = cUColor;
+                    resultView.Msg = $"Color {cUColor.NameEn} Deleted Successfully";
+                    return resultView;
+                }
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = "This Color Not Found";
                 return resultView;
             }
-            resultView.IsSuccess = false;
-            resultView.Data = null;
-            resultView.Msg = "This Color Not Found";
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Fetch Colors ${ex.Message}";
+            }
             return resultView;
         }
 
-        public async Task<List<CUColorDTO>> GetAllAsync()
+        public async Task<ResultView<List<CUColorDTO>>> GetAllAsync()
         {
-            //List<Color> ColorsList = (await _ColorRepository.GetAllAsync()).Where(s => s.IsDeleted == false).ToList();
-            // this is called collection expression
-            List<Color> colorsList = [.. (await _colorRepository.GetAllAsync()).Where(s => !s.IsDeleted)];
-            return _mapper.Map<List<CUColorDTO>>(colorsList);
+            ResultView<List<CUColorDTO>> resultView = new();
+            try
+            {
+                List<Color> colorsList = [.. (await _colorRepository.GetAllAsync()).Where(s => !s.IsDeleted)];
+                List<CUColorDTO> cUColors = _mapper.Map<List<CUColorDTO>>(colorsList);
+                if (cUColors.Count > 0)
+                {
+                    resultView.IsSuccess = true;
+                    resultView.Data = cUColors;
+                    resultView.Msg = "All Colors Fetched Successfully";
+                    return resultView;
+                }
+                resultView.IsSuccess = false;
+                resultView.Msg = "Colors Is Empty..! Sorry";
+                resultView.Data = null;
+                return resultView;
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Fetch Colors ${ex.Message}";
+            }
+            return resultView;
         }
 
         public async Task<List<CUColorDTO>> GetAllWithDeletedAsync()

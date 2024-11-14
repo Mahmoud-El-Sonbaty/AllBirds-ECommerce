@@ -9,7 +9,7 @@ namespace AllBirds.Application.Services.SizeServices
         public Task<ResultView<CUSizeDTO>> UpdateAsync(CUSizeDTO cUSizeDTO);
         public Task<CUSizeDTO> SoftDeleteAsync(int sizeId);
         public Task<ResultView<CUSizeDTO>> HardDeleteAsync(int sizeId);
-        public Task<List<CUSizeDTO>> GetAllAsync();
+        public Task<ResultView<List<CUSizeDTO>>> GetAllAsync();
         public Task<List<CUSizeDTO>> GetAllWithDeletedAsync();
         public Task<GetSizeDTO> GetByIdAsync(int sizeId);
     }

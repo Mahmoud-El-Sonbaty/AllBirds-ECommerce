@@ -31,17 +31,19 @@ namespace AllBirds.AdminDashboard.Controllers
             var AllOrderState = await _orderStateService.GetAllAsync();
             var Model = new GetAll
             {
-                cUColorDTOs = AllColor,
-                cUSizeDTOs = AllSize,
-                cUCoupons = AllCoupon,
-                OrderStateDTOs = AllOrderState,
+                cUColorDTOs = AllColor.Data,
+                cUSizeDTOs = AllSize.Data,
+                cUCoupons = AllCoupon.Data,
+                OrderStateDTOs = AllOrderState.Data,
             };
             return View(Model);
         }
         public async Task<IActionResult> Index()
         {
-            var colors = await _colorService.GetAllAsync();
-            return View(colors);
+            ResultView<List<CUColorDTO>> colors = await _colorService.GetAllAsync();
+            TempData["Msg"] = colors.Msg;
+            TempData["IsSuccess"] = colors.IsSuccess;
+            return View(colors.Data);
         }
 
         public IActionResult Create()
