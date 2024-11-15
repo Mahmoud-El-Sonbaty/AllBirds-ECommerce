@@ -75,6 +75,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
                 if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
                 {
+                    
                     createOrderMasterDTO.ClientId = userId;
                     ResultView<CreateOrderMasterDTO> createdOrderMaster = await orderMasterService.UpdateAsync(createOrderMasterDTO);
                     if (createdOrderMaster.IsSuccess)

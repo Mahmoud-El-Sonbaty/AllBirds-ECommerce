@@ -54,7 +54,7 @@ namespace AllBirds.Application.Services.SizeServices
             {
                 resultView.IsSuccess = false;
                 resultView.Data = null;
-                resultView.Msg = $"Error Happened While Creating Color ${cUSizeDTO.SizeNumber} ${ex.Message}";
+                resultView.Msg = $"Error Happened While Creating Size ${cUSizeDTO.SizeNumber} ${ex.Message}";
             }
             return resultView;
 
@@ -63,32 +63,42 @@ namespace AllBirds.Application.Services.SizeServices
         public async Task<ResultView<CUSizeDTO>> UpdateAsync(CUSizeDTO cUSizeDTO)
         {
             ResultView<CUSizeDTO> resultView = new();
-            bool Check = (await _sizeRepository.GetAllAsync()).Any(P => P.SizeNumber == cUSizeDTO.SizeNumber);
-            if(Check)
+            try
             {
-                resultView.Data = cUSizeDTO;
+                bool Check = (await _sizeRepository.GetAllAsync()).Any(P => P.SizeNumber == cUSizeDTO.SizeNumber);
+                if (Check)
+                {
+                    resultView.Data = cUSizeDTO;
+                    resultView.IsSuccess = false;
+                    resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Already Exist";
+                    return resultView;
+                }
+
+
+                Size? sizeObj = (await _sizeRepository.GetAllAsync()).FirstOrDefault(s => s.Id == cUSizeDTO.Id && s.IsDeleted == false);
+                if (sizeObj is not null)
+                {
+                    sizeObj.SizeNumber = cUSizeDTO.SizeNumber;
+                    await _sizeRepository.SaveChangesAsync();
+                    CUSizeDTO cUSize = _mapper.Map<CUSizeDTO>(sizeObj);
+                    resultView.Data = cUSize;
+                    resultView.IsSuccess = true;
+                    resultView.Msg = $"Size {cUSize.SizeNumber} Updated Successfully";
+                    return resultView;
+
+                }
+
+                resultView.Data = null;
                 resultView.IsSuccess = false;
-                resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Already Exist";
+                resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Not Updated Successfully";
                 return resultView;
             }
-
-
-            Size? sizeObj = (await _sizeRepository.GetAllAsync()).FirstOrDefault(s => s.Id == cUSizeDTO.Id && s.IsDeleted == false);
-            if (sizeObj is not null)
+            catch (Exception ex)
             {
-                sizeObj.SizeNumber = cUSizeDTO.SizeNumber;
-                await _sizeRepository.SaveChangesAsync();
-                CUSizeDTO cUSize = _mapper.Map<CUSizeDTO>(sizeObj);
-                resultView.Data = cUSize;
-                resultView.IsSuccess = true;
-                resultView.Msg = $"Size {cUSize.SizeNumber} Updated Successfully";
-                return resultView;
-
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Updated Size ${cUSizeDTO.SizeNumber} ${ex.Message}";
             }
-
-            resultView.Data = null;
-            resultView.IsSuccess = false;
-            resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Not Updated Successfully";
             return resultView;
         }
 
@@ -106,31 +116,60 @@ namespace AllBirds.Application.Services.SizeServices
         public async Task<ResultView<CUSizeDTO>> HardDeleteAsync(int sizeId) // will this throw tracking exception ??
         {
             ResultView<CUSizeDTO> resultView = new();
-
-            Size? sizeObj = (await _sizeRepository.GetAllAsync()).FirstOrDefault(s => s.Id == sizeId && s.IsDeleted == false);
-            if (sizeObj is not null)
+            try
             {
-                Size deletedSize = await _sizeRepository.DeleteAsync(sizeObj);
+                Size? sizeObj = (await _sizeRepository.GetAllAsync()).FirstOrDefault(s => s.Id == sizeId && s.IsDeleted == false);
+                if (sizeObj is not null)
+                {
+                    Size deletedSize = await _sizeRepository.DeleteAsync(sizeObj);
 
-                await _sizeRepository.SaveChangesAsync();
-                CUSizeDTO cUSize = _mapper.Map<CUSizeDTO>(deletedSize);
-                resultView.IsSuccess = true;
-                resultView.Data = cUSize;
-                resultView.Msg = $"Size {cUSize.SizeNumber} Deleted Successfully ";
+                    await _sizeRepository.SaveChangesAsync();
+                    CUSizeDTO cUSize = _mapper.Map<CUSizeDTO>(deletedSize);
+                    resultView.IsSuccess = true;
+                    resultView.Data = cUSize;
+                    resultView.Msg = $"Size {cUSize.SizeNumber} Deleted Successfully ";
+                    return resultView;
+                }
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Size Is Not Found ";
                 return resultView;
             }
-            resultView.IsSuccess = false;
-            resultView.Data = null;
-            resultView.Msg = $"Size Is Not Found ";
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Deleted Size ${ex.Message}";
+            }
             return resultView;
         }
 
-        public async Task<List<CUSizeDTO>> GetAllAsync()
+        public async Task<ResultView<List<CUSizeDTO>>> GetAllAsync()
         {
-            //List<Size> sizesList = (await _sizeRepository.GetAllAsync()).Where(s => s.IsDeleted == false).ToList();
-            // this is called collection expression
-            List<Size> sizesList = [.. (await _sizeRepository.GetAllAsync()).Where(s => !s.IsDeleted)];
-            return _mapper.Map<List<CUSizeDTO>>(sizesList);
+            ResultView<List<CUSizeDTO>> resultView = new();
+            try
+            {
+                List<Size> sizesList = [.. (await _sizeRepository.GetAllAsync()).Where(s => !s.IsDeleted)];
+                if (sizesList.Count > 0)
+                {
+                    List<CUSizeDTO> cUSizes = _mapper.Map<List<CUSizeDTO>>(sizesList);
+                    resultView.IsSuccess = true;
+                    resultView.Data = cUSizes;
+                    resultView.Msg = "All Size Fetched Successfully";
+                    return resultView;
+                }
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = "Sizes Is Empty..! Sorry";
+                return resultView;
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Deleted Size ${ex.Message}";
+            }
+            return resultView;
         }
 
         public async Task<List<CUSizeDTO>> GetAllWithDeletedAsync()

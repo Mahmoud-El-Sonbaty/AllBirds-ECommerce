@@ -1,5 +1,7 @@
 ﻿using AllBirds.Application.Services.CouponServices;
 using AllBirds.DTOs.CouponDTOs;
+using AllBirds.DTOs.Shared;
+using AllBirds.DTOs.SizeDTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllBirds.AdminDashboard.Controllers
@@ -16,8 +18,10 @@ namespace AllBirds.AdminDashboard.Controllers
         // Display all coupons
         public async Task<IActionResult> Index()
         {
-            var coupons = await _couponService.GetAllAsync();
-            return View(coupons);
+            ResultView<List<CUCouponDTO>> coupons = await _couponService.GetAllAsync();
+            TempData["Msg"] = coupons.Msg;
+            TempData["IsSuccess"] = coupons.IsSuccess;
+            return View(coupons.Data);
         }
 
         // GET: Create new coupon
@@ -32,8 +36,18 @@ namespace AllBirds.AdminDashboard.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _couponService.CreateAsync(couponDto);
-                return RedirectToAction("GetALLForC_CO_S_OS", "Color");
+                ResultView<CUCouponDTO> resultView = await _couponService.CreateAsync(couponDto);
+                TempData["Msg"] = resultView.Msg;
+                TempData["IsSuccess"] = resultView.IsSuccess;
+                if (resultView.IsSuccess)
+                {
+                    return Redirect("/Color/GetALLForC_CO_S_OS");
+
+                }
+                else
+                {
+                    return View(couponDto);
+                }
             }
             return View(couponDto);
         }
@@ -55,34 +69,43 @@ namespace AllBirds.AdminDashboard.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _couponService.UpdateAsync(couponDto);
-                return RedirectToAction("GetALLForC_CO_S_OS","Color");
+                ResultView<CUCouponDTO> resultView = await _couponService.UpdateAsync(couponDto);
+                if (resultView.IsSuccess)
+                {
+                    TempData["IsSuccess"] = resultView.IsSuccess;
+                    TempData["Msg"] = resultView.Msg;
+                    return Redirect("/Color/GetALLForC_CO_S_OS");
+                }
+                return View(couponDto);
             }
             return View(couponDto);
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            var coupon = await _couponService.GetByIdAsync(id);
-            if (coupon == null)
-            {
-                return NotFound();
-            }
-            return View(coupon);
-        }
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var coupon = await _couponService.GetByIdAsync(id);
+        //    if (coupon == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(coupon);
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> SoftDelete(int id)
-        {
-            await _couponService.SoftDeleteAsync(id);
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> SoftDelete(int id)
+        //{
+        //    await _couponService.SoftDeleteAsync(id);
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         [HttpPost]
         public async Task<IActionResult> HardDelete(int id)
         {
-            await _couponService.HardDeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            ResultView<CUCouponDTO> resultView = await _couponService.HardDeleteAsync(id);
+            TempData["IsSuccess"] = resultView.IsSuccess;
+            TempData["Msg"] = resultView.Msg;
+
+            return Redirect("/Color/GetALLForC_CO_S_OS");
         }
     }
 }
