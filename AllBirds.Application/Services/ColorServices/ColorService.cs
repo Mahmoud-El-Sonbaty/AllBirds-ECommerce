@@ -4,6 +4,7 @@ using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.Shared;
 using AllBirds.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AllBirds.Application.Services.ColorServices
 {
@@ -39,14 +40,14 @@ namespace AllBirds.Application.Services.ColorServices
                     CUColorDTO cUColor = _mapper.Map<CUColorDTO>(createdColor);
                     resultView.IsSuccess = true;
                     resultView.Data = cUColor;
-                    resultView.Msg = $"Product {cUColor.NameEn} Created Successfully";
+                    resultView.Msg = $"Color {cUColor.NameEn} Created Successfully";
                     return resultView;
                 }
                 else
                 {
                     resultView.IsSuccess = false;
                     resultView.Data = null;
-                    resultView.Msg = $"Product {mappedColor.NameEn} Not Created Successfully";
+                    resultView.Msg = $"Color {mappedColor.NameEn} Not Created Successfully";
                     return resultView;
                 }
 
@@ -77,7 +78,6 @@ namespace AllBirds.Application.Services.ColorServices
                     resultView.Msg = $"Color {cUColor.NameEn} Updated Successfully";
                     return resultView;
                 }
-
                 resultView.IsSuccess = false;
                 resultView.Data = null;
                 resultView.Msg = "This Color Not Found";
@@ -107,6 +107,14 @@ namespace AllBirds.Application.Services.ColorServices
             ResultView<CUColorDTO> resultView = new();
             try
             {
+                bool dependentPrds = (await _colorRepository.GetAllAsync()).Any(c => c.Id == colorId && c.Products.Count > 0);
+                if (dependentPrds)
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = "Cannot Delete This Color As There Are Product Color Variants That Depend On It";
+                    return resultView;
+                }
                 Color? colorObj = (await _colorRepository.GetAllAsync()).FirstOrDefault(s => s.Id == colorId);
                 if (colorObj is not null)
                 {

@@ -1,10 +1,12 @@
-﻿@using AllBirds.DTOs.ColorDTOs
-@model GetAll
-
+﻿@model GetAll
 
 @section Navbar {
 
     <partial name="_NavbarPartial" />
+}
+@section Sidebar {
+
+    <partial name="_SidebarPartial" />
 }
 @section Footer {
 
@@ -48,16 +50,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var i in Model.cUColorDTOs)
+                            @if (Model.cUColorDTOs is not null && Model.cUColorDTOs.Count > 0)
+                            {
+                                @foreach (var i in Model.cUColorDTOs)
+                                {
+                                    <tr>
+                                        <td><label class="rounded text-light" style="background-color: @i.Code; width: 35px;height: 35px; border-radius: 50%;"></label></td>
+                                        <td>@i.NameEn</td>
+                                        <td>@i.NameAr</td>
+                                        <td>
+                                            <a type="button" asp-action="Edit" asp-controller="Color" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                            <a type="button" class="btn btn-outline-danger" asp-controller="Color" asp-route-id="@i.Id" asp-action="Delete"> <i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td><label class="rounded text-light" style="background-color: @i.Code; width: 35px;height: 35px; border-radius: 50%;"></label></td>
-                                    <td>@i.NameEn</td>
-                                    <td>@i.NameAr</td>
-                                    <td>
-                                        <a type="button" asp-action="Edit" asp-controller="Color" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
-                                        <a type="button" class="btn btn-outline-danger" asp-controller="Color" asp-route-id="@i.Id" asp-action="Delete"> <i class="fas fa-trash-alt"></i></a>
-                                    </td>
+                                    <td colspan="3" class="text-center">No Colors Available</td>
                                 </tr>
                             }
                         </tbody>
@@ -83,14 +94,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var i in Model.cUSizeDTOs)
+                            @if (Model.cUSizeDTOs is not null && Model.cUSizeDTOs.Count > 0)
+                            {
+                                @foreach (var i in Model.cUSizeDTOs)
+                                {
+                                    <tr>
+                                        <td>@i.SizeNumber</td>
+                                        <td>
+                                            <a type="button" asp-action="Edit" asp-controller="Size" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                            <a type="button" class="btn btn-outline-danger" asp-controller="Size" asp-route-id="@i.Id" asp-action="Delete"> <i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td>@i.SizeNumber</td>
-                                    <td>
-                                        <a type="button" asp-action="Edit" asp-controller="Size" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
-                                        <a type="button" class="btn btn-outline-danger" asp-controller="Size" asp-route-id="@i.Id" asp-action="Delete"> <i class="fas fa-trash-alt"></i></a>
-                                    </td>
+                                    <td colspan="2" class="text-center">No Sizes Available</td>
                                 </tr>
                             }
                         </tbody>
@@ -118,16 +138,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var i in Model.cUCoupons)
+                            @if (Model.cUCoupons is not null && Model.cUCoupons.Count > 0)
+                            {
+                                @foreach (var i in Model.cUCoupons)
+                                {
+                                    <tr>
+                                        <td>@i.Code</td>
+                                        <td>@i.Discount</td>
+                                        <td>@i.IsActive</td>
+                                        <td>
+                                            <a type="button" asp-action="Edit" asp-controller="Coupon" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                            <a type="button" class="btn btn-outline-danger" asp-controller="Coupon" asp-route-id="@i.Id" asp-action="Delete"> <i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td>@i.Code</td>
-                                    <td>@i.Discount</td>
-                                    <td>@i.IsActive</td>
-                                    <td>
-                                        <a type="button" asp-action="Edit" asp-controller="Size" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
-                                        <a type="button" class="btn btn-outline-danger" asp-controller="Coupon" asp-route-id="@i.Id" asp-action="HardDelete"> <i class="fas fa-trash-alt"></i></a>
-                                    </td>
+                                    <td colspan="4" class="text-center">No Coupons Available</td>
                                 </tr>
                             }
                         </tbody>
@@ -154,15 +183,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var i in Model.OrderStateDTOs)
+                            @if (Model.OrderStateDTOs is not null && Model.OrderStateDTOs.Count > 0)
+                            {
+                                @foreach (var i in Model.OrderStateDTOs)
+                                {
+                                    <tr>
+                                        <td>@i.StateAr</td>
+                                        <td>@i.StateEn</td>
+                                        <td>
+                                            <a type="button" asp-action="Edit" asp-controller="OrderState" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                                            <a type="button" class="btn btn-outline-danger" asp-controller="OrderState" asp-route-id="@i.Id" asp-action="Delete"> <i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td>@i.StateAr</td>
-                                    <td>@i.StateEn</td>
-                                    <td>
-                                        <a type="button" asp-action="Edit" asp-controller="OrderState" asp-route-id="@i.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
-                                        <a type="button" class="btn btn-outline-danger" asp-controller="OrderState" asp-route-id="@i.Id" asp-action="HardDelete"> <i class="fas fa-trash-alt"></i></a>
-                                    </td>
+                                    <td colspan="3" class="text-center">No Order States Available</td>
                                 </tr>
                             }
                         </tbody>

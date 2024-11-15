@@ -106,7 +106,7 @@ namespace AllBirds.AdminDashboard.Controllers
         //    return View(color);
         //}
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             //if (hardDelete)
