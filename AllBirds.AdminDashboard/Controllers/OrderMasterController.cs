@@ -6,6 +6,7 @@ using AllBirds.DTOs.OrderMasterDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
@@ -14,9 +15,7 @@ namespace AllBirds.AdminDashboard.Controllers
         public IOrderMasterService OrderService { get; set; }
         public IOrderStateService OrderSateService { get; set; }
 
-        public OrderMasterController(IOrderMasterService _orderService,
-                                       IOrderStateService _orderSate
-                                      )
+        public OrderMasterController(IOrderMasterService _orderService, IOrderStateService _orderSate)
         {
             this.OrderService = _orderService; 
             this.OrderSateService = _orderSate;
@@ -47,21 +46,21 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> GetAllOrderMasters()
         {
-            var OrderMaster = await OrderService.GetAllAsync();
+            var OrderMaster = (await OrderService.GetAllAsync());
             var orderState =  await OrderSateService.GetAllAsync();
-            ViewBag.OrderSate = orderState;
+            ViewBag.OrderSate = orderState.Data?[1..];
 
             if (OrderMaster.IsSuccess)
             {
               
-                return View(OrderMaster.Data);  
+                return View(OrderMaster.Data.Where(om => om.OrderStateName != "In Cart").ToList());  
 
             }
             else
             {
                 ViewBag.ErrMsg = OrderMaster.Msg;
 
-                return View(OrderMaster.Data);
+                return View(OrderMaster.Data?.Where(om => om.OrderStateName != "In Cart").ToList());
             }
           
 

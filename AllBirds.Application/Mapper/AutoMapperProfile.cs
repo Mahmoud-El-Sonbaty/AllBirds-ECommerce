@@ -103,9 +103,9 @@ namespace AllBirds.Application.Mapper
 
             #region OrderMaster
             CreateMap<GetAllOrderMastersDTO, OrderMaster>().ReverseMap()
-                  .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => $"{src.Client.FirstName} {src.Client.LastName}"))
+                  .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.Client.FirstName) ? "NA" : $"{src.Client.FirstName} {src.Client.LastName}"))
                 .ForMember(dest => dest.OrderStateName, opt => opt.MapFrom(src => src.OrderState.StateEn))
-                .ForMember(dest => dest.DiscountPerctnage, opt => opt.MapFrom(src => $"{src.Coupon.Discount} %"))
+                .ForMember(dest => dest.DiscountPerctnage, opt => opt.MapFrom(src => src.Coupon == null ? "0%" : $"{src.Coupon.Discount} %"))
                 .ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.Coupon.Discount * src.Total));
 
             CreateMap<CreateOrderMasterDTO, OrderMaster>()

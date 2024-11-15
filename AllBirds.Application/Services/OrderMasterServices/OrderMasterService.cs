@@ -110,7 +110,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
             ResultView<List<GetAllOrderMastersDTO>> result = new();
             try
             {
-                List<OrderMaster> orderMasters = (await orderMasterRepository.GetAllAsync()).Where(b => !b.IsDeleted).Include(src => src.OrderState).ToList();
+                List<OrderMaster> orderMasters = [.. (await orderMasterRepository.GetAllAsync()).Include(src => src.OrderState).Include(om => om.Client).Include(om => om.Coupon).Where(b => !b.IsDeleted)];
                 if (orderMasters.Count() != 0)
                 {
                     result.IsSuccess = true;
