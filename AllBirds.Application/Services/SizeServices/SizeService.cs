@@ -65,7 +65,7 @@ namespace AllBirds.Application.Services.SizeServices
             ResultView<CUSizeDTO> resultView = new();
             try
             {
-                bool Check = (await _sizeRepository.GetAllAsync()).Any(P => P.SizeNumber == cUSizeDTO.SizeNumber);
+                bool Check = (await _sizeRepository.GetAllAsync()).Any(P => P.Id != cUSizeDTO.Id && P.SizeNumber == cUSizeDTO.SizeNumber);
                 if (Check)
                 {
                     resultView.Data = cUSizeDTO;
@@ -73,8 +73,6 @@ namespace AllBirds.Application.Services.SizeServices
                     resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Already Exist";
                     return resultView;
                 }
-
-
                 Size? sizeObj = (await _sizeRepository.GetAllAsync()).FirstOrDefault(s => s.Id == cUSizeDTO.Id && s.IsDeleted == false);
                 if (sizeObj is not null)
                 {
@@ -85,9 +83,7 @@ namespace AllBirds.Application.Services.SizeServices
                     resultView.IsSuccess = true;
                     resultView.Msg = $"Size {cUSize.SizeNumber} Updated Successfully";
                     return resultView;
-
                 }
-
                 resultView.Data = null;
                 resultView.IsSuccess = false;
                 resultView.Msg = $"Size {cUSizeDTO.SizeNumber} Not Updated Successfully";
@@ -118,6 +114,14 @@ namespace AllBirds.Application.Services.SizeServices
             ResultView<CUSizeDTO> resultView = new();
             try
             {
+                bool dependentPrds = (await _sizeRepository.GetAllAsync()).Any(s => s.Id == sizeId && s.Products.Count > 0);
+                if (dependentPrds)
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = "Cannot Delete This Size As There Are Product Color Variants That Depend On It";
+                    return resultView;
+                }
                 Size? sizeObj = (await _sizeRepository.GetAllAsync()).FirstOrDefault(s => s.Id == sizeId && s.IsDeleted == false);
                 if (sizeObj is not null)
                 {
