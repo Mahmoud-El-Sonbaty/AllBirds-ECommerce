@@ -295,6 +295,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                         ProductId = od.ProductColorSize.ProductColor.ProductId,
                         DetailPrice = od.DetailPrice,
                         Quantity = od.Quantity,
+                        UnitsInStock = od.ProductColorSize.UnitsInStock,
                         ProductName = od.ProductColorSize.ProductColor.Product.NameEn,
                         ColorName = od.ProductColorSize.ProductColor.Color.NameEn,
                         SizeNumber = od.ProductColorSize.Size.SizeNumber,
@@ -511,6 +512,8 @@ namespace AllBirds.Application.Services.OrderMasterServices
                         ColorName = (Lang == "en") ? od.ProductColorSize.ProductColor.Color.NameEn : od.ProductColorSize.ProductColor.Color.NameAr,
                         SizeNumber = od.ProductColorSize.Size.SizeNumber,
                         ImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath
+                        ProductColorSizeId = od.ProductColorSizeId,
+                        ProductId = od.ProductColorSize.ProductColor.ProductId,
                     }).ToList()
                 }).FirstOrDefault();
                 if (orderMaster2 is not null)

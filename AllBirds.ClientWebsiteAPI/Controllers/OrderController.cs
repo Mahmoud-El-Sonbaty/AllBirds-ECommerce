@@ -42,9 +42,6 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             }
         }
 
-
-
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateOrder(CreateOrderMasterDTO createOrderMasterDTO)
@@ -75,7 +72,6 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
                 if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
                 {
-                    
                     createOrderMasterDTO.ClientId = userId;
                     ResultView<CreateOrderMasterDTO> createdOrderMaster = await orderMasterService.UpdateAsync(createOrderMasterDTO);
                     if (createdOrderMaster.IsSuccess)
@@ -147,8 +143,6 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 return BadRequest(orderDetailUpdated);
         }
 
-
-
         [Authorize]
         [HttpGet("PlaceOrder")]
         public async Task<IActionResult> PlaceOrder() // here we should minus the units of stock of the products in the order details
@@ -183,16 +177,9 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return Unauthorized("Invalid Token");
         }
 
-
-
-
-
-
-
         /*=======================================================================
                                     for localization 
         ========================================================================*/
-
 
         [Authorize]
         [HttpGet]
@@ -215,13 +202,9 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
 
         }
 
-
-
-
         [Authorize]
         [HttpGet]
         [Route("GetAllClientOrders/{Lang:twoLetterLang}")]
-
         public async Task<IActionResult> GetByUserWithLang(string Lang)
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
@@ -236,9 +219,5 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             }
             return Unauthorized("Invalid Token");
         }
-
-
-
-
     }
 }
