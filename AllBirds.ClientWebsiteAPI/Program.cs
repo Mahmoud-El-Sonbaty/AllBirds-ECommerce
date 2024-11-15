@@ -10,6 +10,7 @@ using AllBirds.Application.Services.OrderMasterServices;
 using AllBirds.Application.Services.OrderStateServices;
 using AllBirds.Application.Services.ProductColorImageServices;
 using AllBirds.Application.Services.ProductColorServices;
+using AllBirds.Application.Services.ProductColorSizeServices;
 using AllBirds.Application.Services.ProductDetailService;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
@@ -81,7 +82,7 @@ builder.Services.AddScoped<IProductColorRepository, ProductColorRepository>();
 builder.Services.AddScoped<IProductColorImageRepository, ProductColorImageRepository>();
 builder.Services.AddScoped<IProductColotImageService, ProductColorImageService>();
 // ProductColorSize
-//builder.Services.AddScoped<IProductColorSizeService, ProductColorSizeService>();
+builder.Services.AddScoped<IProductColorSizeService, ProductColorSizeService>();
 builder.Services.AddScoped<IProductColorSizeRepository, ProductColorSizeRepository>();
 // ProductDetail
 builder.Services.AddScoped<IProductDetailsService, ProductDetailsService>();
@@ -165,10 +166,16 @@ builder.Services.AddCors(op =>
     op.AddPolicy("Default", policy =>
     {
         //policy.WithOrigins("http://localhost:4200", "http://anydomain:domainport", "null")
-        //.WithHeaders("Key")
+        //.WithHeaders("Authorization")
         //.WithMethods("Post", "Get");
         policy.AllowAnyHeader()
         .AllowAnyOrigin()
+        .AllowAnyMethod();
+    });
+    op.AddPolicy("Production", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "https://allbirds-orcin.vercel.app")
+        .WithHeaders("Authorization")
         .AllowAnyMethod();
     });
 });
@@ -198,7 +205,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("Default");
+app.UseCors("Production");
 app.UseAuthentication();
 app.UseAuthorization();
 

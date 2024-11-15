@@ -3,12 +3,15 @@ using AllBirds.Application.Services.CategoryServices;
 using AllBirds.Application.Services.ColorServices;
 using AllBirds.Application.Services.ProductColorImageServices;
 using AllBirds.Application.Services.ProductColorServices;
+using AllBirds.Application.Services.ProductColorSizeServices;
 using AllBirds.Application.Services.ProductServices;
 using AllBirds.Application.Services.ProductSpecificationServices;
+using AllBirds.Application.Services.SizeServices;
 using AllBirds.Application.Services.SpecificationServices;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductColorImageDTOs;
+using AllBirds.DTOs.ProductColorSizeDTOs;
 using AllBirds.DTOs.ProductDetailDTOs;
 using AllBirds.DTOs.ProductDTOs;
 using AllBirds.DTOs.ProductSpecificationDTOs;
@@ -27,11 +30,15 @@ namespace AllBirds.AdminDashboard.Controllers
         private readonly ISpecificationService specificationService;
         private readonly IProductColorService productColorService;
         private readonly IProductColotImageService productColotImageService;
+        private readonly IProductColorSizeService productColorSizeService;
+        private readonly ISizeService sizeService;
         private readonly IColorService colorService;
         private readonly IWebHostEnvironment webHostEnvironment;
 
 
-        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService, IProductColorService _productColorService, IColorService _colorService , IProductColotImageService _productColotImageService, IWebHostEnvironment _webHostEnvironment)
+        public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService,
+            IProductColorService _productColorService, IColorService _colorService , IProductColotImageService _productColotImageService, IProductColorSizeService _productColorSizeService, ISizeService _sizeService,
+            IWebHostEnvironment _webHostEnvironment)
         {
             productService = _productService;
             categoryService = _categoryService;
@@ -39,7 +46,9 @@ namespace AllBirds.AdminDashboard.Controllers
             specificationService = _specificationService;
             productColorService = _productColorService;
             productColotImageService = _productColotImageService;
+            productColorSizeService = _productColorSizeService;
             colorService = _colorService;
+            sizeService = _sizeService;
             webHostEnvironment = _webHostEnvironment;
         }
         public IActionResult Index()
@@ -216,10 +225,9 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> DeleteProductColorImage(int id)
         {
             ResultView<CUProductColorImageDTO> resultView = await productColotImageService.HardDeleteProductColorImage(id);
-
             TempData["IsSuccess"] = resultView.IsSuccess;
             TempData["Msg"] = resultView.Msg;
-                return RedirectToAction("GetProductColorImages");
+            return RedirectToAction("GetProductColorImages");
         }
 
 
@@ -272,5 +280,54 @@ namespace AllBirds.AdminDashboard.Controllers
             return Redirect($"/Product/GetAllProductColors/{resultView.Data.ProductId}");
         }
 
+        /////////////////////////////////////////////////// Product Color Size //////////////////////////////////////////////////////////////
+        
+        public async Task<IActionResult> GetAllProductColorSizes(int prdColorId)
+        {
+            ResultView<List<GetPCSDTO>> resultView = await productColorSizeService.GetAllAsync(prdColorId);
+            if (!resultView.IsSuccess)
+            {
+                TempData["Msg"] = resultView.Msg;
+                TempData["IsSuccess"] = resultView.IsSuccess;
+            }
+            ViewBag.PrdColorId = prdColorId;
+            ViewBag.Sizes = await sizeService.GetAllAsync();
+            return View(resultView.Data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductColorSize([FromBody] CreatePCSDTO createPCSDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                ResultView<UpdatePCSDTO> res = await productColorSizeService.CreateAsync(createPCSDTO);
+                return res.IsSuccess ? Json(new { success = true, id = res.Data!.Id, message = res.Msg }) : Json(new { success = false, message = res.Msg });
+            }
+
+            // If the model is invalid, return an error response
+            return Json(new { success = false, message = "Invalid data" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProductColorSize([FromBody] UpdatePCSDTO updatePCSDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                ResultView<UpdatePCSDTO> res = await productColorSizeService.UpdateAsync(updatePCSDTO);
+                return res.IsSuccess ? Json(new { success = true, id = res.Data!.Id, message = res.Msg }) : Json(new { success = false, message = res.Msg });
+            }
+
+            // If the model is invalid, return an error response
+            return Json(new { success = false, message = "Invalid data" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProductColorSize(int prdColorSizeId, int prdColorId)
+        {
+            ResultView<CreatePCSDTO> resultView = await productColorSizeService.DeleteAsync(prdColorSizeId);
+            TempData["Msg"] = resultView.Msg;
+            TempData["IsSuccess"] = resultView.IsSuccess;
+            return Redirect($"GetAllProductColorSizes?prdColorId={prdColorId}");
+        }
     }
 }
