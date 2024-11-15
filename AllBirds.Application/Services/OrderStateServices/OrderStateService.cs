@@ -86,6 +86,14 @@ namespace AllBirds.Application.Services.OrderStateServices
             ResultView<CUOrderStateDTO> resultView = new();
             try
             {
+                bool dependentOrders = (await _orderStateRepository.GetAllAsync()).Any(c => c.Id == orderStateId && c.Orders.Count > 0);
+                if (dependentOrders)
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = "Cannot Delete This State As There Are Orders That Depend On It";
+                    return resultView;
+                }
                 OrderState? orderStateObj = (await _orderStateRepository.GetAllAsync()).FirstOrDefault(s => s.Id == orderStateId && s.IsDeleted == false);
                 if (orderStateObj is not null)
                 {
@@ -144,13 +152,13 @@ namespace AllBirds.Application.Services.OrderStateServices
             List<OrderState> orderStatesList = [.. (await _orderStateRepository.GetAllAsync())];
             return _mapper.Map<List<CUOrderStateDTO>>(orderStatesList);
         }
-        public async Task<GetOrderStateDTO> GetByIdAsync(int orderStateId)
+        public async Task<CUOrderStateDTO> GetByIdAsync(int orderStateId)
         {
             IQueryable<OrderState> orderStateList = await _orderStateRepository.GetAllAsync();
             OrderState? orderStateObj = orderStateList.FirstOrDefault(s => s.Id == orderStateId && !s.IsDeleted); // bool operator
             if (orderStateObj != null)
             {
-                return _mapper.Map<GetOrderStateDTO>(orderStateObj);
+                return _mapper.Map<CUOrderStateDTO>(orderStateObj);
             }
             return null;
         }

@@ -51,7 +51,7 @@ namespace AllBirds.AdminDashboard.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var orderState = await _orderStateService.GetByIdAsync(id);
+            CUOrderStateDTO orderState = await _orderStateService.GetByIdAsync(id);
             if (orderState == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace AllBirds.AdminDashboard.Controllers
         //    return View(orderState);
         //}
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             //if (hardDelete)

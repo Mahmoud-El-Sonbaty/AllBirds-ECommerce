@@ -11,6 +11,6 @@ namespace AllBirds.Application.Services.OrderStateServices
         public Task<ResultView<CUOrderStateDTO>> HardDeleteAsync(int sizeId);
         public Task<ResultView<List<CUOrderStateDTO>>> GetAllAsync();
         public Task<List<CUOrderStateDTO>> GetAllWithDeletedAsync();
-        public Task<GetOrderStateDTO> GetByIdAsync(int sizeId);
+        public Task<CUOrderStateDTO> GetByIdAsync(int sizeId);
     }
 }
