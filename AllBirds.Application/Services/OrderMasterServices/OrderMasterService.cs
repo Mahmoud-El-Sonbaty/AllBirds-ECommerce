@@ -506,6 +506,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                         Id = od.Id,
                         DetailPrice = od.DetailPrice,
                         Quantity = od.Quantity,
+                        UnitsInStock = od.ProductColorSize.UnitsInStock,
                         ProductName = (Lang == "en") ? od.ProductColorSize.ProductColor.Product.NameEn : od.ProductColorSize.ProductColor.Product.NameAr,
                         ColorName = (Lang == "en") ? od.ProductColorSize.ProductColor.Color.NameEn : od.ProductColorSize.ProductColor.Color.NameAr,
                         SizeNumber = od.ProductColorSize.Size.SizeNumber,

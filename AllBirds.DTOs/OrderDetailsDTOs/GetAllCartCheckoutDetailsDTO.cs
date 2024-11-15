@@ -16,6 +16,7 @@ namespace AllBirds.DTOs.OrderDetailsDTOs
         public string ColorName { get; set; }
         public decimal DetailPrice { get; set; }
         public int Quantity { get; set; }
+        public int UnitsInStock { get; set; }
         public string SizeNumber { get; set; }
         public string ImagePath { get; set; }
     }
