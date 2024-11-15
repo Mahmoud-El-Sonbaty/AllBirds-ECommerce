@@ -110,7 +110,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
             ResultView<List<GetAllOrderMastersDTO>> result = new();
             try
             {
-                List<OrderMaster> orderMasters = (await orderMasterRepository.GetAllAsync()).Where(b => !b.IsDeleted).Include(src => src.OrderState).ToList();
+                List<OrderMaster> orderMasters = [.. (await orderMasterRepository.GetAllAsync()).Include(src => src.OrderState).Include(om => om.Client).Include(om => om.Coupon).Where(b => !b.IsDeleted)];
                 if (orderMasters.Count() != 0)
                 {
                     result.IsSuccess = true;
@@ -295,6 +295,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                         ProductId = od.ProductColorSize.ProductColor.ProductId,
                         DetailPrice = od.DetailPrice,
                         Quantity = od.Quantity,
+                        UnitsInStock = od.ProductColorSize.UnitsInStock,
                         ProductName = od.ProductColorSize.ProductColor.Product.NameEn,
                         ColorName = od.ProductColorSize.ProductColor.Color.NameEn,
                         SizeNumber = od.ProductColorSize.Size.SizeNumber,
@@ -506,10 +507,13 @@ namespace AllBirds.Application.Services.OrderMasterServices
                         Id = od.Id,
                         DetailPrice = od.DetailPrice,
                         Quantity = od.Quantity,
+                        UnitsInStock = od.ProductColorSize.UnitsInStock,
                         ProductName = (Lang == "en") ? od.ProductColorSize.ProductColor.Product.NameEn : od.ProductColorSize.ProductColor.Product.NameAr,
                         ColorName = (Lang == "en") ? od.ProductColorSize.ProductColor.Color.NameEn : od.ProductColorSize.ProductColor.Color.NameAr,
                         SizeNumber = od.ProductColorSize.Size.SizeNumber,
-                        ImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath
+                        ImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath,
+                        ProductColorSizeId = od.ProductColorSizeId,
+                        ProductId = od.ProductColorSize.ProductColor.ProductId
                     }).ToList()
                 }).FirstOrDefault();
                 if (orderMaster2 is not null)

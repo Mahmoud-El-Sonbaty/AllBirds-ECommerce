@@ -38,12 +38,9 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             }
             else
             {
-                return Unauthorized("Invalid token or user ID");
+                return Unauthorized("Invalid Token");
             }
         }
-
-
-
 
         [Authorize]
         [HttpPost]
@@ -61,7 +58,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     else
                         return BadRequest(createdOrderMaster);
                 }
-                return Unauthorized();
+                return Unauthorized("Invalid Token");
             }
             return NotFound();
         }
@@ -82,7 +79,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     else
                         return BadRequest(createdOrderMaster);
                 }
-                return Unauthorized();
+                return Unauthorized("Invalid Token");
             }
             return NotFound();
         }
@@ -102,7 +99,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                     else
                         return BadRequest(createdOrderDetail);
                 }
-                return Unauthorized();
+                return Unauthorized("Invalid Token");
             }
             return BadRequest("validation errors");
         }
@@ -120,7 +117,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 else
                     return BadRequest(deletedOrder);
             }
-            return Unauthorized();
+            return Unauthorized("Invalid Token");
         }
 
         [Authorize]
@@ -146,8 +143,6 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 return BadRequest(orderDetailUpdated);
         }
 
-
-
         [Authorize]
         [HttpGet("PlaceOrder")]
         public async Task<IActionResult> PlaceOrder() // here we should minus the units of stock of the products in the order details
@@ -162,7 +157,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 }
                 return BadRequest(resultView);
             }
-            return Unauthorized();
+            return Unauthorized("Invalid Token");
         }
 
         [Authorize]
@@ -179,19 +174,12 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 }
                 return BadRequest(resultView);
             }
-            return Unauthorized();
+            return Unauthorized("Invalid Token");
         }
-
-
-
-
-
-
 
         /*=======================================================================
                                     for localization 
         ========================================================================*/
-
 
         [Authorize]
         [HttpGet]
@@ -209,18 +197,14 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             }
             else
             {
-                return Unauthorized("Invalid token or user ID");
+                return Unauthorized("Invalid Token");
             }
 
         }
 
-
-
-
         [Authorize]
         [HttpGet]
         [Route("GetAllClientOrders/{Lang:twoLetterLang}")]
-
         public async Task<IActionResult> GetByUserWithLang(string Lang)
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
@@ -233,11 +217,7 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 }
                 return BadRequest(resultView.Msg);
             }
-            return Unauthorized();
+            return Unauthorized("Invalid Token");
         }
-
-
-
-
     }
 }

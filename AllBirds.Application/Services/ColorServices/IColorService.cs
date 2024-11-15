@@ -9,7 +9,7 @@ namespace AllBirds.Application.Services.ColorServices
         public Task<ResultView<CUColorDTO>> UpdateAsync(CUColorDTO CUColorDTO);
         public Task<CUColorDTO> SoftDeleteAsync(int sizeId);
         public Task<ResultView<CUColorDTO>> HardDeleteAsync(int sizeId);
-        public Task<List<CUColorDTO>> GetAllAsync();
+        public Task<ResultView<List<CUColorDTO>>> GetAllAsync();
         public Task<List<CUColorDTO>> GetAllWithDeletedAsync();
         public Task<CUColorDTO> GetByIdAsync(int sizeId);
     }

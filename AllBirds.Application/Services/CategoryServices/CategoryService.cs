@@ -79,11 +79,11 @@ namespace AllBirds.Application.Services.CategoryServices
                 {
                     resultView.IsSuccess = false;
                     resultView.Data = null;
-                    resultView.Msg = $"Category ({entity.NameEn}) IS Not Found";
+                    resultView.Msg = $"Category ({entity.NameEn}) Is Not Found";
                     return resultView;
                 }
                 // modifications by sonbaty
-                else if ((await categoryRepository.GetAllAsync()).Any(c => c.Id != entity.Id && c.NameEn == entity.NameEn || c.NameAr == entity.NameAr))
+                else if ((await categoryRepository.GetAllAsync()).Any(c => (c.Id != entity.Id && c.NameEn == entity.NameEn) || (c.Id != entity.Id && c.NameAr == entity.NameAr)))
                 {
                     resultView.IsSuccess = false;
                     resultView.Data = null;
@@ -129,29 +129,6 @@ namespace AllBirds.Application.Services.CategoryServices
             ResultView<List<GetAllCategoryDTO>> resultView = new();
             try
             {
-                //List<Category> allCats = (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted).ToList();
-                //List<GetAllCategoryNestedDTO> result = new();
-                //List<Category> grandParents = allCats.Where(c => c.ParentCategoryId == 0).ToList();
-                //foreach (Category parent in grandParents)
-                //{
-                //    GetAllCategoryNestedDTO mappedObj = new();
-                //    mappedObj.Id = parent.Id;
-                //    mappedObj.NameAr = parent.NameAr;
-                //    mappedObj.NameEn = parent.NameEn;
-                //    mappedObj.Level = parent.Level;
-                //    mappedObj.IsParentCategory = parent.IsParentCategory;
-                //    mappedObj.ParentCategoryId = parent.ParentCategoryId;
-                //    //mappedObj.Children = parent.IsParentCategory ? test(allCats.Where(ch => ch.ParentCategoryId == parent.Id).ToList(), parent) : [];
-                //    mappedObj.Children = [];
-                //    if (parent.IsParentCategory)
-                //    {
-                //        mappedObj.Children = test(allCats, parent.Id);
-                //    }
-                //    result.Add(mappedObj);
-                //}
-
-
-                //================================================================================================
                 List<Category> successCategorys;
                 if (onlyParents)
                     successCategorys = [.. (await categoryRepository.GetAllAsync()).Where(a => !a.IsDeleted && a.IsParentCategory == true).OrderByDescending(c => c.Created)];
@@ -160,6 +137,39 @@ namespace AllBirds.Application.Services.CategoryServices
                 List<GetAllCategoryDTO> successCategorySDTO = mapper.Map<List<GetAllCategoryDTO>>(successCategorys);
                 resultView.IsSuccess = true;
                 resultView.Data = successCategorySDTO;
+                resultView.Msg = "All Categories Fetched Successfully";
+            }
+            catch (Exception ex)
+            {
+                resultView.IsSuccess = false;
+                resultView.Data = null;
+                resultView.Msg = $"Error Happened While Fetching All Categories {ex.Message}";
+            }
+            return resultView;
+        }
+
+        // for pagination
+        public async Task<ResultView<EntityPaginated<GetAllCategoryDTO>>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+        {
+            ResultView<EntityPaginated<GetAllCategoryDTO>> resultView = new();
+            try
+            {
+                List<Category> categories;
+                categories = [.. (await categoryRepository.GetAllAsync())
+                    .Where(a => !a.IsDeleted)
+                    .OrderByDescending(c => c.Created)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)];
+
+                List<GetAllCategoryDTO> categoryDTOs = mapper.Map<List<GetAllCategoryDTO>>(categories);
+                int totalCategories = (await categoryRepository.GetAllAsync()).Count(a => !a.IsDeleted);
+
+                resultView.IsSuccess = true;
+                resultView.Data = new EntityPaginated<GetAllCategoryDTO>
+                {
+                    Data = categoryDTOs,
+                    Count = totalCategories
+                };
                 resultView.Msg = "All Categories Fetched Successfully";
             }
             catch (Exception ex)
@@ -271,7 +281,7 @@ namespace AllBirds.Application.Services.CategoryServices
                         GetOneCategoryDTO successCategoryDTO = mapper.Map<GetOneCategoryDTO>(successCategory2);
                         resultView.IsSuccess = true;
                         resultView.Data = successCategoryDTO;
-                        resultView.Msg = $"Category {successCategory.NameEn} Was Hard Deleted Successfully";
+                        resultView.Msg = $"Category {successCategory.NameEn} Was Deleted Successfully";
                     }
                 }
                 else
