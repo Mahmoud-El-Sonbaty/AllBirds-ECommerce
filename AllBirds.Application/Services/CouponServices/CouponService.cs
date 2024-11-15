@@ -98,6 +98,14 @@ namespace AllBirds.Application.Services.CouponServices
             ResultView<CUCouponDTO> resultView = new();
             try
             {
+                bool dependentOrders = (await _couponRepository.GetAllAsync()).Any(c => c.Id == couponId && c.Orders.Count > 0);
+                if (dependentOrders)
+                {
+                    resultView.IsSuccess = false;
+                    resultView.Data = null;
+                    resultView.Msg = "Cannot Delete This Coupon As There Are Orders That Depend On It";
+                    return resultView;
+                }
                 Coupon? couponObj = (await _couponRepository.GetAllAsync()).FirstOrDefault(s => s.Id == couponId && s.IsDeleted == false);
                 if (couponObj is not null)
                 {
@@ -156,13 +164,13 @@ namespace AllBirds.Application.Services.CouponServices
             List<Coupon> couponsList = [.. (await _couponRepository.GetAllAsync())];
             return _mapper.Map<List<CUCouponDTO>>(couponsList);
         }
-        public async Task<GetCouponDTO> GetByIdAsync(int couponId)
+        public async Task<CUCouponDTO> GetByIdAsync(int couponId)
         {
             IQueryable<Coupon> couponList = await _couponRepository.GetAllAsync();
             Coupon? couponObj = couponList.FirstOrDefault(s => s.Id == couponId && !s.IsDeleted); // bool operator
             if (couponObj != null)
             {
-                return _mapper.Map<GetCouponDTO>(couponObj);
+                return _mapper.Map<CUCouponDTO>(couponObj);
             }
             return null;
         }

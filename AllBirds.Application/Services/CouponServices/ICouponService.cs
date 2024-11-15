@@ -11,6 +11,6 @@ namespace AllBirds.Application.Services.CouponServices
         public Task<ResultView<CUCouponDTO>> HardDeleteAsync(int sizeId);
         public Task<ResultView<List<CUCouponDTO>>> GetAllAsync();
         public Task<List<CUCouponDTO>> GetAllWithDeletedAsync();
-        public Task<GetCouponDTO> GetByIdAsync(int sizeId);
+        public Task<CUCouponDTO> GetByIdAsync(int sizeId);
     }
 }

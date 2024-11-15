@@ -3,6 +3,8 @@ using AllBirds.DTOs.CouponDTOs;
 using AllBirds.DTOs.Shared;
 using AllBirds.DTOs.SizeDTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
@@ -49,6 +51,18 @@ namespace AllBirds.AdminDashboard.Controllers
                     return View(couponDto);
                 }
             }
+            var tt = ModelState.FirstOrDefault(ms => ms.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Value.Errors;
+            StringBuilder errors = new();
+            foreach (var err in ModelState.Where(ms => ms.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid))
+            {
+                foreach (ModelError val in err.Value?.Errors ?? [])
+                {
+                    errors.Append(val.ErrorMessage);
+                    errors.Append(",");
+                }
+            }
+            TempData["Msg"] = errors;
+            TempData["IsSuccess"] = false;
             return View(couponDto);
         }
 
@@ -98,8 +112,8 @@ namespace AllBirds.AdminDashboard.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
 
-        [HttpPost]
-        public async Task<IActionResult> HardDelete(int id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
             ResultView<CUCouponDTO> resultView = await _couponService.HardDeleteAsync(id);
             TempData["IsSuccess"] = resultView.IsSuccess;
