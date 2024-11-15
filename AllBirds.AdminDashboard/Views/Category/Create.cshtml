@@ -1,5 +1,4 @@
-﻿
-@model CUCategoryDTO
+﻿@model CUCategoryDTO
 @{
     ViewData["Title"] = "Create";
 }
@@ -22,29 +21,15 @@
 
     <partial name="_FooterPartial" />
 }
-@if (TempData["IsSuccess"] is bool Success)
-{
-    @if (Success)
-    {
-        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
-            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
-        </div>
-    }
-    else
-    {
-        <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
-            <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
-        </div>
-    }
-}
+
 <h1>Create Category</h1>
 
 <div class="row">
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Create Category</h4>
-                <p class="card-description">Create Category </p>
+                @* <h4 class="card-title">Create Category</h4>
+                <p class="card-description">Create Category </p> *@
                 <form class="forms-sample" method="post" enctype="multipart/form-data" asp-action="Create">
                     <div class="form-group">
                         <label asp-for="NameEn">NameEn</label>
@@ -121,5 +106,21 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    @if (TempData["IsSuccess"] is bool Success)
+    {
+        @if (Success)
+        {
+            <script>
+                showMsgSuccessToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
+        else
+        {
+            <script>
+                showMsgDangerToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
     }
 }

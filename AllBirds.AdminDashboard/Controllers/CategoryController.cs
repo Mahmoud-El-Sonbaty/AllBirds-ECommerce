@@ -125,16 +125,31 @@ namespace AllBirds.AdminDashboard.Controllers
             }
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync();
+        //    if (!getAllCategoryDTOs.IsSuccess)
+        //    {
+        //        TempData.Add("IsSuccess", false);
+        //        TempData.Add("Msg", getAllCategoryDTOs.Msg);
+        //    }
+        //    return View(getAllCategoryDTOs.Data);
+        //}
+
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 8)
         {
-            ResultView<List<GetAllCategoryDTO>> getAllCategoryDTOs = await categoryService.GetAllAsync();
-            if (!getAllCategoryDTOs.IsSuccess)
+            ResultView<EntityPaginated<GetAllCategoryDTO>> paginatedCategories = await categoryService.GetAllPaginatedAsync(pageNumber, pageSize);
+            if (!paginatedCategories.IsSuccess)
             {
-                TempData.Add("IsSuccess", false);
-                TempData.Add("Msg", getAllCategoryDTOs.Msg);
+                TempData["IsSuccess"] = false;
+                TempData["Msg"] = paginatedCategories.Msg;
             }
-            return View(getAllCategoryDTOs.Data);
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = paginatedCategories.Data?.Count ?? 0;
+            return View(paginatedCategories.Data?.Data ?? new List<GetAllCategoryDTO>());
         }
 
         [HttpGet]
