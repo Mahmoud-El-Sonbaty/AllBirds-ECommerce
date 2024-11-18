@@ -1,4 +1,5 @@
-﻿using AllBirds.DTOs.OrderStateDTOs;
+﻿using AllBirds.DTOs.CategoryDTOs;
+using AllBirds.DTOs.OrderStateDTOs;
 using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductColorImageDTOs;
 using AllBirds.DTOs.Shared;
@@ -17,6 +18,7 @@ namespace AllBirds.Application.Services.ProductColorServices
         //public Task<ResultView<GetOneProductColorDTO>> SoftDeleteAsync(int sizeId);
         public Task<ResultView<GetOneProductColorDTO>> HardDeleteAsync(int sizeId);
         public Task<ResultView<List<GetALlProductColorDTO>>> GetAllAsync(int Id);
+        public Task<ResultView<EntityPaginated<GetALlProductColorDTO>>> GetAllPaginatedAsync(int Id, int pageNumber, int pageSize);
         public Task<ResultView<List<GetOneProductColorDTO>>> GetAllWithDeletedAsync();
         public Task<ResultView<GetOneProductColorDTO>> GetByIdAsync(int Id);
     }

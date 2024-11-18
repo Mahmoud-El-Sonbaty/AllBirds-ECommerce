@@ -1,10 +1,12 @@
 ﻿using AllBirds.Application.Services.CategoryServices;
 using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
+    [Authorize(Roles = "SuperUser,Manager,Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService categoryService;

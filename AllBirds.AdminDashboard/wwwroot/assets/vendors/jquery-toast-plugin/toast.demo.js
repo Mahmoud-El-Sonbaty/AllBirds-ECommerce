@@ -3,7 +3,7 @@
         'use strict';
         resetToastPosition();
         $.toast({
-            heading: 'Danger',
+            heading: 'Error',
             text: msg,
             showHideTransition: 'slide',
             icon: 'error',

@@ -117,7 +117,8 @@
                                             <td>
                                                 @* <a type="button" asp-action="Details" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a> *@
                                                 @* <a type="button" asp-action="Update" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a> *@
-                                                <a type="button" asp-action="DeleteAdmin" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                                @* <a type="button" asp-action="DeleteAdmin" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a> *@
+                                                <button type="button" class="btn btn-outline-danger" onclick="openModal('Admin', '/Account/DeleteAdmin/@adminDTO.Id')"><i class="fas fa-trash-alt"></i></button>
                                             </td>
                                         }
                                     </tr>                                    
@@ -142,7 +143,14 @@
                     @for (int i = 1; i <= totalPages; i++)
                     {
                         <li class="page-item @(i == currentPage ? "active" : "")">
-                            <a class="page-link" asp-action="GetAll" asp-route-pageNumber="@i" asp-route-pageSize="@pageSize">@i</a>
+                            @if (i == currentPage)
+                            {
+                                <a class="page-link">@i</a>
+                            }
+                            else
+                            {
+                                <a class="page-link" asp-action="GetAll" asp-route-pageNumber="@i" asp-route-pageSize="@pageSize">@i</a>
+                            }
                         </li>
                     }
                     <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
