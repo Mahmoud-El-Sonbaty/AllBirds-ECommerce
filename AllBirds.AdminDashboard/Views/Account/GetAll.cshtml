@@ -117,7 +117,8 @@
                                             <td>
                                                 @* <a type="button" asp-action="Details" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a> *@
                                                 @* <a type="button" asp-action="Update" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a> *@
-                                                <a type="button" asp-action="DeleteAdmin" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                                @* <a type="button" asp-action="DeleteAdmin" asp-controller="Account" asp-route-id="@adminDTO.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a> *@
+                                                <button type="button" class="btn btn-outline-danger" onclick="openModal('Admin', '/Account/DeleteAdmin/@adminDTO.Id')"><i class="fas fa-trash-alt"></i></button>
                                             </td>
                                         }
                                     </tr>                                    

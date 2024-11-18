@@ -90,7 +90,8 @@
                                     </td>
                                     <td>
                                         <a type="submit" asp-action="Update" asp-controller="ProductDetail" asp-route-id="@prd.Id" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
-                                        <a type="button" asp-action="DeleteProductDetails" asp-controller="ProductDetail" asp-route-id="@prd.Id" asp-route-ProductId="@ViewBag.ProductId" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                        @* <a type="button" asp-action="DeleteProductDetails" asp-controller="ProductDetail" asp-route-id="@prd.Id" asp-route-ProductId="@ViewBag.ProductId" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a> *@
+                                        <button type="button" class="btn btn-outline-danger" onclick="openModal('Detail', '/ProductDetail/DeleteProductDetails/@prd.Id?ProductId=@ViewBag.ProductId')"><i class="fas fa-trash-alt"></i></button>
                                     </td>
                                 </tr>
                             }

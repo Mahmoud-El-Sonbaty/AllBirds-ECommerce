@@ -77,7 +77,8 @@
                                             @* <a type="button" asp-action="CategiryDetils" asp-controller="Category" asp-route-id="@cat.Id" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a> *@
                                             <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
                                             @* <a asp-action="UpdateProductColorSize" asp-controller="Product" asp-route-prdColorSizeId="@pcs.ProductColorSizeId" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a> *@
-                                            <a asp-action="DeleteProductColorSize" asp-controller="Product" asp-route-prdColorSizeId="@pcs.ProductColorSizeId" asp-route-prdColorId="@ViewBag.PrdColorId" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                            @* <a asp-action="DeleteProductColorSize" asp-controller="Product" asp-route-prdColorSizeId="@pcs.ProductColorSizeId" asp-route-prdColorId="@ViewBag.PrdColorId" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a> *@
+                                            <button type="button" class="btn btn-outline-danger" onclick="openModal('Product Color Size', '/Product/DeleteProductColorSize?prdColorSizeId=@pcs.ProductColorSizeId&prdColorId=@ViewBag.PrdColorId')"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -204,6 +205,9 @@
                         // msgDiv.style = "display: block;";
                         // msgDiv.children[0].textContent = res.message;
                         showMsgSuccessToast(res.message);
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1500);
                     }
                     else {
                         showMsgDangerToast(res.message);

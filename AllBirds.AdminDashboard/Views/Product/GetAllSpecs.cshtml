@@ -54,7 +54,8 @@
                                         <td>@prdSpec.ContentEn | @prdSpec.ContentAr</td>
                                         <td>
                                             <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
-                                            <a asp-action="DeletePrdSpec" asp-controller="Product" asp-route-id="@prdSpec.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+                                            @* <a asp-action="DeletePrdSpec" asp-controller="Product" asp-route-id="@prdSpec.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a> *@
+                                            <button type="button" class="btn btn-outline-danger" onclick="openModal('Specification', '/Product/DeletePrdSpec/@prdSpec.Id')"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 }                                

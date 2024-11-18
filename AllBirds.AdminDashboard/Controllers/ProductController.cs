@@ -267,6 +267,7 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductColorImages(int id)
         {
+            //ViewBag.PrdColorId = id;
             ResultView<GetOneProductColorDTO> resultView = await productColorService.GetByIdAsync(id);
             if(resultView.IsSuccess)
             {
@@ -281,12 +282,12 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DeleteProductColorImage(int id)
+        public async Task<IActionResult> DeleteProductColorImage(int id, int prdColorId)
         {
             ResultView<CUProductColorImageDTO> resultView = await productColotImageService.HardDeleteProductColorImage(id);
             TempData["IsSuccess"] = resultView.IsSuccess;
             TempData["Msg"] = resultView.Msg;
-            return Redirect("/Product/GetProductColorImages/1");
+            return Redirect($"/Product/GetProductColorImages/{prdColorId}");
         }
 
         /////////////////////////////////////////////////// Product Color Size //////////////////////////////////////////////////////////////
