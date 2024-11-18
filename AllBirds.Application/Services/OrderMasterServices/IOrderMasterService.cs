@@ -16,7 +16,9 @@ namespace AllBirds.Application.Services.OrderMasterServices
         public Task<ResultView<CreateOrderMasterDTO>> HardDeleteAsync(int userId);
         public Task<ResultView<GetUserCartCheckoutDTO>> GetUserCartAsync(int userId);
         public Task<ResultView<List<GetAllClientOrderMasterDTO>>> GetByUserAsync(int userId);
+        public Task<ResultView<GetAllClientOrderMasterDTO>> GetDetailsAsync(int orderId);
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllAsync();
+        public Task<ResultView<EntityPaginated<GetAllOrderMastersDTO>>> GetAllPaginatedAsync(int pageNumber, int pageSize);
         public Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllWithDeletedAsync();
         public Task<ResultView<GetOneOrderMasterDTO>> GetByIdAsync(int OrderId);
         public Task<ResultView<bool>> ChangingStateAsync(int StateId, int OrderID);

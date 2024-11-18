@@ -66,5 +66,16 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
                 return BadRequest(resultView.Msg);
             }
         }
+
+        [HttpGet]
+        [Route("User/{userId}")]
+        public async Task<IActionResult> UserDetails(int userId)
+        {
+            ResultView<ClientDetailsDTO> result = await accountService.GetClientDetails(userId);
+            if (result.IsSuccess)
+                return Ok(result);
+            else
+                return BadRequest(result);
+        }
     }
 }

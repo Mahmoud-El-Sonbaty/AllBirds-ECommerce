@@ -1,6 +1,6 @@
 (function($) {
   'use strict';
-    $('#exampleModal-3').on('show.bs.modal', function (event) {
+    $('#deleteModal').on('show.bs.modal', function (event) {
     console.log('flkjafl');
     var button = $(event.relatedTarget) // Button that triggered the modal
     var urlToGo = button.data('urlToGo') // Extract info from data-* attributes

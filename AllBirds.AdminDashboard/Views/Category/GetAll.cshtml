@@ -30,7 +30,6 @@
         </div> *@
         @section Scripts {
             <script>
-                // showMsgDangerToast('fsdfasdf');
                 showMsgSuccessToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
             </script>
         }
@@ -42,7 +41,6 @@
         </div> *@
         @section Scripts {
             <script>
-                // showMsgDangerToast('fsdfasdf');
                 showMsgDangerToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
             </script>
         }

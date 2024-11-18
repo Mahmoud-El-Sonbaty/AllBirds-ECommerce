@@ -1,15 +1,14 @@
 ﻿using AllBirds.Application.Services.AccountServices;
 using AllBirds.Application.Services.OrderMasterServices;
 using AllBirds.Application.Services.OrderStateServices;
-using AllBirds.DTOs.OrderDetailsDTOs;
 using AllBirds.DTOs.OrderMasterDTOs;
+using AllBirds.DTOs.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
-using System.Diagnostics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
+    [Authorize(Roles = "SuperUser,Manager,Admin")]
     public class OrderMasterController : Controller
     {
         public IOrderMasterService OrderService { get; set; }
@@ -25,48 +24,59 @@ namespace AllBirds.AdminDashboard.Controllers
             return View();
 
         }
-        public async Task< IActionResult> changingState(int stateID ,int orderID )
+
+        [HttpGet]
+        public async Task< IActionResult> changingState(int stateID, int orderID )
         {
-            
-
-           var item= await OrderService.ChangingStateAsync(stateID, orderID);
-            if (item.IsSuccess)
+            if (stateID != 0 && orderID != 0)
             {
-                return RedirectToAction("GetAllOrderMasters");
-
+                var item= await OrderService.ChangingStateAsync(stateID, orderID);
+                return item.IsSuccess ? Json(new { success = true, id = item.Data, message = item.Msg }) : Json(new { success = false, message = item.Msg });
+                //return RedirectToAction("GetAllOrderMasters");
             }
             else
             {
-                ViewBag.ErrMsg=item.Msg;
-                return RedirectToAction("GetAllOrderMasters");
-
+                return Json(new { success = false, message = "Invalid data" });
+                //return RedirectToAction("GetAllOrderMasters");
             }
-
         }
 
-        public async Task<IActionResult> GetAllOrderMasters()
+        [HttpGet]
+        public async Task<IActionResult> GetAllOrderMasters(int pageNumber = 1, int pageSize = 7)
         {
-            var OrderMaster = (await OrderService.GetAllAsync());
+            var OrderMaster = (await OrderService.GetAllPaginatedAsync(pageNumber, pageSize));
             var orderState =  await OrderSateService.GetAllAsync();
             ViewBag.OrderSate = orderState.Data?[1..];
-
             if (OrderMaster.IsSuccess)
             {
-              
-                return View(OrderMaster.Data.Where(om => om.OrderStateName != "In Cart").ToList());  
-
+                ViewBag.CurrentPage = pageNumber;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalItems = OrderMaster.Data?.Count ?? 0;
+                return View(OrderMaster.Data?.Data);
             }
             else
             {
-                ViewBag.ErrMsg = OrderMaster.Msg;
-
-                return View(OrderMaster.Data?.Where(om => om.OrderStateName != "In Cart").ToList());
+                TempData["IsSuccess"] = OrderMaster.IsSuccess;
+                TempData["Msg"] = OrderMaster.Msg;
+                return View(OrderMaster.Data?.Data);
             }
-          
-
         }
 
-
+        [HttpGet]
+        public async Task<IActionResult> GetDetails(int orderId)
+        {
+            ResultView<GetAllClientOrderMasterDTO> result = await OrderService.GetDetailsAsync(orderId);
+            if (result.IsSuccess)
+            {
+                return View(result.Data);
+            }
+            else
+            {
+                TempData["IsSuccess"] = result.IsSuccess;
+                TempData["Msg"] = result.Msg;
+                return RedirectToAction("GetAllOrderMasters");
+            }
+        }
         //public async Task<IActionResult> GetOneOrderMaster(int id)
         //{
         //    var OrderMaster = (await OrderService.GetByIdAsync(id));

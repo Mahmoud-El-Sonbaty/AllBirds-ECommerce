@@ -16,20 +16,23 @@ namespace AllBirds.AdminDashboard.Controllers
             this.webHostEnvironment = _webHostEnvironment;
             this.accountService = _accountService;
         }
-
+        
         [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
-        public async Task<IActionResult> GetAll(string role)
+        public async Task<IActionResult> GetAll(string role, int pageNumber = 1, int pageSize = 8)
         {
-            ResultView<List<GetAllAdminsDTO>> adminsResult = await accountService.GetAllAsync(role);
+            ResultView<EntityPaginated<GetAllAdminsDTO>> adminsResult = await accountService.GetAllPaginatedAsync(role, pageNumber, pageSize);
             if (!adminsResult.IsSuccess)
             {
                 TempData.Add("IsSuccess", false);
                 TempData.Add("Msg", adminsResult.Msg);
             }
-            return View(adminsResult.Data);
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = adminsResult.Data?.Count ?? 0;
+            return View(adminsResult.Data?.Data);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> AddModerator()
         {
             ViewBag.Roles = accountService.GetRoles();
@@ -37,17 +40,24 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         // should be converted to add admin
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> AddModerator(CUAccountDTO cUAccountDTO)
         {
             if (ModelState.IsValid)
             {
                 cUAccountDTO.ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "Accounts" });
                 ResultView<CUAccountDTO> createdMod = await accountService.AddModerator(cUAccountDTO);
+                TempData.Add("IsSuccess", createdMod.IsSuccess);
+                TempData.Add("Msg", createdMod.Msg);
                 if (createdMod.IsSuccess)
                 {
                     return Redirect("/Account/GetAll?role=admin");
                 }
+            }
+            else
+            {
+                TempData.Add("IsSuccess", false);
+                TempData.Add("Msg", "Invalid Data");
             }
             return View();
         }
@@ -65,21 +75,23 @@ namespace AllBirds.AdminDashboard.Controllers
                     ResultView<GetAllAdminsDTO> getUserRes = await accountService.GetUserById(User.Claims.FirstOrDefault()?.Value);
                     if (getUserRes.IsSuccess)
                     {
-                        return Redirect("/");
+                        return Redirect("/Account/GetAll?role=admin");
                     }
                 }
+                TempData.Add("IsSuccess", false);
+                TempData.Add("Msg", "Invalid Credentials");
             }
             return View();
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> Logout()
         {
             await accountService.LogoutAsync();
             return RedirectToAction("Login");
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> DeleteAdmin(int id)
         {
             ResultView<CUAccountDTO> deletedAdminRes = await accountService.DeleteAsync(id);
@@ -88,7 +100,7 @@ namespace AllBirds.AdminDashboard.Controllers
             return Redirect("/Account/GetAll?role=admin");
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword)
         {
             return Redirect("/");

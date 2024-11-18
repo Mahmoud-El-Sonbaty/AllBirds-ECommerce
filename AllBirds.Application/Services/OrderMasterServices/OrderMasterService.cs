@@ -1,5 +1,6 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.OrderDetailServices;
+using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.OrderDetailsDTOs;
 using AllBirds.DTOs.OrderMasterDTOs;
 using AllBirds.DTOs.Shared;
@@ -34,14 +35,54 @@ namespace AllBirds.Application.Services.OrderMasterServices
             ResultView<bool> result = new();
             try
             {
-                OrderMaster item = await orderMasterRepository.GetOneAsync(orderMasterId);
-                if (item is not null)
+                OrderMaster orderMaster = (await orderMasterRepository.GetAllAsync()).Include(om => om.OrderDetails).ThenInclude(od => od.ProductColorSize).Include(om => om.OrderState).FirstOrDefault(om => om.Id == orderMasterId);
+                if (stateId == 7)
                 {
-                    item.OrderStateId = stateId;
+                    if (orderMaster is not null && orderMaster.OrderDetails?.Count > 0)
+                    {
+                        foreach (OrderDetail detail in orderMaster.OrderDetails)
+                        {
+                            detail.ProductColorSize.UnitsInStock += detail.Quantity;
+                        }
+                        orderMaster.OrderStateId = stateId;
+                        await orderMasterRepository.SaveChangesAsync();
+                        result.IsSuccess = true;
+                        result.Data = true;
+                        result.Msg = $"Order State Changed Successfully";
+                    }
+                    else
+                    {
+                        result.Data = false;
+                        result.Msg = "This Order Doesn't Exist";
+                    }
+                }
+                else if (orderMaster.OrderStateId == 7 && stateId != 7)
+                {
+                    if (orderMaster is not null && orderMaster.OrderDetails?.Count > 0)
+                    {
+                        foreach (OrderDetail detail in orderMaster.OrderDetails)
+                        {
+                            detail.ProductColorSize.UnitsInStock -= detail.Quantity;
+                        }
+                        orderMaster.OrderStateId = stateId;
+                        await orderMasterRepository.SaveChangesAsync();
+                        result.IsSuccess = true;
+                        result.Data = true;
+                        result.Msg = $"Order State Changed Successfully";
+                    }
+                    else
+                    {
+                        result.Data = false;
+                        result.Msg = "This Order Doesn't Exist";
+                    }
+                }
+                else if (orderMaster is not null)
+                {
+                    orderMaster.OrderStateId = stateId;
                     await orderMasterRepository.SaveChangesAsync();
                     result.IsSuccess = true;
                     result.Data = true;
-                    result.Msg = $"Order State Changed To Be {item.OrderState}";
+                    result.Msg = $"Order State Changed Successfully";
                 }
                 else
                 {
@@ -105,6 +146,59 @@ namespace AllBirds.Application.Services.OrderMasterServices
             return result;
         }
 
+        public async Task<ResultView<GetAllClientOrderMasterDTO>>  GetDetailsAsync(int orderId)
+        {
+            ResultView<GetAllClientOrderMasterDTO> result = new();
+            try
+            {
+                GetAllClientOrderMasterDTO? orderWithDetails = (await orderMasterRepository.GetAllAsync()).Where(om => om.Id == orderId).Select(om =>
+                new GetAllClientOrderMasterDTO
+                {
+                    Id = om.Id,
+                    ClientId = om.ClientId,
+                    ClientName = $"{om.Client.FirstName} {om.Client.LastName}",
+                    ClientAddress = om.Client.Address,
+                    OrderStateId = om.OrderStateId,
+                    OrderStateName = om.OrderState.StateEn,
+                    OrderNo = om.OrderNo,
+                    Total = om.Total,
+                    DiscountPercentage = om.Coupon != null ? om.Coupon.Discount : 0,
+                    DiscountAmount = om.Coupon != null ? om.Total * om.Coupon.Discount / 100 : 0,
+                    DateOrdered = om.Updated.Value.ToShortDateString(),
+                    Details = om.OrderDetails.Select(od => new GetAllClientOrderDetailsDTO
+                    {
+                        Id = od.Id,
+                        ProductId = od.ProductColorSize.ProductColor.ProductId,
+                        ProductColorSizeId = od.ProductColorSizeId,
+                        ProductName = od.ProductColorSize.ProductColor.Product.NameEn,
+                        ProductImagePath = od.ProductColorSize.ProductColor.Images.FirstOrDefault(i => i.Id == od.ProductColorSize.ProductColor.MainImageId).ImagePath,
+                        Price = od.ProductColorSize.ProductColor.Product.Price,
+                        Quantity = od.Quantity,
+                        DetailPrice = od.DetailPrice,
+                        ColorName = od.ProductColorSize.ProductColor.Color.Code,
+                        SizeNumber = od.ProductColorSize.Size.SizeNumber
+                    }).ToList()
+                }).FirstOrDefault();
+                if (orderWithDetails is null || !(orderWithDetails.Details?.Count > 0))
+                {
+                    result.IsSuccess = false;
+                    result.Data = null;
+                    result.Msg = $"This Order Or It's Details Are Not Found";
+                }
+                else
+                {
+                    result.IsSuccess = true;
+                    result.Data = orderWithDetails;
+                    result.Msg = $"Order With Details Fetched Successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Msg = $"Error Happened While Getting This Order Details, {ex.Message}";
+            }
+            return result;
+        }
+
         public async Task<ResultView<List<GetAllOrderMastersDTO>>> GetAllAsync()
         {
             ResultView<List<GetAllOrderMastersDTO>> result = new();
@@ -116,6 +210,41 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     result.IsSuccess = true;
                     result.Data = mapper.Map<List<GetAllOrderMastersDTO>>(orderMasters);
                     result.Msg = "get all orders done  ";
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Data = null;
+                    result.Msg = " order list is Empty ";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Data = null;
+                result.Msg = $"Error Happen While get Orders " + ex.Message;
+            }
+            return result;
+        }
+        
+        public async Task<ResultView<EntityPaginated<GetAllOrderMastersDTO>>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+        {
+            ResultView<EntityPaginated<GetAllOrderMastersDTO>> result = new();
+            try
+            {
+                List<OrderMaster> orderMasters = [.. (await orderMasterRepository.GetAllAsync()).Include(src => src.OrderState)
+                    .Include(om => om.Client).Include(om => om.Coupon).Where(om => om.OrderState.StateEn != "In Cart")
+                    .Skip((pageNumber - 1) * pageSize).Take(pageSize)];
+                int totalOrders = (await orderMasterRepository.GetAllAsync()).Count(om => om.OrderState.StateEn != "In Cart");
+                if (orderMasters.Count != 0)
+                {
+                    result.IsSuccess = true;
+                    result.Data = new EntityPaginated<GetAllOrderMastersDTO>
+                    {
+                        Data = mapper.Map<List<GetAllOrderMastersDTO>>(orderMasters),
+                        Count = totalOrders
+                    }; ;
+                    result.Msg = "get all orders done";
                 }
                 else
                 {
