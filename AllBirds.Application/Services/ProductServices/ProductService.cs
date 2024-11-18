@@ -146,6 +146,33 @@ namespace AllBirds.Application.Services.ProductServices
             }
             return resultView;
         }
+
+        public async Task<ResultView<bool>> SetAsMainColorAsync(int prdColorId, int prdId)
+        {
+            ResultView<bool> result = new();
+            try
+            {
+                Product? findPrd = (await productRepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == prdId);
+                if (findPrd is not null)
+                {
+                    findPrd.MainColorId = prdColorId;
+                    await productRepoistory.SaveChangesAsync();
+                    result.IsSuccess = true;
+                    result.Data = true;
+                    result.Msg = "Changed Main Color Successfully";
+                }
+                else
+                {
+                    result.Msg = "This Product Doesn't Exist";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Msg = $"Error Happened While Changing Main Color, {ex.Message}";
+            }
+            return result;
+        }
+
         public async Task<ResultView<CUProductDTO>> HardDeleteAsync(int productId)
         {
             ResultView<CUProductDTO> resultView = new();

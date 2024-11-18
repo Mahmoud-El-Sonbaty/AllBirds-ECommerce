@@ -228,7 +228,14 @@ namespace AllBirds.AdminDashboard.Controllers
             }
         }
 
-
+        [HttpGet]
+        public async Task<IActionResult> SetAsMainColor(int prdColorId, int prdId)
+        {
+            ResultView<bool> res = await productService.SetAsMainColorAsync(prdColorId, prdId);
+            TempData["IsSuccess"] = res.IsSuccess;
+            TempData["Msg"] = res.Msg;
+            return Redirect($"/Product/GetAllProductColors/{prdId}");
+        }
 
         [HttpGet]
         public async Task<IActionResult> CreateProductColor(int Id)
