@@ -42,20 +42,23 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllOrderMasters()
+        public async Task<IActionResult> GetAllOrderMasters(int pageNumber = 1, int pageSize = 7)
         {
-            var OrderMaster = (await OrderService.GetAllAsync());
+            var OrderMaster = (await OrderService.GetAllPaginatedAsync(pageNumber, pageSize));
             var orderState =  await OrderSateService.GetAllAsync();
             ViewBag.OrderSate = orderState.Data?[1..];
             if (OrderMaster.IsSuccess)
             {
-                return View(OrderMaster.Data.Where(om => om.OrderStateName != "In Cart").ToList());
+                ViewBag.CurrentPage = pageNumber;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalItems = OrderMaster.Data?.Count ?? 0;
+                return View(OrderMaster.Data?.Data);
             }
             else
             {
                 TempData["IsSuccess"] = OrderMaster.IsSuccess;
                 TempData["Msg"] = OrderMaster.Msg;
-                return View(OrderMaster.Data?.Where(om => om.OrderStateName != "In Cart").ToList());
+                return View(OrderMaster.Data?.Data);
             }
         }
 

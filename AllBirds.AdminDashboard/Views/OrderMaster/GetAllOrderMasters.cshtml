@@ -1,6 +1,10 @@
 ﻿@model List<GetAllOrderMastersDTO>
 @{
     ViewData["Title"] = "GetAllOrderMasters";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int totalItems = ViewBag.TotalItems ?? 0;
+    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
     SelectList OrderState = new(ViewBag.OrderSate, "Id", "StateEn");
     Dictionary<int, string> orderStateColors = new()
     {
@@ -54,104 +58,94 @@
                     <tbody>
                         @if(Model is not null)
                         {
-                            
-                        @foreach(var item in Model)
-                        {
-
-                        <tr id="row-@item.Id">
-                            
-                            <td>@item.OrderNo </td>
-                                <td>@item.ClientName </td>
-                            <td>
-                               @if (item.OrderStateId == 2)
-                                {
-                                    <div class="progress">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                }
-                               else if (item.OrderStateId == 3)
-                                {
-                                    <div class="progress">
-                                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                }
-                               else if (item.OrderStateId == 4)
-                                {
-                                    <div class="progress">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                }
-                                else if (item.OrderStateId == 5)
-                                {
-                                    <div class="progress">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                }
-                                else if (item.OrderStateId == 6)
-                                {
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="progress">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                }
-
-                            </td>
-
-                            <td>
-                                @if (item.OrderStateId == 2)
-                                {
-                                    <label class="badge badge-warning">@item.OrderStateName</label>
-                                }
-                                else if (item.OrderStateId == 3)
-                                {
-                                    <label class="badge badge-secondary text-dark">@item.OrderStateName</label>
-                                }
-                                else if (item.OrderStateId == 4)
-                                {
-                                    <label class="badge badge-info">@item.OrderStateName</label>
-                                }
-                                else if (item.OrderStateId == 5)
-                                {
-                                    <label class="badge badge-primary">@item.OrderStateName</label>
-                                }
-                                else if (item.OrderStateId == 6)
-                                {
-                                    <label class="badge badge-success  text-dark">@item.OrderStateName</label>
-                                }
-                                else
-                                {
-                                    <label class="badge badge-danger">@item.OrderStateName</label>
-                                }
-                             </td>
-                                <td> @item.DiscountPerctnage</td>
-                                <td> $@item.Total</td>
-                            <td class="d-flex flex-row gap-2">
-             @*                     <button class="btn btn-inverse-success for inverse buttons p-2  m-1" onclick="changingState(3,@Model.Id)">Aprove</button>
-                                 <button class="btn btn-inverse-danger  for inverse buttons p-2  m-1" onclick="changingState(4,@Model.Id)">Rejecte</button> *@
-                                    <a type="button" asp-action="GetDetails" asp-controller="OrderMaster" asp-route-orderId="@item.Id" class="btn btn-inverse-primary d-flex align-items-center"><i class="fas fa-eye"></i></a>
-                                @* <div class="mb-3" > *@
-                                    <select id="orderStateSelect" class="form-select bg-light text-dark" aria-label="Action select" style="width: auto;" onchange="changingState(this.value, @item.Id, this.options[this.selectedIndex].text, this.value - @item.OrderStateId)">@* this.value > @item.OrderStateId ? 20 : -20 *@
-                                        @foreach (CUOrderStateDTO state in ViewBag.OrderSate)
+                            @foreach(var item in Model)
+                            {
+                                <tr id="row-@item.Id">
+                                    <td>@item.OrderNo </td>
+                                    <td>@item.ClientName </td>
+                                    <td>
+                                        @if (item.OrderStateId == 2)
                                         {
-                                            @if (state.Id == item.OrderStateId)
-                                            {
-                                                <option value="@state.Id" selected>@state.StateEn</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@state.Id">@state.StateEn</option>
-                                            }
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
                                         }
-                                    </select> 
-                                @* </div> *@
-                            </td>
-                        </tr>
-                            
+                                        else if (item.OrderStateId == 3)
+                                        {
+                                            <div class="progress">
+                                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        }
+                                        else if (item.OrderStateId == 4)
+                                        {
+                                            <div class="progress">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        }
+                                        else if (item.OrderStateId == 5)
+                                        {
+                                            <div class="progress">
+                                                <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        }
+                                        else if (item.OrderStateId == 6)
+                                        {
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="progress">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.OrderStateId == 2)
+                                        {
+                                            <label class="badge badge-warning">@item.OrderStateName</label>
+                                        }
+                                        else if (item.OrderStateId == 3)
+                                        {
+                                            <label class="badge badge-secondary text-dark">@item.OrderStateName</label>
+                                        }
+                                        else if (item.OrderStateId == 4)
+                                        {
+                                            <label class="badge badge-info">@item.OrderStateName</label>
+                                        }
+                                        else if (item.OrderStateId == 5)
+                                        {
+                                            <label class="badge badge-primary">@item.OrderStateName</label>
+                                        }
+                                        else if (item.OrderStateId == 6)
+                                        {
+                                            <label class="badge badge-success  text-dark">@item.OrderStateName</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="badge badge-danger">@item.OrderStateName</label>
+                                        }
+                                    </td>
+                                    <td> @item.DiscountPerctnage</td>
+                                    <td> $@item.Total</td>
+                                    <td class="d-flex flex-row gap-2">
+                                        <a type="button" asp-action="GetDetails" asp-controller="OrderMaster" asp-route-orderId="@item.Id" class="btn btn-inverse-primary d-flex align-items-center"><i class="fas fa-eye"></i></a>
+                                        <select id="orderStateSelect" class="form-select bg-light text-dark" aria-label="Action select" style="width: auto;" onchange="changingState(this.value, @item.Id, this.options[this.selectedIndex].text, this.value - @item.OrderStateId)">@* this.value > @item.OrderStateId ? 20 : -20 *@
+                                            @foreach (CUOrderStateDTO state in ViewBag.OrderSate)
+                                            {
+                                                @if (state.Id == item.OrderStateId)
+                                                {
+                                                    <option value="@state.Id" selected>@state.StateEn</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@state.Id">@state.StateEn</option>
+                                                }
+                                            }
+                                        </select> 
+                                    </td>
+                                </tr>
                             }
                         }
                         else
@@ -167,6 +161,23 @@
                 </table>
             </div>
         </div>
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination d-flex justify-content-center rounded-separated pagination-primary">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="GetAllOrderMasters" asp-route-pageNumber="@(currentPage - 1)" asp-route-pageSize="@pageSize"><i class="mdi mdi-chevron-left"></i></a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" asp-action="GetAllOrderMasters" asp-route-pageNumber="@i" asp-route-pageSize="@pageSize">@i</a>
+                    </li>
+                }
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="GetAllOrderMasters" asp-route-pageNumber="@(currentPage + 1)" asp-route-pageSize="@pageSize"><i class="mdi mdi-chevron-right"></i></a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 

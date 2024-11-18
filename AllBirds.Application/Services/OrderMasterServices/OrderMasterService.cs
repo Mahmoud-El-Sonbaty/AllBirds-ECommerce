@@ -1,5 +1,6 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.OrderDetailServices;
+using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.OrderDetailsDTOs;
 using AllBirds.DTOs.OrderMasterDTOs;
 using AllBirds.DTOs.Shared;
@@ -209,6 +210,41 @@ namespace AllBirds.Application.Services.OrderMasterServices
                     result.IsSuccess = true;
                     result.Data = mapper.Map<List<GetAllOrderMastersDTO>>(orderMasters);
                     result.Msg = "get all orders done  ";
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Data = null;
+                    result.Msg = " order list is Empty ";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Data = null;
+                result.Msg = $"Error Happen While get Orders " + ex.Message;
+            }
+            return result;
+        }
+        
+        public async Task<ResultView<EntityPaginated<GetAllOrderMastersDTO>>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+        {
+            ResultView<EntityPaginated<GetAllOrderMastersDTO>> result = new();
+            try
+            {
+                List<OrderMaster> orderMasters = [.. (await orderMasterRepository.GetAllAsync()).Include(src => src.OrderState)
+                    .Include(om => om.Client).Include(om => om.Coupon).Where(om => om.OrderState.StateEn != "In Cart")
+                    .Skip((pageNumber - 1) * pageSize).Take(pageSize)];
+                int totalOrders = (await orderMasterRepository.GetAllAsync()).Count(om => om.OrderState.StateEn != "In Cart");
+                if (orderMasters.Count != 0)
+                {
+                    result.IsSuccess = true;
+                    result.Data = new EntityPaginated<GetAllOrderMastersDTO>
+                    {
+                        Data = mapper.Map<List<GetAllOrderMastersDTO>>(orderMasters),
+                        Count = totalOrders
+                    }; ;
+                    result.Msg = "get all orders done";
                 }
                 else
                 {
