@@ -35,7 +35,6 @@ namespace AllBirds.AdminDashboard.Controllers
         private readonly IColorService colorService;
         private readonly IWebHostEnvironment webHostEnvironment;
 
-
         public ProductController(IProductService _productService, ICategoryService _categoryService, IProductSpecificationService _productSpecservice, ISpecificationService _specificationService,
             IProductColorService _productColorService, IColorService _colorService , IProductColotImageService _productColotImageService, IProductColorSizeService _productColorSizeService, ISizeService _sizeService,
             IWebHostEnvironment _webHostEnvironment)
@@ -145,12 +144,12 @@ namespace AllBirds.AdminDashboard.Controllers
             {
                 ResultView<List<GetProductSpecificationDTO>> getProductSpecs = (await productSpecService.GetByProductIdAsync(id));
                 ViewBag.Specs = await specificationService.GetAllAsync();
-                return getProductSpecs.IsSuccess ? View(getProductSpecs) : View();
+                if (getProductSpecs.IsSuccess)
+                    return View(getProductSpecs);
             }
-            else
-            {
-                return RedirectToAction("GetAll");
-            }
+            TempData["IsSuccess"] = false;
+            TempData["Msg"] = "This Product Specifications Were Not Found";
+            return RedirectToAction("GetAll");
         }
 
         [HttpPost]
@@ -184,7 +183,11 @@ namespace AllBirds.AdminDashboard.Controllers
         {
             ResultView<GetProductSpecificationDTO> res = await productSpecService.HardDeleteAsync(id);
             if (res.IsSuccess)
+            {
+                TempData["IsSuccess"] = true;
+                TempData["Msg"] = res.Msg;
                 return Redirect($"/Product/GetAllSpecs/{res.Data.ProductId}");
+            }
             return Json(new { success = false, message = res.Msg });
         }
 
