@@ -16,7 +16,7 @@ namespace AllBirds.AdminDashboard.Controllers
             this.webHostEnvironment = _webHostEnvironment;
             this.accountService = _accountService;
         }
-
+        
         [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> GetAll(string role)
         {
@@ -29,7 +29,7 @@ namespace AllBirds.AdminDashboard.Controllers
             return View(adminsResult.Data);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> AddModerator()
         {
             ViewBag.Roles = accountService.GetRoles();
@@ -37,7 +37,7 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         // should be converted to add admin
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> AddModerator(CUAccountDTO cUAccountDTO)
         {
             if (ModelState.IsValid)
@@ -72,14 +72,14 @@ namespace AllBirds.AdminDashboard.Controllers
             return View();
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> Logout()
         {
             await accountService.LogoutAsync();
             return RedirectToAction("Login");
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> DeleteAdmin(int id)
         {
             ResultView<CUAccountDTO> deletedAdminRes = await accountService.DeleteAsync(id);
@@ -88,7 +88,7 @@ namespace AllBirds.AdminDashboard.Controllers
             return Redirect("/Account/GetAll?role=admin");
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
         public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword)
         {
             return Redirect("/");
