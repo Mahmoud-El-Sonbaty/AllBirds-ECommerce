@@ -80,7 +80,7 @@
                                         <td alt="Product Image"><img src="@Image" style="width: 90px; height: 90px; border-radius: 20px;" alt="Alternate Text" /></td>
                                         <td>
                                             @* <a type="button" class="btn btn-outline-danger" asp-controller="Product" asp-action="DeleteProductColorImage" asp-route-id="@Model.Data.ProductColorImageId[counter]"> <i class="fas fa-trash-alt"></i></a> *@
-                                            <button type="button" class="btn btn-outline-danger" onclick="openModal('Category', '/Product/DeleteProductColorImage/@Model.Data.ProductColorImageId[counter]?prdColorId=@Model.Data.ProductId')"><i class="fas fa-trash-alt"></i></button>
+                                            <button type="button" class="btn btn-outline-danger" onclick="openModal('Image', '/Product/DeleteProductColorImage/@Model.Data.ProductColorImageId[counter]?prdColorId=@ViewBag.PrdColorId')"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                     counter += 1;

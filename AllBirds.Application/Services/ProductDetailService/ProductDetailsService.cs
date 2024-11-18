@@ -43,7 +43,7 @@ namespace AllBirds.Application.Services.ProductDetailService
                     {
                         await cUProductDetails.ImageData.CopyToAsync(fileStream);
                     }
-                    cUProductDetails.ImagePath = "/Images/" + "/product-details/" + uniqueFileName;
+                    cUProductDetails.ImagePath = "/images/" + "/product-details/" + uniqueFileName;
                 }
                 ProductDetail productDetail = mapper.Map<ProductDetail>(cUProductDetails);
                 ProductDetail productDetailCreated = await productDetailsRepository.CreateAsync(productDetail);

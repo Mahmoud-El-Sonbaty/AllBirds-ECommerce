@@ -194,18 +194,23 @@ namespace AllBirds.AdminDashboard.Controllers
         /////////////////////////////////////////////////// Product Color //////////////////////////////////////////////////////////////
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProductColors(int Id)
+        public async Task<IActionResult> GetAllProductColors(int Id, int pageNumber = 1, int pageSize = 4)
         {
 
-            ResultView<List<GetALlProductColorDTO>> PrColor = await productColorService.GetAllAsync(Id);
+            ResultView<EntityPaginated<GetALlProductColorDTO>> PrColor = await productColorService.GetAllPaginatedAsync(Id, pageNumber, pageSize);
             ViewBag.PrdId = Id;
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = PrColor.Data?.Count ?? 0;
             if (PrColor.IsSuccess)
             {
 
-                return View(PrColor.Data);
+                return View(PrColor.Data?.Data);
             }
             else
             {
+                TempData["IsSuccess"] = PrColor.IsSuccess;
+                TempData["Msg"] = PrColor.Msg;
                 ViewBag.ErrMsg = PrColor.Msg;
                 return View();
             }
@@ -217,7 +222,7 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> CreateProductColor(int Id)
         {
             ViewBag.ProductId = Id;
-            ViewBag.Colors = await colorService.GetAllAsync();
+            ViewBag.Colors = (await colorService.GetAllAsync()).Data;
             return View();
         }
 
@@ -228,11 +233,13 @@ namespace AllBirds.AdminDashboard.Controllers
             {
                 CUProductColorImageDTO cUProductColorImageDTO = new();
 
-                var ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "ProductColorImages" });
+                var ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "images", "product-color-images" });
 
                 ResultView<CreateProductColorDTO> CrProductColorDTO = await productColorService.CreateAsync(createProductColorDTO, ImagePath);
                 if (CrProductColorDTO.IsSuccess)
                 {
+                    TempData["Msg"] = CrProductColorDTO.Msg;
+                    TempData["IsSuccess"] = CrProductColorDTO.IsSuccess;
                     return Redirect($"/Product/GetAllProductColors/{CrProductColorDTO.Data.ProductId}");
                 }
                 else
@@ -248,12 +255,13 @@ namespace AllBirds.AdminDashboard.Controllers
                 TempData["IsSuccess"] = false;
 
             }
-            ViewBag.Colors = await colorService.GetAllAsync();
+            ViewBag.Colors = (await colorService.GetAllAsync()).Data;
 
             return View();
 
 
         }
+
         public async Task<IActionResult> DeleteProductColor(int Id)
         {
             ResultView<GetOneProductColorDTO> resultView = await productColorService.HardDeleteAsync(Id);
@@ -267,7 +275,7 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductColorImages(int id)
         {
-            //ViewBag.PrdColorId = id;
+            ViewBag.PrdColorId = id;
             ResultView<GetOneProductColorDTO> resultView = await productColorService.GetByIdAsync(id);
             if(resultView.IsSuccess)
             {

@@ -1,5 +1,6 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.Application.Services.ProductColorImageServices;
+using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.OrderStateDTOs;
 using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductColorImageDTOs;
@@ -39,7 +40,7 @@ namespace AllBirds.Application.Services.ProductColorServices
                 {
                     result.IsSuccess = false;
                     result.Data = null;
-                    result.Msg = "Product Color  Is ALready Exist";
+                    result.Msg = "Product Color Is ALready Exist";
                     return result;
                 }
 
@@ -50,31 +51,28 @@ namespace AllBirds.Application.Services.ProductColorServices
                     prCL.Images = new List<ProductColorImage>();
                 }
 
+                if (!Directory.Exists(ImagePath))
+                {
+                    Directory.CreateDirectory(ImagePath);
+                }
+                string? mainImageUniqueFileName = null;
                 foreach (IFormFile formFile in productColorDTO.Images)
                 {
-
-                    if (!Directory.Exists(ImagePath))
-                    {
-                        Directory.CreateDirectory(ImagePath);
-                    }
-
                     string uniqueFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
                     string filePath = Path.Combine(ImagePath, uniqueFileName);
-
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(fileStream);
                     }
-
-                    ProductColorImage productColorImage = new() { ImagePath = "/Images/" + "/ProductColorImages/" + uniqueFileName };
-
+                    ProductColorImage productColorImage = new() { ImagePath = "/images/" + "/product-color-images/" + uniqueFileName };
+                    if (mainImageUniqueFileName is null)
+                        mainImageUniqueFileName = productColorImage.ImagePath;
                     prCL.Images.Add(productColorImage);
-
                 }
                 ProductColor created = await productColorRepository.CreateAsync(prCL);
-
                 await productColorRepository.SaveChangesAsync();
-
+                created.MainImageId = created.Images.FirstOrDefault(i => i.ImagePath == mainImageUniqueFileName).Id;
+                await productColorRepository.SaveChangesAsync();
 
 
                 result.IsSuccess = true;
@@ -128,21 +126,15 @@ namespace AllBirds.Application.Services.ProductColorServices
                 result.IsSuccess = false;
                 result.Data = null;
                 result.Msg = "Error Happened While Creating With Ex :" + ex.Message;
-
             }
-
             return result;
-
         }
+
         public async Task<ResultView<List<GetALlProductColorDTO>>> GetAllAsync(int Id)
         {
             ResultView<List<GetALlProductColorDTO>> result = new();
             try
             {
-                //var item = (await productColorRepository.GetAllAsync()).Where(b => b.ProductId == Id)
-                //            .Include(b => b.Product)
-                //            .Include(s => s.Color)
-                //            .Include(r => r.Images);
                 var item = (await productColorRepository.GetAllAsync()).Where(b => b.ProductId == Id).Select(P => new GetALlProductColorDTO
                 {
                     PNameEn = P.Product.NameEn,
@@ -155,20 +147,11 @@ namespace AllBirds.Application.Services.ProductColorServices
                     MainImageId = P.MainImageId,
                     IsDeleted = P.IsDeleted,
                     MainImagePath = P.Images.FirstOrDefault(I => I.Id == P.MainImageId).ImagePath
-                });
-            //.Include(b => b.Product)
-            //.Include(s => s.Color)
-            //.Include(r => r.Images);
-
-
-
-
+                }).ToList();
                 if (item.Count() != 0)
                 {
-
                     result.IsSuccess = true;
                     result.Data = mapper.Map<List<GetALlProductColorDTO>>(item);
-
                     result.Msg = "Get All Product's Colors successfully";
                 }
                 else
@@ -177,21 +160,59 @@ namespace AllBirds.Application.Services.ProductColorServices
                     result.Data = null;
                     result.Msg = "Product's Color's list Is Empty";
                 }
-
             }
             catch (Exception ex)
             {
-
                 result.IsSuccess = false;
                 result.Data = null;
                 result.Msg = "Error Happened While Getting All Product Colors With Ex :" + ex.Message;
-
-
             }
-
             return result;
-
-
+        }
+        
+        public async Task<ResultView<EntityPaginated<GetALlProductColorDTO>>> GetAllPaginatedAsync(int Id, int pageNumber, int pageSize)
+        {
+            ResultView<EntityPaginated<GetALlProductColorDTO>> result = new();
+            try
+            {
+                var item = (await productColorRepository.GetAllAsync()).Where(b => b.ProductId == Id).Select(P => new GetALlProductColorDTO
+                {
+                    PNameEn = P.Product.NameEn,
+                    PNameAr = P.Product.NameAr,
+                    ProductNo = P.Product.ProductNo,
+                    Id = P.Id,
+                    ColorNameAr = P.Color.NameAr,
+                    ColorNameEn = P.Color.NameEn,
+                    ColorCode = P.Color.Code,
+                    MainImageId = P.MainImageId,
+                    IsDeleted = P.IsDeleted,
+                    MainImagePath = P.Images.FirstOrDefault(I => I.Id == P.MainImageId).ImagePath
+                }).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                int totalPrdColors = (await productColorRepository.GetAllAsync()).Count(pc => pc.ProductId == Id);
+                if (item.Count > 0)
+                {
+                    result.IsSuccess = true;
+                    result.Data = new EntityPaginated<GetALlProductColorDTO>
+                    {
+                        Data = mapper.Map<List<GetALlProductColorDTO>>(item),
+                        Count = totalPrdColors
+                    };
+                    result.Msg = "Get All Product's Colors successfully";
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Data = null;
+                    result.Msg = "Product's Color's list Is Empty";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Data = null;
+                result.Msg = "Error Happened While Getting All Product Colors With Ex :" + ex.Message;
+            }
+            return result;
         }
 
         public async Task<ResultView<List<GetOneProductColorDTO>>> GetAllWithDeletedAsync()
@@ -277,13 +298,13 @@ namespace AllBirds.Application.Services.ProductColorServices
                     if (item.IsDeleted)
                     {
 
-                        bool CheckImage = (await productColorRepository.GetAllAsync()).AsNoTracking().Any(P => P.Images.Any());
-                        bool CheckSize = (await productColorRepository.GetAllAsync()).AsNoTracking().Any(P => P.AvailableSizes.Any());
+                        bool CheckImage = (await productColorRepository.GetAllAsync()).AsNoTracking().Any(P => P.Images.Any(i => i.ProductColorId == id));
+                        bool CheckSize = (await productColorRepository.GetAllAsync()).AsNoTracking().Any(P => P.AvailableSizes.Any(pcs => pcs.ProductColorId == id));
                         if (CheckImage && CheckSize)
                         {
                             result.Data = mapper.Map<GetOneProductColorDTO>(item);
                             result.IsSuccess = false;
-                            result.Msg = $"This Product Color Have Depend On It Like Images And Size..! Sorry Cannot Delete Thais Color ";
+                            result.Msg = $"Cannot Delete This Color As There Are Images & Sizes That Depend On It";
                         }
                         else if (CheckSize)
                         {
@@ -304,7 +325,7 @@ namespace AllBirds.Application.Services.ProductColorServices
                             
                             result.IsSuccess = true;
                             result.Data = mapper.Map<GetOneProductColorDTO>(deleted);
-                            result.Msg = "Deleting Product's Color successfully";
+                            result.Msg = "Deleted Product Color Successfully";
 
                         }
                     }

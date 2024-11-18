@@ -41,7 +41,7 @@ namespace AllBirds.AdminDashboard.Controllers
             ResultView<CRProductDetails> resultView = new();
             if (ModelState.IsValid)
             {
-                cUProductDetails.Data.ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "product-details" });
+                cUProductDetails.Data.ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "images", "product-details" });
                 resultView = await productDetailsService.CreateProductDetails(cUProductDetails.Data);
                 TempData["IsSuccess"] = resultView.IsSuccess;
                 TempData["Msg"] = resultView.Msg;
@@ -80,7 +80,7 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> Update(ResultView<UpdateProductDetail> cUProductDTO)
         {
             ResultView<UpdateProductDetail> ProductDetailsUpdated = new();
-            cUProductDTO.Data.ImagePath += "~@#$%&"+ Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "product-details" });
+            cUProductDTO.Data.ImagePath += "~@#$%&"+ Path.Combine(new string[] { webHostEnvironment.WebRootPath, "images", "product-details" });
             if (ModelState.IsValid)
             {
                 ProductDetailsUpdated = await productDetailsService.UpdateProductDetails(cUProductDTO.Data);

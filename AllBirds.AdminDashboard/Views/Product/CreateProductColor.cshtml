@@ -37,7 +37,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <select class="form-control" asp-for="ColorId" asp-items="colorList">
+                                <select class="form-control text-light" asp-for="ColorId" asp-items="colorList">
                                 </select>
                             </div>
                             <span class="text-danger" asp-validation-for="ColorId"></span>
@@ -69,7 +69,21 @@
 </div>
 @section Scripts {
     <script src="~/assets/js/file-upload.js"></script>
-
+    @if (TempData["IsSuccess"] is bool Success)
+    {
+        @if (Success)
+        {
+            <script>
+                showMsgSuccessToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
+        else
+        {
+            <script>
+                showMsgDangerToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
+    }
     <script>
         function AddInput() {
             let addInput = document.getElementsByClassName("addInput")[0];
