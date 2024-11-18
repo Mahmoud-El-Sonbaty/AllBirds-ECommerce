@@ -18,6 +18,7 @@ using AllBirds.DTOs.ProductSpecificationDTOs;
 using AllBirds.DTOs.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing.Printing;
 
 namespace AllBirds.AdminDashboard.Controllers
 {
@@ -56,10 +57,18 @@ namespace AllBirds.AdminDashboard.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 6)
         {
-            ResultView<List<GetAllProductDTO>> getAllProductDTOs = (await productService.GetAllAsync());
-            return View(getAllProductDTOs.Data);
+            ResultView<EntityPaginated<GetAllProductDTO>> getAllProductDTOs = (await productService.GetAllPaginatedAsync(pageNumber, pageSize));
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = getAllProductDTOs.Data?.Count ?? 0;
+            if (!getAllProductDTOs.IsSuccess)
+            {
+                TempData["IsSuccess"] = getAllProductDTOs.IsSuccess;
+                TempData["Msg"] = getAllProductDTOs.Msg;
+            }
+            return View(getAllProductDTOs.Data?.Data);
         }
 
         [HttpGet]
@@ -73,7 +82,6 @@ namespace AllBirds.AdminDashboard.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CUProductDTO cUProductDTO)
         {
-            var ff = Request;
             if (ModelState.IsValid)
             {
                 ResultView<CUProductDTO> createRes = await productService.CreateAsync(cUProductDTO);
@@ -115,10 +123,14 @@ namespace AllBirds.AdminDashboard.Controllers
                 }
                 TempData["Msg"] = updateRes.Msg;
                 TempData["IsSuccess"] = updateRes.IsSuccess;
-                return View(updateRes.Data);
             }
-            TempData["Msg"] = ModelState.ErrorCount > 1 ? $"There Are {ModelState.ErrorCount} Validation Errors" : $"There Is {ModelState.ErrorCount} Validation Error";
-            TempData["IsSuccess"] = false;
+            else
+            {
+                TempData["Msg"] = ModelState.ErrorCount > 1 ? $"There Are {ModelState.ErrorCount} Validation Errors" : $"There Is {ModelState.ErrorCount} Validation Error";
+                TempData["IsSuccess"] = false;
+            }
+            ResultView<List<GetAllCategoryDTO>> allCategoryDTOs = await categoryService.GetAllAsync();
+            ViewBag.Categories = allCategoryDTOs.Data;
             return View(cUProductDTO);
         }
 

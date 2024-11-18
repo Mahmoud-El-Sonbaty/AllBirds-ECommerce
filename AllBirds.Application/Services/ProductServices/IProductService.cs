@@ -16,6 +16,7 @@ namespace AllBirds.Application.Services.ProductServices
         public Task<ResultView<CUProductDTO>> SoftDeleteAsync(int productId);
         public Task<ResultView<CUProductDTO>> HardDeleteAsync(int productId);
         public Task<ResultView<List<GetAllProductDTO>>> GetAllAsync();
+        public Task<ResultView<EntityPaginated<GetAllProductDTO>>> GetAllPaginatedAsync(int pageNumber, int pageSize);
         public Task<ResultView<CUProductDTO>> GetByIdAsync(int productId);
 
         // for api

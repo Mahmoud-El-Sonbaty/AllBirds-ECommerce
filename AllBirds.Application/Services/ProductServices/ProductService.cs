@@ -1,4 +1,5 @@
 ﻿using AllBirds.Application.Contracts;
+using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.ProductColorDTOs;
 using AllBirds.DTOs.ProductColorImageDTOs;
 using AllBirds.DTOs.ProductColorSizeDTOs;
@@ -9,17 +10,20 @@ using AllBirds.DTOs.Shared;
 using AllBirds.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace AllBirds.Application.Services.ProductServices
 {
     public class ProductService : IProductService
     {
         private readonly IProductRepository productRepoistory;
+        private readonly ICategoryProductRepository categoryProductRepoistory;
         public IMapper mapper;
 
-        public ProductService(IProductRepository _productRepository, IMapper _mapper)
+        public ProductService(IProductRepository _productRepository, ICategoryProductRepository _categoryProductRepoistory, IMapper _mapper)
         {
             productRepoistory = _productRepository;
+            categoryProductRepoistory = _categoryProductRepoistory;
             mapper = _mapper;
         }
 
@@ -90,12 +94,43 @@ namespace AllBirds.Application.Services.ProductServices
             return result;
         }
 
-
+        public async Task<ResultView<EntityPaginated<GetAllProductDTO>>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+        {
+            ResultView<EntityPaginated<GetAllProductDTO>> result = new();
+            //List<Product> productsList = [.. (await productrepoistory.GetAllAsync())
+            //    .Include(p => p.AvailableColors)
+            //        .ThenInclude(pc => pc.Color)
+            //    .Include(p => p.AvailableColors)
+            //        .ThenInclude(pc => pc.Images)];
+            List<GetAllProductDTO> getAllPrds = [.. (await productRepoistory.GetAllAsync()).Select(p => new GetAllProductDTO()
+            {
+                Id = p.Id,
+                ProductNo = p.ProductNo,
+                NameAr = p.NameAr,
+                NameEn = p.NameEn,
+                Price = p.Price,
+                Discount = p.Discount,
+                FreeShipping = p.FreeShipping,
+                IsDeleted = p.IsDeleted,
+                MainColorCode = p.AvailableColors.FirstOrDefault(pc => pc.Id == p.MainColorId).Color.Code,
+                MainImagePath = p.AvailableColors.FirstOrDefault(pc => pc.Id == p.MainColorId).Images.FirstOrDefault(pci => pci.Id == p.AvailableColors.FirstOrDefault(pc => pc.Id == p.MainColorId).MainImageId).ImagePath,
+            }).Skip((pageNumber - 1) * pageSize).Take(pageSize)];
+            //List<GetAllProductDTO> getAllPrds = mapper.Map<List<GetAllProductDTO>>(productsList);
+            int totalProducts = (await productRepoistory.GetAllAsync()).Count();
+            result.IsSuccess = true;
+            result.Data = new EntityPaginated<GetAllProductDTO>
+            {
+                Data = getAllPrds,
+                Count = totalProducts
+            };
+            result.Msg = "All Products Fetched Successfully";
+            return result;
+        }
 
         public async Task<ResultView<CUProductDTO>> GetByIdAsync(int productId)
         {
             ResultView<CUProductDTO> resultView = new();
-            Product? getProduct = (await productRepoistory.GetAllAsync()).Include(p => p.Categories).FirstOrDefault(p => p.Id == productId && !p.IsDeleted);
+            Product? getProduct = (await productRepoistory.GetAllAsync()).Include(p => p.Categories).FirstOrDefault(p => p.Id == productId);
             if (getProduct is not null)
             {
                 CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
@@ -157,37 +192,39 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<CUProductDTO> resultView = new();
             try
             {
-                Product? getProduct = (await productRepoistory.GetAllAsync()).FirstOrDefault(p => p.Id == productId);
+                Product? getProduct = (await productRepoistory.GetAllAsync()).Include(p => p.AvailableColors).Include(p => p.Details).Include(p => p.Specifications).FirstOrDefault(p => p.Id == productId);
                 if (getProduct is not null)
                 {
-                    CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
                     if (getProduct.IsDeleted)
                     {
-                        bool CheckProduct = (await productRepoistory.GetAllAsync()).Any(P => P.AvailableColors.Any());
-                        if((await productRepoistory.GetAllAsync()).Any(P => P.AvailableColors.Any()))
+                        bool checkColors = getProduct.AvailableColors?.Count > 0;
+                        //bool checkColors = (await productRepoistory.GetAllAsync()).Any(P => P.AvailableColors.Any(pc => pc.ProductId == productId));
+                        if(checkColors)
                         {
                         resultView.IsSuccess = false;
                         resultView.Data = null;
-                        resultView.Msg = $"Product {mappedCUProductDTO.ProductNo} Has Product Colors That Depend On It So It Cannot Be Deleted";
+                        resultView.Msg = $"Product {getProduct.ProductNo} Has Product Colors That Depend On It So It Cannot Be Deleted";
 
                         }
-                        else if ((await productRepoistory.GetAllAsync()).Any(P => P.Details.Any()))
+                        else if (getProduct.Details?.Count > 0)
+                        //else if ((await productRepoistory.GetAllAsync()).Any(P => P.Details.Any(d => d.ProductId == productId)))
                         {
                             resultView.IsSuccess = false;
                             resultView.Data = null;
-                            resultView.Msg = $"Product {mappedCUProductDTO.ProductNo} Has Details That Depend On It So It Cannot Be Deleted";
+                            resultView.Msg = $"Product {getProduct.ProductNo} Has Details That Depend On It So It Cannot Be Deleted";
                         }
-                        else if ((await productRepoistory.GetAllAsync()).Any(P => P.Specifications.Any()))
+                        else if (getProduct.Specifications?.Count > 0)
+                        //else if ((await productRepoistory.GetAllAsync()).Any(P => P.Specifications.Any(s => s.ProductId == productId)))
                         {
                             resultView.IsSuccess = false;
                             resultView.Data = null;
-                            resultView.Msg = $"Product {mappedCUProductDTO.ProductNo} Has Specifications That Depend On It So It Cannot Be Deleted";
+                            resultView.Msg = $"Product {getProduct.ProductNo} Has Specifications That Depend On It So It Cannot Be Deleted";
                         }
                         else
                         {
-                            await productRepoistory.DeleteAsync(getProduct);
+                            Product deletedPrd = await productRepoistory.DeleteAsync(getProduct);
                             await productRepoistory.SaveChangesAsync();
-
+                            CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(deletedPrd);
                             resultView.IsSuccess = true;
                             resultView.Data = mappedCUProductDTO;
                             resultView.Msg = $"Product {mappedCUProductDTO.ProductNo} Hard Deleted Successfully";
@@ -199,6 +236,7 @@ namespace AllBirds.Application.Services.ProductServices
                         int saveStatus = await productRepoistory.SaveChangesAsync();
                         //if (saveStatus > 0)
                         //{
+                        CUProductDTO mappedCUProductDTO = mapper.Map<CUProductDTO>(getProduct);
                         resultView.IsSuccess = true;
                         resultView.Data = mappedCUProductDTO;
                         resultView.Msg = $"Product {mappedCUProductDTO.ProductNo} Soft Deleted Successfully";
@@ -233,11 +271,79 @@ namespace AllBirds.Application.Services.ProductServices
             ResultView<CUProductDTO> resultView = new();
             try
             {
-                bool CheckPrdExist = (await productRepoistory.GetAllAsync()).Any(P => P.Id == cUProductDTO.Id && !P.IsDeleted);
-                if (CheckPrdExist)
+                Product CheckPrdExist = (await productRepoistory.GetAllAsync()).Include(p => p.Categories).FirstOrDefault(P => P.Id == cUProductDTO.Id);
+                //bool CheckPrdExist = (await productRepoistory.GetAllAsync()).Any(P => P.Id == cUProductDTO.Id);
+                if (CheckPrdExist is not null)
                 {
-                    Product prdUpdat = mapper.Map<Product>(cUProductDTO);
-                    Product prdUpdated = await productRepoistory.UpdateAsync(prdUpdat);
+                    if (CheckPrdExist.Categories.Count > 0)
+                    {
+                        foreach (CategoryProduct categoryProduct in CheckPrdExist.Categories)
+                        {
+                            await categoryProductRepoistory.DeleteAsync(categoryProduct);
+                        }
+                    }
+                    CheckPrdExist.Categories.Clear();
+                    CheckPrdExist.Categories = cUProductDTO.CategoriesId?.Select(c => new CategoryProduct() { CategoryId = c, ProductId = cUProductDTO.Id }).ToList();
+                    CheckPrdExist.ProductNo = cUProductDTO.ProductNo;
+                    CheckPrdExist.Price = cUProductDTO.Price;
+                    CheckPrdExist.NameEn = cUProductDTO.NameEn;
+                    CheckPrdExist.NameAr = cUProductDTO.NameAr;
+                    CheckPrdExist.Discount = cUProductDTO.Discount;
+                    CheckPrdExist.ShippingAndReturnsEn = cUProductDTO.ShippingAndReturnsEn;
+                    CheckPrdExist.ShippingAndReturnsAr = cUProductDTO.ShippingAndReturnsAr;
+                    if(cUProductDTO.HighlightsEn?.Count > 0)
+                    {
+                        StringBuilder builder = new();
+                        for (int i = 0; i < cUProductDTO.HighlightsEn.Count; i++)
+                        {
+                            builder.Append(cUProductDTO.HighlightsEn[i]);
+                            if (i != cUProductDTO.HighlightsEn.Count - 1)
+                                builder.Append("~@#$%&");
+                        }
+                        CheckPrdExist.HighlightsEn = builder.ToString();
+                    }
+                    if(cUProductDTO.HighlightsAr?.Count > 0)
+                    {
+                        StringBuilder builder = new();
+                        for (int i = 0; i < cUProductDTO.HighlightsAr.Count; i++)
+                        {
+                            builder.Append(cUProductDTO.HighlightsAr[i]);
+                            if (i != cUProductDTO.HighlightsAr.Count - 1)
+                                builder.Append("~@#$%&");
+                        }
+                        CheckPrdExist.HighlightsAr = builder.ToString();
+                    }
+                    CheckPrdExist.SustainabilityEn = cUProductDTO.SustainabilityEn;
+                    CheckPrdExist.SustainabilityAr = cUProductDTO.SustainabilityAr;
+                    CheckPrdExist.CareGuideEn = cUProductDTO.CareGuideEn;
+                    CheckPrdExist.CareGuideAr = cUProductDTO.CareGuideAr;
+                    if (cUProductDTO.SustainableMaterialsEn?.Count > 0)
+                    {
+                        StringBuilder builder = new();
+                        for (int i = 0; i < cUProductDTO.SustainableMaterialsEn.Count; i++)
+                        {
+                            builder.Append(cUProductDTO.SustainableMaterialsEn[i]);
+                            if (i != cUProductDTO.SustainableMaterialsEn.Count - 1)
+                                builder.Append("~@#$%&");
+                        }
+                        CheckPrdExist.SustainableMaterialsEn = builder.ToString();
+                    }
+                    if (cUProductDTO.SustainableMaterialsAr?.Count > 0)
+                    {
+                        StringBuilder builder = new();
+                        for (int i = 0; i < cUProductDTO.SustainableMaterialsAr.Count; i++)
+                        {
+                            builder.Append(cUProductDTO.SustainableMaterialsAr[i]);
+                            if (i != cUProductDTO.SustainableMaterialsAr.Count - 1)
+                                builder.Append("~@#$%&");
+                        }
+                        CheckPrdExist.SustainableMaterialsAr = builder.ToString();
+                    }
+                    CheckPrdExist.FreeShipping = cUProductDTO.FreeShipping;
+                    //Product prdUpdat = mapper.Map<Product>(cUProductDTO);
+                    //prdUpdat.Created = CheckPrdExist.Created;
+                    //prdUpdat.CreatedBy = CheckPrdExist.CreatedBy;
+                    //Product prdUpdated = await productRepoistory.UpdateAsync(prdUpdat);
                     //var prdCats = await categoryProductService.ge
                     /*foreach (int catId in cUProductDTO.CategoriesId)
                     {
@@ -245,7 +351,7 @@ namespace AllBirds.Application.Services.ProductServices
                         //ICategoryRepository.createAsync(cat)
                     }*/
                     await productRepoistory.SaveChangesAsync();
-                    CUProductDTO mappedUpdatedPrd = mapper.Map<CUProductDTO>(prdUpdated);
+                    CUProductDTO mappedUpdatedPrd = mapper.Map<CUProductDTO>(CheckPrdExist);
                     resultView.IsSuccess = true;
                     resultView.Data = mappedUpdatedPrd;
                     resultView.Msg = $"Product {cUProductDTO.ProductNo} Updated Successfully";
