@@ -1,5 +1,6 @@
 ﻿using AllBirds.Application.Contracts;
 using AllBirds.DTOs.AccountDTOs;
+using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.Shared;
 using AllBirds.Models;
 using AutoMapper;
@@ -63,6 +64,33 @@ namespace AllBirds.Application.Services.AccountServices
                 List<GetAllAdminsDTO> getAllAdminsDTOs = mapper.Map<List<GetAllAdminsDTO>>(adminsList);
                 result.IsSuccess = true;
                 result.Data = getAllAdminsDTOs;
+                result.Msg = "All Admins Fetched Successfully";
+            }
+            else
+            {
+                result.IsSuccess = false;
+                result.Data = null;
+                result.Msg = "No Role Named Admin Was Found";
+            }
+            return result;
+        }
+
+        public async Task<ResultView<EntityPaginated<GetAllAdminsDTO>>> GetAllPaginatedAsync(string role, int pageNumber, int pageSize)
+        {
+            ResultView<EntityPaginated<GetAllAdminsDTO>> result = new();
+            IdentityRole<int>? adminRole = roleManager.Roles.FirstOrDefault(r => r.NormalizedName == role.ToUpper());
+            if (adminRole is not null)
+            {
+                List<int> adminIdsList = [..(await accountRoleRepository.GetAllAccountRolesAsync()).Where(ar => ar.RoleId == adminRole.Id).Select(ur => ur.UserId)];
+                List<CustomUser> adminsList = [..userManager.Users.Where(u => adminIdsList.Contains(u.Id))];
+                List<GetAllAdminsDTO> getAllAdminsDTOs = mapper.Map<List<GetAllAdminsDTO>>(adminsList);
+                int totalUsers = userManager.Users.Where(u => adminIdsList.Contains(u.Id)).Count();
+                result.IsSuccess = true;
+                result.Data = new EntityPaginated<GetAllAdminsDTO>
+                {
+                    Data = getAllAdminsDTOs,
+                    Count = totalUsers
+                };
                 result.Msg = "All Admins Fetched Successfully";
             }
             else
@@ -219,7 +247,7 @@ namespace AllBirds.Application.Services.AccountServices
                     {
                         resultView.IsSuccess = false;
                         resultView.Data = null;
-                        List<IdentityUserRole<int>> userRoles = [.. (await accountRoleRepository.GetAllAccountRolesAsync()).Where(iur => iur.RoleId != 4)];
+                        List<IdentityUserRole<int>> userRoles = [.. (await accountRoleRepository.GetAllAccountRolesAsync()).Where(iur => iur.RoleId != 4 && iur.UserId == findUser.Id)];
                         if (userRoles.Count != 0)
                         {
                             foreach (IdentityUserRole<int> role in userRoles)
@@ -227,7 +255,9 @@ namespace AllBirds.Application.Services.AccountServices
                                 await accountRoleRepository.DeleteAsync(role);
                             }
                         }
+                        await accountRoleRepository.SaveChangesAsync();
                         resultView.Msg = $"Cannot Delete Admin ({findUser.FirstName ?? findUser.UserName} {findUser.LastName ?? ""}) Because Of His/Her Orders Made Before, We Removed His/Her Role Instead";
+                        return resultView;
                     }
                     IdentityResult deleteUser = await userManager.DeleteAsync(findUser);
                     if (deleteUser.Succeeded)

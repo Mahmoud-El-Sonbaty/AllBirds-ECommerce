@@ -15,7 +15,7 @@
 
     <partial name="_FooterPartial" />
 }
-@if (TempData["IsSuccess"] is bool Success)
+@* @if (TempData["IsSuccess"] is bool Success)
 {
     @if (Success)
     {
@@ -29,7 +29,7 @@
             <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
         </div>
     }
-}
+} *@
 <h1>Add Moderator</h1>
 
 <div class="row">
@@ -109,5 +109,20 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    @if (TempData["IsSuccess"] is bool Success)
+    {
+        @if (Success)
+        {
+            <script>
+                showMsgSuccessToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
+        else
+        {
+            <script>
+                showMsgDangerToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
     }
 }

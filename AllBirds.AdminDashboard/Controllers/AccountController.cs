@@ -18,15 +18,18 @@ namespace AllBirds.AdminDashboard.Controllers
         }
         
         [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
-        public async Task<IActionResult> GetAll(string role)
+        public async Task<IActionResult> GetAll(string role, int pageNumber = 1, int pageSize = 8)
         {
-            ResultView<List<GetAllAdminsDTO>> adminsResult = await accountService.GetAllAsync(role);
+            ResultView<EntityPaginated<GetAllAdminsDTO>> adminsResult = await accountService.GetAllPaginatedAsync(role, pageNumber, pageSize);
             if (!adminsResult.IsSuccess)
             {
                 TempData.Add("IsSuccess", false);
                 TempData.Add("Msg", adminsResult.Msg);
             }
-            return View(adminsResult.Data);
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = adminsResult.Data?.Count ?? 0;
+            return View(adminsResult.Data?.Data);
         }
 
         [HttpGet, Authorize(Roles = "SuperUser,Manager,Admin")]
@@ -44,10 +47,17 @@ namespace AllBirds.AdminDashboard.Controllers
             {
                 cUAccountDTO.ImagePath = Path.Combine(new string[] { webHostEnvironment.WebRootPath, "Images", "Accounts" });
                 ResultView<CUAccountDTO> createdMod = await accountService.AddModerator(cUAccountDTO);
+                TempData.Add("IsSuccess", createdMod.IsSuccess);
+                TempData.Add("Msg", createdMod.Msg);
                 if (createdMod.IsSuccess)
                 {
                     return Redirect("/Account/GetAll?role=admin");
                 }
+            }
+            else
+            {
+                TempData.Add("IsSuccess", false);
+                TempData.Add("Msg", "Invalid Data");
             }
             return View();
         }
@@ -65,9 +75,11 @@ namespace AllBirds.AdminDashboard.Controllers
                     ResultView<GetAllAdminsDTO> getUserRes = await accountService.GetUserById(User.Claims.FirstOrDefault()?.Value);
                     if (getUserRes.IsSuccess)
                     {
-                        return Redirect("/");
+                        return Redirect("/Account/GetAll?role=admin");
                     }
                 }
+                TempData.Add("IsSuccess", false);
+                TempData.Add("Msg", "Invalid Credentials");
             }
             return View();
         }
