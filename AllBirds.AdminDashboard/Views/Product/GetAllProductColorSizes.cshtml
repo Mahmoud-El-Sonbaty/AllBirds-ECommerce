@@ -1,6 +1,10 @@
 ﻿@model List<GetPCSDTO>
 @{
     ViewData["Title"] = "GetAllPrdColorSizes";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int totalItems = ViewBag.TotalItems ?? 0;
+    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 }
 
 @* <h1>GetAllPrdColorSizes</h1> *@
@@ -20,7 +24,7 @@
 }
 
 @* <h1>AllCategory</h1> *@
-@if (TempData["IsSuccess"] is bool Success)
+@* @if (TempData["IsSuccess"] is bool Success)
 {
     @if (Success)
     {
@@ -34,7 +38,7 @@
             <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
         </div>
     }
-}
+} *@
 <div id="msgDiv" style="display: none;" class="alert alert-warning text-dark" role="alert"> <span></span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button></div>
 <div class="row ">
     <div class="col-12 grid-margin">
@@ -82,20 +86,49 @@
                     </table>
                 </div>
             </div>
+            <!-- Pagination -->
             <nav>
                 <ul class="pagination d-flex justify-content-center rounded-separated pagination-primary">
-                    <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="GetAllProductColorSizes" asp-route-prdColorId="@ViewBag.PrdColorId" asp-route-pageNumber="@(currentPage - 1)" asp-route-pageSize="@pageSize"><i class="mdi mdi-chevron-left"></i></a>
+                    </li>
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            @if (i == currentPage)
+                            {
+                                <a class="page-link">@i</a>
+                            }
+                            else
+                            {
+                                <a class="page-link" asp-action="GetAllProductColorSizes" asp-route-prdColorId="@ViewBag.PrdColorId" asp-route-pageNumber="@i" asp-route-pageSize="@pageSize">@i</a>
+                            }
+                        </li>
+                    }
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="GetAllProductColorSizes" asp-route-prdColorId="@ViewBag.PrdColorId" asp-route-pageNumber="@(currentPage + 1)" asp-route-pageSize="@pageSize"><i class="mdi mdi-chevron-right"></i></a>
+                    </li>
                 </ul>
             </nav>
         </div>
     </div>
 </div>
 @section Scripts {
+    @if (TempData["IsSuccess"] is bool Success)
+    {
+        @if (Success)
+        {
+            <script>
+                showMsgSuccessToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
+        else
+        {
+            <script>
+                showMsgDangerToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
+    }
     <script>
         let tBody = document.getElementsByTagName("tbody");
         console.log(tBody);
@@ -167,14 +200,16 @@
                         sizeSelectTd.textContent = sizeSelectTd.children[0].selectedOptions[0].textContent;
                         lastTd.innerHTML = `<button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
                                     <a href="/Product/DeleteProductColorSize?prdColorSizeId=${res.id}&prdColorId=${prdColorId}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
-                        msgDiv.setAttribute("class", "alert alert-success text-dark");
-                        msgDiv.style = "display: block;";
-                        msgDiv.children[0].textContent = res.message;
+                        // msgDiv.setAttribute("class", "alert alert-success text-dark");
+                        // msgDiv.style = "display: block;";
+                        // msgDiv.children[0].textContent = res.message;
+                        showMsgSuccessToast(res.message);
                     }
                     else {
-                        msgDiv.setAttribute("class", "alert alert-danger text-dark");
-                        msgDiv.style = "display: block;";
-                        msgDiv.children[0].textContent = res.message;
+                        showMsgDangerToast(res.message);
+                        // msgDiv.setAttribute("class", "alert alert-danger text-dark");
+                        // msgDiv.style = "display: block;";
+                        // msgDiv.children[0].textContent = res.message;
                         // alert(res.message);
                     }
                 }
@@ -252,15 +287,17 @@
                         sizeTd.textContent = sizeTd.children[0].selectedOptions[0].textContent;
                         lastTd.innerHTML = `<button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
                                     <a href="/Product/DeleteProductColorSize?prdColorSizeId=${latestPrdColorSizeIdClicked}&prdColorId=${prdColorId}" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a>`;
-                        msgDiv.style = "display: block;";
-                        msgDiv.setAttribute("class", "alert alert-success text-dark");
-                        msgDiv.children[0].textContent = res.message;
+                        // msgDiv.style = "display: block;";
+                        // msgDiv.setAttribute("class", "alert alert-success text-dark");
+                        // msgDiv.children[0].textContent = res.message;
+                        showMsgSuccessToast(res.message);
                         isOpenSomewhere = false;
                     }
                     else {
-                        msgDiv.style = "display: block;";
-                        msgDiv.setAttribute("class", "alert alert-danger text-dark");
-                        msgDiv.children[0].textContent = res.message;
+                        // msgDiv.style = "display: block;";
+                        // msgDiv.setAttribute("class", "alert alert-danger text-dark");
+                        // msgDiv.children[0].textContent = res.message;
+                        showMsgDangerToast(res.message);
                         // alert(res.message);
                     }
                 }

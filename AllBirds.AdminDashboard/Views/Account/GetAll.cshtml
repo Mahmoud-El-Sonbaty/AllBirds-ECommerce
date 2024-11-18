@@ -142,7 +142,14 @@
                     @for (int i = 1; i <= totalPages; i++)
                     {
                         <li class="page-item @(i == currentPage ? "active" : "")">
-                            <a class="page-link" asp-action="GetAll" asp-route-pageNumber="@i" asp-route-pageSize="@pageSize">@i</a>
+                            @if (i == currentPage)
+                            {
+                                <a class="page-link">@i</a>
+                            }
+                            else
+                            {
+                                <a class="page-link" asp-action="GetAll" asp-route-pageNumber="@i" asp-route-pageSize="@pageSize">@i</a>
+                            }
                         </li>
                     }
                     <li class="page-item @(currentPage == totalPages ? "disabled" : "")">

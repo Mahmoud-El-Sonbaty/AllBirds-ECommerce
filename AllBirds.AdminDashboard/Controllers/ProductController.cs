@@ -210,28 +210,7 @@ namespace AllBirds.AdminDashboard.Controllers
                 return View();
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> GetProductColorImages(int id)
-        {
-            ResultView<GetOneProductColorDTO> resultView = await productColorService.GetByIdAsync(id);
-            if(resultView.IsSuccess)
-            {
-                return View(resultView);
-            }
-            else
-            {
-                return View(resultView.Msg);
-            }
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> DeleteProductColorImage(int id)
-        {
-            ResultView<CUProductColorImageDTO> resultView = await productColotImageService.HardDeleteProductColorImage(id);
-            TempData["IsSuccess"] = resultView.IsSuccess;
-            TempData["Msg"] = resultView.Msg;
-            return RedirectToAction("GetProductColorImages");
-        }
 
 
         [HttpGet]
@@ -283,19 +262,47 @@ namespace AllBirds.AdminDashboard.Controllers
             return Redirect($"/Product/GetAllProductColors/{resultView.Data.ProductId}");
         }
 
+        /////////////////////////////////////////////////// Product Color Image //////////////////////////////////////////////////////////////
+        
+        [HttpGet]
+        public async Task<IActionResult> GetProductColorImages(int id)
+        {
+            ResultView<GetOneProductColorDTO> resultView = await productColorService.GetByIdAsync(id);
+            if(resultView.IsSuccess)
+            {
+                return View(resultView);
+            }
+            else
+            {
+                return View(resultView.Msg);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProductColorImage(int id)
+        {
+            ResultView<CUProductColorImageDTO> resultView = await productColotImageService.HardDeleteProductColorImage(id);
+            TempData["IsSuccess"] = resultView.IsSuccess;
+            TempData["Msg"] = resultView.Msg;
+            return RedirectToAction("GetProductColorImages");
+        }
+
         /////////////////////////////////////////////////// Product Color Size //////////////////////////////////////////////////////////////
         
-        public async Task<IActionResult> GetAllProductColorSizes(int prdColorId)
+        public async Task<IActionResult> GetAllProductColorSizes(int prdColorId, int pageNumber = 1, int pageSize = 8)
         {
-            ResultView<List<GetPCSDTO>> resultView = await productColorSizeService.GetAllAsync(prdColorId);
+            ResultView<EntityPaginated<GetPCSDTO>> resultView = await productColorSizeService.GetAllPaginatedAsync(prdColorId, pageNumber, pageSize);
             if (!resultView.IsSuccess)
             {
                 TempData["Msg"] = resultView.Msg;
                 TempData["IsSuccess"] = resultView.IsSuccess;
             }
             ViewBag.PrdColorId = prdColorId;
-            ViewBag.Sizes = await sizeService.GetAllAsync();
-            return View(resultView.Data);
+            ViewBag.Sizes = (await sizeService.GetAllAsync()).Data;
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = resultView.Data?.Count ?? 0;
+            return View(resultView.Data?.Data);
         }
 
         [HttpPost]

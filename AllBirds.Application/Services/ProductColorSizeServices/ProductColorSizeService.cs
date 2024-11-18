@@ -1,4 +1,5 @@
 ﻿using AllBirds.Application.Contracts;
+using AllBirds.DTOs.CategoryDTOs;
 using AllBirds.DTOs.ProductColorSizeDTOs;
 using AllBirds.DTOs.Shared;
 using AllBirds.Models;
@@ -126,6 +127,31 @@ namespace AllBirds.Application.Services.ProductColorSizeServices
                 List<ProductColorSize> productColorSizes = [.. (await productColorSizeRepoistory.GetAllAsync()).Include(pcs => pcs.Size).Where(pcs => pcs.ProductColorId == prdColorId)];
                 result.IsSuccess = true;
                 result.Data = mapper.Map<List<GetPCSDTO>>(productColorSizes);
+                result.Msg = productColorSizes.Count > 0 ? "All Product Color Sizes Fetched Successfully" : "No Sizes Found For This Product Color";
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Data = null;
+                result.Msg = $"Error Happened While Fetching All Sizes For This Product Color {ex.Message}";
+            }
+            return result;
+        }
+
+        public async Task<ResultView<EntityPaginated<GetPCSDTO>>> GetAllPaginatedAsync(int prdColorId, int pageNumber, int pageSize)
+        {
+            ResultView<EntityPaginated<GetPCSDTO>> result = new();
+            try
+            {
+                List<ProductColorSize> productColorSizes = [.. (await productColorSizeRepoistory.GetAllAsync())
+                    .Include(pcs => pcs.Size).Where(pcs => pcs.ProductColorId == prdColorId).Skip((pageNumber - 1) * pageSize).Take(pageSize)];
+                int totalPrdColorSizes = (await productColorSizeRepoistory.GetAllAsync()).Where(pcs => pcs.ProductColorId == prdColorId).Count();
+                result.IsSuccess = true;
+                result.Data = new EntityPaginated<GetPCSDTO>
+                {
+                    Data = mapper.Map<List<GetPCSDTO>>(productColorSizes),
+                    Count = totalPrdColorSizes
+                };
                 result.Msg = productColorSizes.Count > 0 ? "All Product Color Sizes Fetched Successfully" : "No Sizes Found For This Product Color";
             }
             catch (Exception ex)
