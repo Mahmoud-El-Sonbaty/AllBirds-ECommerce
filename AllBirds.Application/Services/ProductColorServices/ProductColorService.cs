@@ -234,42 +234,34 @@ namespace AllBirds.Application.Services.ProductColorServices
 
         public async Task<ResultView<GetOneProductColorDTO>> GetByIdAsync(int id)
         {
-
-
             ResultView<GetOneProductColorDTO> result = new();
             try
             {
-                ProductColor item = (await productColorRepository.GetAllAsync())
+                ProductColor? item = (await productColorRepository.GetAllAsync())
                     .Where(b => b.Id == id)
                     .Include(b => b.Product)
                     .Include(s => s.Color)
                     .Include(r => r.Images)
-                    .Include(s => s.AvailableSizes).ThenInclude(a => a.Size).FirstOrDefault();
-
-                if (item != null)
+                    .FirstOrDefault();
+                if (item is not null)
                 {
                     result.IsSuccess = true;
                     result.Data = mapper.Map<GetOneProductColorDTO>(item);
-                    result.Msg = "Get  Product's Color successfully";
+                    result.Msg = "Product Color Images Fetched successfully";
                 }
                 else
                 {
                     result.IsSuccess = false;
                     result.Data = null;
-                    result.Msg = "Product's Color Not Found";
+                    result.Msg = "Product Color Images Not Found";
                 }
-
             }
             catch (Exception ex)
             {
-
                 result.IsSuccess = false;
                 result.Data = null;
-                result.Msg = "Error Happened While Getting  Product Color By Id With Ex :" + ex.Message;
-
-
+                result.Msg = $"Error Happened While Getting Product Color Images, {ex.Message}";
             }
-
             return result;
         }
 

@@ -257,8 +257,8 @@ namespace AllBirds.AdminDashboard.Controllers
         public async Task<IActionResult> DeleteProductColor(int Id)
         {
             ResultView<GetOneProductColorDTO> resultView = await productColorService.HardDeleteAsync(Id);
-            TempData["Msg"] = resultView.Msg;
             TempData["IsSuccess"] = resultView.IsSuccess;
+            TempData["Msg"] = resultView.Msg;
             return Redirect($"/Product/GetAllProductColors/{resultView.Data.ProductId}");
         }
 
@@ -274,7 +274,9 @@ namespace AllBirds.AdminDashboard.Controllers
             }
             else
             {
-                return View(resultView.Msg);
+                TempData["IsSuccess"] = resultView.IsSuccess;
+                TempData["Msg"] = resultView.Msg;
+                return View(resultView);
             }
         }
 
@@ -284,7 +286,7 @@ namespace AllBirds.AdminDashboard.Controllers
             ResultView<CUProductColorImageDTO> resultView = await productColotImageService.HardDeleteProductColorImage(id);
             TempData["IsSuccess"] = resultView.IsSuccess;
             TempData["Msg"] = resultView.Msg;
-            return RedirectToAction("GetProductColorImages");
+            return Redirect("/Product/GetProductColorImages/1");
         }
 
         /////////////////////////////////////////////////// Product Color Size //////////////////////////////////////////////////////////////
