@@ -393,5 +393,28 @@ namespace AllBirds.Application.Services.AccountServices
             await signInManager.SignOutAsync();
         }
 
+        public async Task<ResultView<ClientDetailsDTO>> GetClientDetails(int userId)
+        {
+            ResultView<ClientDetailsDTO> result = new();
+            try
+            {
+                CustomUser? userFindById = await userManager.FindByIdAsync($"{userId}");
+                if (userFindById is not null)
+                {
+                    result.IsSuccess = true;
+                    result.Data = mapper.Map<ClientDetailsDTO>(userFindById);
+                    result.Msg = "User Details Fetched Successfully";
+                }
+                else
+                {
+                    result.Msg = "This User Doesn't Exist";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Msg = $"Error Happened While Getting Client Details, {ex.Message}.";
+            }
+            return result;
+        }
     }
 }

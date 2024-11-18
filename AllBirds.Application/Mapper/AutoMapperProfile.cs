@@ -31,6 +31,8 @@ namespace AllBirds.Application.Mapper
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName ?? "NA"))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber ?? "NA"))
                 .ReverseMap();
+            CreateMap<CustomUser, ClientDetailsDTO>()
+                .ForMember(dest => dest.ZipCode, opt => opt.MapFrom(src => src.PostalCode));
             #endregion
 
             #region Category

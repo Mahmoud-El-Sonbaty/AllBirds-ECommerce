@@ -21,5 +21,6 @@ namespace AllBirds.Application.Services.AccountServices
         public Task<ResultView<CUAccountDTO>> AddModerator(CUAccountDTO cUAccountDTO);
         public Task LogoutAsync();
         public Task<ResultView<CUAccountDTO>> DeleteAsync(int userId);
+        public Task<ResultView<ClientDetailsDTO>> GetClientDetails(int userId);
     }
 }
