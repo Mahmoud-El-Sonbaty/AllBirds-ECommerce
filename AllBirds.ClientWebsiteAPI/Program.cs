@@ -174,8 +174,8 @@ builder.Services.AddCors(op =>
     });
     op.AddPolicy("Production", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://allbirds-orcin.vercel.app")
-        .WithHeaders("Authorization")
+        policy.WithOrigins("http://localhost:4200", "https://allbirds-orcin.vercel.app, https://allbirds-git-elghoul-mahmoud-elsonbatys-projects.vercel.app/")
+        .AllowAnyHeader()
         .AllowAnyMethod();
     });
 });
@@ -189,19 +189,21 @@ builder.Services.AddRouting(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    //app.UseSwagger();
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//    //app.UseSwagger();
 
-    //// Ensure Swagger UI is configured with the correct endpoint
-    //app.UseSwaggerUI(c =>
-    //{
-    //    c.SwaggerEndpoint("/swagger/V1/swagger.json", "Client API V1");
-    //    //c.RoutePrefix = ""; // Ensures Swagger loads at root (http://localhost:5120)
-    //});
-}
+//    //// Ensure Swagger UI is configured with the correct endpoint
+//    //app.UseSwaggerUI(c =>
+//    //{
+//    //    c.SwaggerEndpoint("/swagger/V1/swagger.json", "Client API V1");
+//    //    //c.RoutePrefix = ""; // Ensures Swagger loads at root (http://localhost:5120)
+//    //});
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
