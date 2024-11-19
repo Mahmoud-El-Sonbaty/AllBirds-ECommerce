@@ -1,5 +1,25 @@
 ﻿@model GetAll
+@{
+    // int currentPageColor = ViewBag.CurrentPage ?? 1;
+    // int pageSizeColor = ViewBag.PageSize ?? 10;
+    // int totalItemsColor = ViewBag.TotalItems ?? 0;
+    // int totalPagesColor = (int)Math.Ceiling((double)totalItemsColor / pageSizeColor);
 
+    // int currentPageSize = ViewBag.CurrentPage ?? 1;
+    // int pageSizeSize = ViewBag.PageSize ?? 10;
+    // int totalItemsSize = ViewBag.TotalItems ?? 0;
+    // int totalPagesSize = (int)Math.Ceiling((double)totalItemsSize / pageSizeSize);
+
+    // int currentPageCoupon = ViewBag.CurrentPage ?? 1;
+    // int pageSizeCoupon = ViewBag.PageSize ?? 10;
+    // int totalItemsCoupon = ViewBag.TotalItems ?? 0;
+    // int totalPagesCoupon = (int)Math.Ceiling((double)totalItemsCoupon / pageSizeCoupon);
+
+    // int currentPageState = ViewBag.CurrentPage ?? 1;
+    // int pageSizeState = ViewBag.PageSize ?? 10;
+    // int totalItemsState = ViewBag.TotalItems ?? 0;
+    // int totalPagesState = (int)Math.Ceiling((double)totalItemsState / pageSizeState);
+}
 @section Navbar {
 
     <partial name="_NavbarPartial" />
@@ -16,15 +36,25 @@
 {
     @if (Success)
     {
-        <div id="msgDiv" class="alert alert-success text-dark" role="alert">
+        @* <div id="msgDiv" class="alert alert-success text-dark" role="alert">
             <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
-        </div>
+        </div> *@
+        @section Scripts {
+            <script>
+                showMsgSuccessToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
     }
     else
     {
-        <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
+        @* <div id="msgDiv" class="alert alert-danger text-dark" role="alert">
             <span>@TempData["Msg"]</span> <button onclick="closeMsg(event)" class="btn btn-outline-danger"><i class="mdi mdi-close"></i></button>
-        </div>
+        </div> *@
+        @section Scripts {
+            <script>
+                showMsgDangerToast(@Html.Raw(Json.Serialize(TempData["Msg"])));
+            </script>
+        }
     }
 }
 <div class="row">
@@ -74,6 +104,30 @@
                         </tbody>
                     </table>
                 </div>
+                @* <!-- Pagination -->
+                <nav>
+                    <ul class="pagination d-flex justify-content-center rounded-separated pagination-primary">
+                        <li class="page-item @(currentPageColor == 1 ? "disabled" : "")">
+                            <a class="page-link" asp-action="GetAll" asp-route-pageNumber="@(currentPageColor - 1)" asp-route-pageSize="@pageSizeColor" asp-route-flag="1"><i class="mdi mdi-chevron-left"></i></a>
+                        </li>
+                        @for (int i = 1; i <= totalPagesColor; i++)
+                        {
+                            <li class="page-item @(i == currentPageColor ? "active" : "")">
+                                @if (i == currentPageColor)
+                                {
+                                    <a class="page-link">@i</a>
+                                }
+                                else
+                                {
+                                    <a class="page-link" asp-action="GetAll" asp-route-pageNumber="@i" asp-route-pageSize="@pageSizeColor" asp-route-flag="1">@i</a>
+                                }
+                            </li>
+                        }
+                        <li class="page-item @(currentPageColor == totalPagesColor ? "disabled" : "")">
+                            <a class="page-link" asp-action="GetAll" asp-route-pageNumber="@(currentPageColor + 1)" asp-route-pageSize="@pageSizeColor" asp-route-flag="1"><i class="mdi mdi-chevron-right"></i></a>
+                        </li>
+                    </ul>
+                </nav> *@
             </div>
         </div>
     </div>

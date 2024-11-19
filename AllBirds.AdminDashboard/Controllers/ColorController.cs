@@ -22,20 +22,25 @@ namespace AllBirds.AdminDashboard.Controllers
             _orderStateService = orderStateService;
             _couponService = couponService;
         }
-        public async Task<IActionResult> GetALLForC_CO_S_OS()
+        public async Task<IActionResult> GetALLForC_CO_S_OS(int pageNumber, int pageSize, int flag)
         {
 
             var AllColor = await _colorService.GetAllAsync();
             var AllSize = await _sizeService.GetAllAsync();
             var AllCoupon = await _couponService.GetAllAsync();
             var AllOrderState = await _orderStateService.GetAllAsync();
+            //var colorData = flag == 1 ? AllColor.Data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList() : AllColor.Data;
             var Model = new GetAll
             {
+                //cUColorDTOs = colorData,
                 cUColorDTOs = AllColor.Data,
                 cUSizeDTOs = AllSize.Data,
                 cUCoupons = AllCoupon.Data,
                 OrderStateDTOs = AllOrderState.Data,
             };
+            //ViewBag.CurrentPageColor = pageNumber;
+            //ViewBag.PageSizeColor = pageSize;
+            //ViewBag.TotalItemsColor = AllColor.Data?.Count ?? 0;
             return View(Model);
         }
         public async Task<IActionResult> Index()

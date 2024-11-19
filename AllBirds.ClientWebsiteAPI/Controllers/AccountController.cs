@@ -56,15 +56,19 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register(ClientRegisterDTO cUAccountDTO)
         {
-            ResultView<ClientRegisterDTO> resultView = await accountService.RegisterAsync(cUAccountDTO);
-            if (resultView.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return Created();
+                ResultView<ClientRegisterDTO> resultView = await accountService.RegisterAsync(cUAccountDTO);
+                if (resultView.IsSuccess)
+                {
+                    return Created();
+                }
+                else
+                {
+                    return BadRequest(resultView.Msg);
+                }
             }
-            else
-            {
-                return BadRequest(resultView.Msg);
-            }
+            return BadRequest();
         }
 
         [HttpGet]

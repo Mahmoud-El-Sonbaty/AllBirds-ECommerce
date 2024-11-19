@@ -55,7 +55,7 @@
                                         <td>
                                             <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
                                             @* <a asp-action="DeletePrdSpec" asp-controller="Product" asp-route-id="@prdSpec.Id" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a> *@
-                                            <button type="button" class="btn btn-outline-danger" onclick="openModal('Specification', '/Product/DeletePrdSpec/@prdSpec.Id')"><i class="fas fa-trash-alt"></i></button>
+                                            <button type="button" class="btn btn-outline-danger" prdSpecId="@prdSpec.Id" onclick="openModal('Specification', '/Product/DeletePrdSpec/@prdSpec.Id')"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 }                                
@@ -192,7 +192,8 @@
             }
             isOpenSomewhere = true;
             let lastTd = evt.target.children.length ? evt.target.parentElement : evt.target.parentElement.parentElement;
-            let prdSpecId = lastTd.children[1].href.split("/").reverse()[0];
+            let prdSpecId = lastTd.children[1]getAttribute("prdSpecId");
+            // let prdSpecId = lastTd.children[1].href.split("/").reverse()[0];
             latestPrdSpecIdClicked = prdSpecId;
             lastTd.innerHTML = `<button type="button" onclick="saveEdit(event)" class="btn btn-outline-success"><i class="fas fa-check"></i></button>
                                 <button type="button" onclick="cancelEdit(event)" class="btn btn-outline-danger"><i class="fas fa-cancel"></i></button>`;
