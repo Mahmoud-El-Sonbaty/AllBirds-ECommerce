@@ -78,7 +78,7 @@
                                             <button type="button" class="btn btn-outline-secondary" onclick="openPrdSpecToEdit(event)"><i class="fas fa-edit"></i></button>
                                             @* <a asp-action="UpdateProductColorSize" asp-controller="Product" asp-route-prdColorSizeId="@pcs.ProductColorSizeId" class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a> *@
                                             @* <a asp-action="DeleteProductColorSize" asp-controller="Product" asp-route-prdColorSizeId="@pcs.ProductColorSizeId" asp-route-prdColorId="@ViewBag.PrdColorId" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></a> *@
-                                            <button type="button" class="btn btn-outline-danger" onclick="openModal('Product Color Size', '/Product/DeleteProductColorSize?prdColorSizeId=@pcs.ProductColorSizeId&prdColorId=@ViewBag.PrdColorId')"><i class="fas fa-trash-alt"></i></button>
+                                            <button type="button" class="btn btn-outline-danger" pcsId="@pcs.ProductColorSizeId" onclick="openModal('Product Color Size', '/Product/DeleteProductColorSize?prdColorSizeId=@pcs.ProductColorSizeId&prdColorId=@ViewBag.PrdColorId')"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -229,7 +229,8 @@
             }
             isOpenSomewhere = true;
             let lastTd = evt.target.children.length ? evt.target.parentElement : evt.target.parentElement.parentElement;
-            let prdSpecId = lastTd.children[1].href.split("/").reverse()[0].split("=")[1].split("&")[0];
+            let prdSpecId = lastTd.children[1].getAttribute("pcsId");
+            // let prdSpecId = lastTd.children[1].href.split("/").reverse()[0].split("=")[1].split("&")[0];
             console.log(prdSpecId);
             latestPrdColorSizeIdClicked = prdSpecId;
             lastTd.innerHTML = `<button type="button" onclick="saveEdit(event)" class="btn btn-outline-success"><i class="fas fa-check"></i></button>

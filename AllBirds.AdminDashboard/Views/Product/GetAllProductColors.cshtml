@@ -96,6 +96,7 @@
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
                                                 <h6 class="dropdown-header">Options</h6>
+                                                <a class="dropdown-item" asp-controller="Product" asp-action="SetAsMainColor" asp-route-prdColorId="@item.Id" asp-route-prdId="@ViewBag.PrdId">Set As Main Color</a>
                                                 <a class="dropdown-item" asp-controller="Product" asp-action="GetProductColorImages" asp-route-id="@item.Id">Product Color Images</a>
                                                 <a class="dropdown-item" asp-controller="Product" asp-action="GetAllProductColorSizes" asp-route-prdColorId="@item.Id">Product Color Sizes</a>
                                             </div>

@@ -11,11 +11,13 @@ namespace AllBirds.Application.Services.CategoryServices
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository categoryRepository;
+        private readonly IProductRepository productRepository;
         private readonly IMapper mapper;
 
-        public CategoryService(ICategoryRepository _categoryRepository, IMapper _mapper)
+        public CategoryService(ICategoryRepository _categoryRepository, IProductRepository _productRepository, IMapper _mapper)
         {
             categoryRepository = _categoryRepository;
+            productRepository = _productRepository;
             mapper = _mapper;
         }
 
@@ -448,7 +450,7 @@ namespace AllBirds.Application.Services.CategoryServices
         //Services for Localization  By ahmed Elghoul
         //================================================================================================
 
-        public List<GetAllCategoryWithLangDTO> testLocal(List<Category> allCats, int parentId,string lang)
+        public async Task<List<GetAllCategoryWithLangDTO>> testLocal(List<Category> allCats, int parentId,string lang)
         {
             List<GetAllCategoryWithLangDTO> result = new();
             //List<Category> subChildren = children.Where(c => c.ParentCategoryId == parentId).ToList();
@@ -463,7 +465,20 @@ namespace AllBirds.Application.Services.CategoryServices
                 obj.Children = [];
                 if (child.IsParentCategory)
                 {
-                    obj.Children = testLocal(allCats, child.Id, lang);
+                    obj.Children = await testLocal(allCats, child.Id, lang);
+                }
+                else if (child.NameEn == "Bestsellers")
+                {
+                    obj.Children = [.. (await productRepository.GetAllAsync()).Where(p => p.Categories.Any(cp => cp.CategoryId == child.Id))
+                        .Select(cp => new GetAllCategoryWithLangDTO()
+                        {
+                            Id = cp.Id,
+                            Name = (lang == "en") ? cp.NameEn : cp.NameAr,
+                            Children = null,
+                            IsParentCategory = false,
+                            ParentCategoryId = child.Id,
+                            Level = child.Level + 1
+                        })];
                 }
                 result.Add(obj);
             }
@@ -491,7 +506,7 @@ namespace AllBirds.Application.Services.CategoryServices
                     mappedObj.Children = [];
                     if (parent.IsParentCategory)
                     {
-                        mappedObj.Children = testLocal(allCats, parent.Id,lang);
+                        mappedObj.Children = await testLocal(allCats, parent.Id,lang);
                     }
                     result.Add(mappedObj);
                 }
