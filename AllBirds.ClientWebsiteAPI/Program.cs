@@ -174,7 +174,7 @@ builder.Services.AddCors(op =>
     });
     op.AddPolicy("Production", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://allbirds-orcin.vercel.app, https://allbirds-git-elghoul-mahmoud-elsonbatys-projects.vercel.app/")
+        policy.WithOrigins("https://allbirds-git-elghoul-mahmoud-elsonbatys-projects.vercel.app", "https://allbirds-orcin.vercel.app", "http://localhost:4200")
         .AllowAnyHeader()
         .AllowAnyMethod();
     });

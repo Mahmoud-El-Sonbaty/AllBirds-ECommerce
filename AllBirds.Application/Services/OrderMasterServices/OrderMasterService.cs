@@ -330,7 +330,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
                 //    .Include(om => om.OrderDetails).ThenInclude(od => od.ProductColorSize.Size)
                 //    .Where(om => om.ClientId == userId && om.OrderState.StateEn != "InCart")];
 
-                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Where(om => om.OrderState.StateEn != "In Cart").Select(om =>
+                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Where(om => om.ClientId == userId && om.OrderState.StateEn != "In Cart").Select(om =>
                 new GetAllClientOrderMasterDTO
                 {
                     Id = om.Id,
@@ -669,7 +669,7 @@ namespace AllBirds.Application.Services.OrderMasterServices
             {
       
 
-                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Where(om => om.OrderState.StateEn != "In Cart").Select(om =>
+                List<GetAllClientOrderMasterDTO> userOrders = [.. (await orderMasterRepository.GetAllAsync()).Where(om => om.ClientId == userId && om.OrderState.StateEn != "In Cart").Select(om =>
                 new GetAllClientOrderMasterDTO
                 {
                     Id = om.Id,
