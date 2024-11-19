@@ -175,9 +175,11 @@ builder.Services.AddCors(op =>
     op.AddPolicy("Production", policy =>
     {
         policy.WithOrigins("http://localhost:4200", "https://allbirds-orcin.vercel.app")
-        .WithHeaders("Authorization")
+        //.WithHeaders("Authorization")
+        .AllowAnyHeader()
         .AllowAnyMethod();
     });
+
 });
 
 
