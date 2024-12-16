@@ -2,14 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.Buffers.Text;
-using static Azure.Core.HttpHeader;
-using System.Text.RegularExpressions;
-using Azure;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Net.Sockets;
 
 namespace AllBirds.Context
 {
