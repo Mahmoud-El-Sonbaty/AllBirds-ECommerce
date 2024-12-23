@@ -1,6 +1,7 @@
 ﻿using AllBirds.Application.Services.AccountServices;
 using AllBirds.DTOs.AccountDTOs;
 using AllBirds.DTOs.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -71,15 +72,20 @@ namespace AllBirds.ClientWebsiteAPI.Controllers
             return BadRequest();
         }
 
+        [Authorize]
         [HttpGet]
-        [Route("User/{userId}")]
-        public async Task<IActionResult> UserDetails(int userId)
+        public async Task<IActionResult> UserDetails()
         {
-            ResultView<ClientDetailsDTO> result = await accountService.GetClientDetails(userId);
-            if (result.IsSuccess)
-                return Ok(result);
-            else
-                return BadRequest(result);
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+            if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                ResultView<ClientDetailsDTO> result = await accountService.GetClientDetails(userId);
+                if (result.IsSuccess)
+                    return Ok(result);
+                else
+                    return BadRequest(result);
+            }
+            return Unauthorized("Invalid Token");
         }
     }
 }
